@@ -3,6 +3,19 @@
 Librairie permettant de créer des interfaces 2.5D basé sur la librairie THREE.js
 Son champs d'action commence au lancement d'un livre et continue jusqu'à son arrêt. 
 
+## Contribute
+
+Run Budo
+``` bash
+npm run dev
+```
+
+Run sass watching
+``` bash
+cd src/stylesheets/
+sass --watch bard.sass:bard.css
+```
+
 ## Architecture 
 
 ```
