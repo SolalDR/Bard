@@ -1,5 +1,5 @@
 import * as THREE from "three"; 
-import * as Bard from "./bard/bard.js"
+import * as Bard from "./src/bard.js"
 
 
 // Custom Fragment
