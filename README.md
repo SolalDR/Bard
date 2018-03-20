@@ -43,10 +43,11 @@ utils
 
 L'objet Book correspond au livre couramment lu. C'est donc l'objet le plus haut niveau de bard puisque c'est le singleton contenant l'ensemble des fragments (Voir `Fragment`). L'objet Book dispose d'un objet `Scene` agissant en surcharge de la scène THREE.js. 
 
-### BookNavigator
+## Navigator
 Cet objet permet comme son nom l'indique de naviguer dans le livre. Son but est de fluidifier la navigation de l'utilisateur. 
 - Il assure le passage d'un fragment à un autre via des transitions
 - Il charge en asynchrone les ressources nécessaire aux lancements des prochains Fragment 
+- Il gère le contrôle de l'interface utilisateur comme l'accès aux paramètres
 
 ## Scene 
 
@@ -91,7 +92,7 @@ Cet élément permet de manipuler un objet3D ainsi qu'un rig. Il implémente cer
 L'élément text est un élément HTML. Il permet d'instancier un `Dictionnary` qui va permettre à l'aide de son texte de lier les commandes vocales à des actions du fragments. 
 
 ## Action
-Une action est le lien entre une intéraction de l'utilisateur ou un callback avec un changement dans l'état d'un des élement. 
+Une action est une procédure lancer depuis n'importe quel éléments et ayant un impact sur 1 ou plusieurs éléments de la scène. Son exécution se traduit par un ou plusieurs changement d'état chez un ou plusieurs éléments.
 
 ## Utils
 
@@ -99,14 +100,15 @@ Que des classes utils agissant en helpers.
 - Animation : Permet d'animer facilement un changement de propriété. 
 - Clock : Outils de raf classique
 - Easing : Une liste de fonctions de easing 
-- Event : Une classe abstraite implémentant un système évenementiel simple mais efficaces
+- Event : Une classe abstraite implémentant un système évenementiel
 - OrbitControl : L'OrbitControl de THREE.js, utile pour débugger.
+- Livenshtein : Une méthode de calcule de proximité syntaxique
 
 ## Components
 
 Les components représentent des fonctionnalités indépendantes du rendu. Ils peuvent avoir un rôle dans l'intéraction avec l'utilisateur comme dans le cas de SpeechRecognition ou dans le chargement de ressource, etc...
 
-#### SpeechRecognition
+### SpeechRecognition
 Il s'agit de l'objet permettant de manipuler les API de SpeechRecognition. A l'avenir il permettra de passer de Annyang à Google rapidemment. Il agit en surcouche pour ajouter, supprimer des commandes, mettre en pause son activité, proposer une interface de debuggage ou d'intéraction...
 
 ## Elements
