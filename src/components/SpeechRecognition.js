@@ -9,16 +9,16 @@ class SpeechRecognition {
 	
 	constructor(args) {
 		if( !args ) var args = {}
-		this.commands = args.commands ? args.commands : [];
+		this.commands = args.commands ? args.commands : {};
 		this.api = annyang;	
 			
   		if (this.api) {
 			// Let's define a command. 
 			this.api.setLanguage('fr-FR')
 
-			var commands = {};
-			commands['observe le ciel étoilé'] = function() { console.log("Hello") };
-			this.api.addCommands()
+			this.api.addCommands({
+				'hello': ()=>{ console.log("bruh") }
+			})
 
 			this.api.addCallback('result', (phrases) => {
 				for(var i=0; i<phrases.length; i++){
@@ -43,11 +43,14 @@ class SpeechRecognition {
 	}
 
 	removeCommands() {
+		if(!this.loaded) return;
 		this.commands = [];
 		this.api.removeCommands();
 	}
 
 	addCommand(command, callback) {
+		if(!this.loaded) return;
+
 		var commands = {};
 		
 		commands[command] = callback;
