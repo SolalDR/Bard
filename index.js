@@ -15,37 +15,30 @@ class StartFragment extends Bard.Fragment {
 		
 		this.addSpeechRecognition();
 		this.addElement( new Bard.MeshElement({ mesh: this.cube, group: "scene" }));
+		this.addElement( new Bard.CharacterElement( {group: "scene", name: "guy"} ) );
+		
 		var text = this.addElement( new Bard.TextElement({ 
 			nodes: [
 				"Un soir alors qu'ils <span data-speech='test_recognition'>observent le ciel étoilé</span> d'une <span data-speech='next'>belle nuit d'été</span>", 
-				"<span data-speech='test_recognition'>une étrange comète traverse l'atmosphère</span> ... pour disparaître <span data-speech='next'>non loin de là.</span>", 
-				"\"Allons voir cela de plus prêt !\" s'exclament en coeur <span data-speech='next'>nos deux héros...</span>", 
-				"<span data-speech='noises_forest'>Soundain <span data-speech='next'>des bruits étranges parviennent de la forêt.</span>"
+				"<span data-speech='test_recognition'>une étrange comète traverse l'atmosphère</span> ... pour disparaître <span data-speech='next'>non loin de là</span>.", 
+				"\"Allons voir cela de plus prêt !\" s'exclament en coeur <span data-speech='next'>nos deux héros</span>...", 
+				"<span data-speech='noises_forest'>Soundain <span data-speech='next'>des bruits étranges parviennent de la forêt</span>."
 			],
 			align: "bottom-left",
 			position: {x: "40px", y:"-20px"},
 			name: "mainText"
 		}));
 
+
 		text.on("update", (args)=>{
 			this.executeAction("fly")
 		})
-		setTimeout(function(){
-			text.next();
-			setTimeout(function(){
-				text.previous();
-			}, 5000)
-		}, 5000)
-		
-		this.addElement( new Bard.CharacterElement( {group: "scene", name: "guy"} ) );
 
-		this.addAction("fly", (e)=>{
-			console.log("Lancement de l'action FLY", e)
-		})
 
-		for(var i=0; i<this.elements.length; i++){
+		this.addAction("next",  e => text.next())
+
+		for(var i=0; i<this.elements.length; i++)
 			this.elements[i].display();
-		}
 
 		super.start();	
 	}

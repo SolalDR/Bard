@@ -63,7 +63,6 @@ class Text extends Element {
 	 			id: commandsEl[i].getAttribute("data-speech")
 	 		});
 	 	}
-
 	 	return commands;
 	 }
 
@@ -87,13 +86,34 @@ class Text extends Element {
 		this.next();
 	}
 
+
+	get current(){
+		return this.nodes[this.currentNode];
+	}
+
+	registerCommands(){
+		var self = this;
+		
+		for(var i=0; i<this.current.speechs.length; i++){
+			(function(rank){
+				console.log("Add command")
+				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
+					self.fragment.executeAction(self.current.speechs[rank].action)
+				});
+
+			})(i)
+		}
+	}
+
+
 	/**
 	 * Restart Text to first TextNode 
 	 */
 	start(){
 		if( this.currentNode !== null ) this.nodes[this.currentNode].hide();
-		this.currentNode = 0;
-		this.nodes[this.currentNode].display();
+		this.update(0)
+		console.log("start")
+		console.log("Start")
 
 		// Launch start event
 		this.dispatch("start", {
@@ -109,10 +129,10 @@ class Text extends Element {
 	update(next){
 
 		// If no change, return
-		if( next == this.currentNode ) return; 
+		if( next === this.currentNode ) return; 
 		
 		// Toggle
-		this.nodes[this.currentNode].hide();
+		if(this.nodes[this.currentNode]) this.nodes[this.currentNode].hide();
 		this.nodes[next].display();
 		
 		// Dispatch event
@@ -130,12 +150,7 @@ class Text extends Element {
 			return; 
 		}
 		this.speechRecognition.removeCommands();
-		for(var i=0; i<this.nodes[this.currentNode].speechs.length; i++){
-			this.speechRecognition.addCommand(this.nodes[this.currentNode].speechs[i].command, (e) => {
-				console.log(e);
-			});
-		}
-		
+		this.registerCommands();
 	}
 
 	/**

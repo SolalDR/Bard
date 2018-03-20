@@ -34,10 +34,11 @@ class TextNode {
 		this.el.classList.add("text-node");	
 		this.el.classList.add("text-node--hide");	
 		this.el.innerHTML = this.text;
-
+		
 		var speechEls = this.el.querySelectorAll("*[data-speech]");
 		speechEls.forEach(el => this.speechs.push({
 			command: TextNode.strip(el.innerHTML),
+			action: el.getAttribute("data-speech"),
 			count: 0
 		}));
 
