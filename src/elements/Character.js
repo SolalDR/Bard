@@ -12,7 +12,7 @@ class Character extends Mesh {
 		super(params);
 		this.type = "obj3D";
 		window.char = this;
-		this.resourceUrl = params.model ? params.model : "/bard/model/marine.json";
+		this.resourceUrl = params.model ? params.model : "/src/model/marine.json";
 		this.action = "idle";
 		this.anims = [];
 		this.mode = 

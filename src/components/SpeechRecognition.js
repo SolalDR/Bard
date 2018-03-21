@@ -20,21 +20,31 @@ class SpeechRecognition {
 				'hello': ()=>{ console.log("bruh") }
 			})
 
+
+			window.annyang = this.api
+
+
 			this.api.addCallback('result', (phrases) => {
 				for(var i=0; i<phrases.length; i++){
 					for(var j=0; j<this.commands.length; j++){
-						console.log(phrases[i], Levenshtein(phrases[i], this.commands[j].command), this.commands[j].command)
+						if( phrases[i].match(this.commands[j].command)) {
+							this.commands[i].callback.call(this)
+						}
+						// console.log(phrases[i], Levenshtein(phrases[i], this.commands[j].command), this.commands[j].command)
 					}
 				}
 				console.log(phrases)
-				console.log('ok')
 			})
+
+			annyang.addCallback('error', function(e) {
+			         console.log('There was an error in Annyang!', e);
+			});
 
 			// Add our commands to annyang 
 			this.api.addCommands(this.commands);
 
 			// Start listening. 
-			this.api.start();
+			this.api.start({ autoRestart: true, continuous: false });
 		}
 	}
 
