@@ -21,7 +21,8 @@
 
 # Ignore Byebug command history file.
 .byebug_history
-
+.DS_Store
 /.sass-cache/
+
 .sass-cache/
 bard.css.map
