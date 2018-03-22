@@ -110,8 +110,6 @@ class Text extends Element {
 	start(){
 		if( this.currentNode !== null ) this.nodes[this.currentNode].hide();
 		this.update(0)
-		console.log("start")
-		console.log("Start")
 
 		// Launch start event
 		this.dispatch("start", {

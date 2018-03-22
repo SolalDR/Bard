@@ -14,9 +14,18 @@ class StartFragment extends Bard.Fragment {
 		this.addSoundManager();
 		
 		/**
+		 * SOUNDS
+		 */
+		var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
+		var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket_launch_start.mp3");
+		forest.on("load", () => {
+			console.log("Load")
+			forest.start();
+		})
+
+		/**
 		 * ELEMENTS
 		 */
-
 		this.rocket = this.addElement( 
 			Bard.MeshElement.fromObj({path:"./src/assets/obj/rocket.obj"})
 		);
@@ -74,20 +83,22 @@ class StartFragment extends Bard.Fragment {
 		/**
 		 * ACTIONS
 		 */
-
 		this.addAction("rocket-fly", (e) => {
 			this.rocket.anims.push(new Bard.Animation({
 				duration: 9000,
 				onProgress: (advancement, time) => {
 					var easeTime = Bard.Easing.easeInQeight(advancement)
 					this.rocket.mesh.position.x = Math.sin(easeTime) * 100.
-					this.rocket.mesh.position.y = advancement * 200
-					this.rocket.mesh.scale.x = 1 - advancement
-					this.rocket.mesh.scale.y = 1 - advancement
-					this.rocket.mesh.scale.z = 1 - advancement
+					this.rocket.mesh.position.y = easeTime * 200
+					this.rocket.mesh.rotation.x = Math.cos(time*200)/2
+					
+					this.rocket.mesh.scale.x = 1 - easeTime
+					this.rocket.mesh.scale.y = 1 - easeTime
+					this.rocket.mesh.scale.z = 1 - easeTime
 					this.book.scene.camera.lookAt(this.rocket.mesh.position)
 				}
 			}))
+			rocketLaunch.start();
 		})
 
 		this.addAction("next",  e => text.next())

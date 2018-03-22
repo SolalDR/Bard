@@ -1,25 +1,38 @@
+import Event from "./../utils/Event.js"
+import Sound from "./Sound.js"
 
 
-class SoundManager {
+/**
+ * Manage all the sounds of a fragment
+ */
+class SoundManager extends Event {
 
+
+    /**
+     * @constructor
+     */
     constructor() {
-
+        super()
+        
         this.context;
         this.loaded = false;
         this.sounds = {};
-        
-        
-        window.addEventListener('load', this.init.bind(this), false);
-
+        this.eventsList = ["load"]
+    
+        this.init();
     }
 
-    init(){
 
+    /**
+     * Initialize the audio context when HTML Dom is loaded
+     */
+    init(){
         try {
             // Fix up for prefixing
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             this.context = new AudioContext();
             this.loaded = true;
+            this.dispatch("load")
         }
         catch (e) {
             this.loaded = false;
@@ -28,35 +41,39 @@ class SoundManager {
 
     }
 
+
+    /**
+     * Play an object Sound from his name
+     * @param {string} name : Name of the sound
+     * @param {int} offset : Offset for start 
+     */
     play(name, offset) {
         if(!offset) var offset = 0;
-        // Fix up prefixing
-        this.buffers[name].start(offset);
+        this.sounds[name].start(offset);
+    }
+
+    
+    /**
+     * Load a sound
+     * @param {String} name 
+     * @param {String} url
+     * @param {Object} args 
+     */
+    load(name, url, args) {
+        if(!args) var args = {};
+
+        var sound = new Sound(this, name, url);
+        if (args.autoplay) {
+            sound.on("load", function(){
+                this.start();
+            })
+        }
+
+        this.sounds[name] = sound;
+        
+        return sound;
     }
     
-
-    load(name, url) {
-
-        if(!this.loaded) console.warn("SoundManager : Cannot load sound, context is not initialized"); return;
-
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-
-        // Decode asynchronously
-        request.onload = () => {
-            context.decodeAudioData(request.response, (response) => {
-                this.buffers[name] = {
-                    buffer: response,
-                    source: this.context.createBufferSource()
-                }
-
-                this.buffers[name].source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-            }, () => {
-                console.warn("SoundManager : Error during loading")
-            });
-        }
-        request.send();
-    }
-
 }
+
+export default SoundManager

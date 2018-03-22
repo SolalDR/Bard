@@ -10,7 +10,7 @@ import Animation from "./../utils/Animation.js"
 class Mesh extends Element {
 	constructor(params){
 		super(params);
-		this.type = "Mesh"
+		this.type = "obj3D"
 		this.eventsList = ["load"]
 
 		this.fragment = null; // Lateinit
@@ -60,7 +60,7 @@ class Mesh extends Element {
 			},
 			 ( xhr ) => {
 
-				console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+				//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 		
 			},
 			// called when loading has errors

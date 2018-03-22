@@ -1,7 +1,7 @@
 import Clock from "./utils/Clock.js"
 import Action from "./Action.js"
 import SpeechRecognition from "./components/SpeechRecognition.js"
-import SoundManager from "./components/SpeechRecognition.js"
+import SoundManager from "./components/SoundManager.js"
 import AlertManager from "./components/AlertManager.js";
 import Event from "./utils/Event.js";
 

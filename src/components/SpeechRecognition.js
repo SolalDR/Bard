@@ -30,14 +30,12 @@ class SpeechRecognition {
 						if( phrases[i].match(this.commands[j].command)) {
 							this.commands[i].callback.call(this)
 						}
-						// console.log(phrases[i], Levenshtein(phrases[i], this.commands[j].command), this.commands[j].command)
 					}
 				}
-				console.log(phrases)
 			})
 
 			annyang.addCallback('error', function(e) {
-			         console.log('There was an error in Annyang!', e);
+				console.warn('SpeechRecognition : There was an error in Annyang!', e);
 			});
 
 			// Add our commands to annyang 
