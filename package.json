@@ -1,5 +1,5 @@
 {
-  "name": "bard-js",
+  "name": "js-bard",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "dev": "budo index.js:bundle.js --live -t glslify -- -t [ babelify --presets [ es2015 ] ]  ",
     "build": "browserify -t [babelify --presets [ es2015 ]] -t glslify index.js > bundle.js  "
   },
-  "author": "",
+  "author": "solaldr",
   "license": "ISC",
   "dependencies": {
     "annyang": "^2.6.0",
