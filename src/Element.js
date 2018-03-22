@@ -1,4 +1,5 @@
 import Event from "./utils/Event.js"
+
 /**
  * Represent a part of a Fragment.
  * Element is abstract
@@ -6,9 +7,18 @@ import Event from "./utils/Event.js"
  * @param loaded boolean
  * @abstract
  */
-
 class Element extends Event {
 
+	/**
+	 * Define the possible type for object extending Element
+	 */
+	static get AVAILABLES_TYPES() { return ["text", "image", "sound", "obj3D", "obj2D", "svg"]; }
+
+
+	/**
+	 * @constructor
+	 * @param {Object} params
+	 */
 	constructor(params){
 		super();
 		this.fragment; // Lateinit accessible after initialisation with Fragment.addElement()
@@ -22,10 +32,10 @@ class Element extends Event {
 		}
 	}
 
-	static get AVAILABLES_TYPES(){
-		return ["text", "image", "sound", "obj3D", "obj2D", "svg"];
-	}
-
+	
+	/**
+	 * Get and set type by checking available type
+	 */
 	set type(type) {
 		if( Element.AVAILABLES_TYPES.indexOf(type) >= 0 ){
 			this._type = type;
@@ -38,7 +48,18 @@ class Element extends Event {
 		return this._type;
 	}
 
-	registerAction(name, action, force){
+
+	/************* ACTIONS *************/
+
+
+	/**
+	 * Register a new action
+	 * @todo
+	 * @param {String} name 
+	 * @param {Action} Action 
+	 * @param {Boolean} force 
+	 */
+	registerAction(name, action, force = false){
 		if( this.actions[name] && !force ){
 			console.warn("Cannot override this action, use force=true to override");
 			return; 
@@ -47,10 +68,20 @@ class Element extends Event {
 		this.actions[name] = action.bind(this)
 	}
 
+	/**
+	 * Delete an action with his name
+	 * @param {String} name 
+	 */
 	deleteAction(name){
 		this.actions[name] = null;
 	}
 
+
+	/**
+	 * Execute an action with his name
+	 * @param {String} name  
+	 * @param {Object} params : Params passed to the action callback 
+	 */
 	execute(name, params){
 		if( this.actions[name] ){
 			this.actions[name].call(this, params);

@@ -4,18 +4,18 @@ import Element from "./../Element.js"
 
 /**
  * A text element
- * @param group (String) : Define where this element need to appear (foreground for text)
- * @param text [String] : Array Text content in raw html
- * @param el (String) : HTML Element with text in it
- * @param positionMofifier enum(String) : top-left, top-right, bottom-left, bottom-right, center-top, center-bottom, center-right, center-left 
- * @param animDisplay (String) : a enter anim in the collection of bard
- * @param animHide (String) : a leaving anim in the collection of bard
- * @param position : Object{x, y} : Offset translation in x & y 
- * @param dimension : Object {x, y} : Width and height
- * @param theme (String) : The text style in bard's collection
- * @param speechRecognition (SpeechRecognition)
+ * @param {String} group : Define where this element need to appear (foreground for text)
+ * @param {String} text : Array Text content in raw html
+ * @param {String} el : HTML Element with text in it
+ * @param {String, Enum} positionMofifier : top-left, top-right, bottom-left, bottom-right, center-top, center-bottom, center-right, center-left 
+ * @param {String} animDisplay : a enter anim in the collection of bard
+ * @param {String} animHide : a leaving anim in the collection of bard
+ * @param {String} theme : The text style in bard's collection
+ * @param {String} color : The text style in bard's collection
+ * @param {Object{x, y}} position : Offset translation in x & y 
+ * @param {Object{x, y}} dimension : Width and height
+ * @param {SpeechRecognition} speechRecognition
  */
-
 import TextNode from "./TextNode.js"
 
 class Text extends Element {
@@ -33,6 +33,7 @@ class Text extends Element {
 		this.align = params.align ? params.align : "top-left";
 		this.position = params.position ? params.position : {x: 0, y: 0};
 		this.dimension = params.dimension ? params.dimension : {x: "100%", y: "auto"};
+		this.color = params.color ? params.color : "#000000"
 
 		this.nodes = [];
 		for(var i=0; i<params.nodes.length; i++) {
@@ -48,7 +49,7 @@ class Text extends Element {
 	 * Return the content of the style attribute
 	 */
 	get style(){
-		return `transform: translate3d(${this.position.x},${this.position.y},0); width: ${this.dimension.x}; height: ${this.dimension.y}`;
+		return `transform: translate3d(${this.position.x},${this.position.y},0); width: ${this.dimension.x}; height: ${this.dimension.y}; color: ${this.color};`;
 	}
 
 	get current(){
