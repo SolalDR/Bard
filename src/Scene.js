@@ -1,5 +1,8 @@
-import * as THREE from 'three'
+window.THREE = require("three")
 import OrbitControls from './utils/OrbitControl.js'
+import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6'
+
+var fxaa = require('three-shader-fxaa')
 
 /** 
  * The threejs scene. It persist during the all livecycle of Book
@@ -10,22 +13,34 @@ class Scene {
 	 * Create the THREE.js Scene, camera, renderer and create layer groups
 	 */
 	constructor(canvas){
-
 		this.canvas = document.getElementById("canvas");
 		this.threeScene = new THREE.Scene();
 		
 		this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
-		this.camera.position.set(0, 100, 300);
+		this.camera.position.set(0, 2, 20);
 
 		this.renderer = new THREE.WebGLRenderer( { 
-			canvas: this.canvas, 
-			antialias: true 
+			canvas: this.canvas,
 		});
+		this.renderer.setClearColor( 0x676FE8, 1 );
+		
+		this.composer = new EffectComposer(this.renderer)
+		this.composer.addPass(new RenderPass(this.threeScene, this.camera))
+	
+		const fxaaPass = new ShaderPass(fxaa())
+		fxaaPass.renderToScreen = true
+		this.composer.addPass(fxaaPass)
 
-		this.threeScene.add( new THREE.AmbientLight( 0xFF0000, 2 ) );
+		fxaaPass.uniforms.resolution.value.x = window.innerWidth
+		fxaaPass.uniforms.resolution.value.y = window.innerHeight
 
 
-		var directionalLight = new THREE.DirectionalLight( 0xffffff, 5 );
+		this.threeScene.add( new THREE.AmbientLight( 0xe1e1e1, 1 ) );
+
+		var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+		directionalLight.position.x  = 2
+		directionalLight.position.y  = 2
+		directionalLight.position.z  = 2
 		this.threeScene.add( directionalLight );
 
 		this.controls = new OrbitControls( this.camera );
@@ -41,7 +56,7 @@ class Scene {
 	 * Call the renderer
 	 */
 	render(){
-		this.renderer.render(this.threeScene, this.camera);
+		this.composer.render();
 	}
 
 	/**	
@@ -74,6 +89,14 @@ class Scene {
 	 * @param element : Element
 	 */
 	addElement(element){
+		if(!element.mesh){
+			console.warn("Element not loaded yet, it will be append to scene later.")
+			element.on("load", ()=>{
+				this.addElement(element)
+			})
+			return;
+		}
+		
 		switch( element.group ){
 			case "background" : this.bgGroup.add(element.mesh); break;
 			case "foreground" : this.fgGroup.add(element.mesh); break;

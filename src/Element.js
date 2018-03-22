@@ -14,6 +14,7 @@ class Element extends Event {
 		this.fragment; // Lateinit accessible after initialisation with Fragment.addElement()
 		this.actions = {};
 		this.loaded = false;
+		this.anims = [];
 		this._type = null;
 
 		if( params.name ){

@@ -7,6 +7,7 @@ export default {
   linear: function (t) { return t },
   // accelerating from zero velocity
   easeInQuad: function (t) { return t*t },
+  easeInQeight: function (t) { return t*t*t*t },
   // decelerating to zero velocity
   easeOutQuad: function (t) { return t*(2-t) },
   // acceleration until halfway, then deceleration
