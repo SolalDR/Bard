@@ -1,6 +1,7 @@
 import Clock from "./utils/Clock.js"
 import Action from "./Action.js"
 import SpeechRecognition from "./components/SpeechRecognition.js"
+import SoundManager from "./components/SpeechRecognition.js"
 import AlertManager from "./components/AlertManager.js";
 import Event from "./utils/Event.js";
 
@@ -64,6 +65,13 @@ class Fragment extends Event {
 		if(!this.speechRecognition.loaded) {
 			AlertManager.error("La reconnaissance vocale ne fonctionne pas sur ce navigateur. Privilégiez un navigateur comme Google Chrome.")
 		}
+	}
+
+	/**
+	 * Add SoundManager
+	 */
+	addSoundManager() {
+		this.soundManager = new SoundManager();
 	}
 
 	/**

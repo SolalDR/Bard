@@ -9,42 +9,43 @@ class StartFragment extends Bard.Fragment {
 	constructor(){ super(); }
 
 	start(){
-		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-		var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		this.cube = new THREE.Mesh( geometry, material );
-
-		let floorGeo = new THREE.PlaneGeometry(100,100,2,2)
-		let floorMat = new THREE.MeshBasicMaterial({color:0xefefef})
-		this.floor = new THREE.Mesh(floorGeo, floorMat)
-		this.floor.rotation.set(-Math.PI/2,0,0)
 		
 		this.addSpeechRecognition();
+		this.addSoundManager();
 		
+		/**
+		 * ELEMENTS
+		 */
 
-
-		this.rocket = this.addElement( Bard.MeshElement.fromObj({path:"./src/assets/obj/rocket.obj"}));
+		this.rocket = this.addElement( 
+			Bard.MeshElement.fromObj({path:"./src/assets/obj/rocket.obj"})
+		);
 		
-		this.addAction("rocket-fly", (e) => {
-			this.rocket.anims.push(new Bard.Animation({
-				duration: 9000,
-				onProgress: (advancement, time) => {
-					var easeTime = Bard.Easing.easeInQeight(advancement)
-					console.log(easeTime)
-					this.rocket.mesh.position.x = Math.sin(easeTime)*100.
-					this.rocket.mesh.position.y = advancement*200
-					this.rocket.mesh.scale.x = 1 - advancement
-					this.rocket.mesh.scale.y = 1 - advancement
-					this.rocket.mesh.scale.z = 1 - advancement
+		var text = this.addElement(
+			new Bard.TextElement({
+				nodes: [
+					"Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>",
+					"Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>.",
+				],
+				align: "bottom-left",
+				position: { x: "40px", y: "-20px" },
+				name: "mainText"
+			})
+		);
 
-					this.book.scene.camera.lookAt(this.rocket.mesh.position)
-				}
-			}))
-		})
-	
-
-		for(let i = 0; i < 5; i++) {
-			this.addElement( Bard.MeshElement.fromObj({path:"./src/assets/obj/tree.obj", scale: 0.04, position:{x:Math.random()*10+(i*20)-40,y:0,z:Math.random()*-30-3}}));
+		for (let i = 0; i < 5; i++) {
+			this.addElement(
+				Bard.MeshElement.fromObj({ 
+					path: "./src/assets/obj/tree.obj", 
+					scale: 0.04, 
+					position: { 
+						x: Math.random() * 10 + (i * 20) - 40, 
+						y: 0, 
+						z: Math.random() * -30 - 3 } 
+				})
+			);
 		}
+		
 		
 		let starGeo = new THREE.SphereGeometry(8,8,1)
 		let starMat = new THREE.MeshBasicMaterial({color: 0xffffff})
@@ -62,19 +63,32 @@ class StartFragment extends Bard.Fragment {
 			this.addElement(new Bard.MeshElement({mesh:star}));
 		}
 
+
+		let floorGeo = new THREE.PlaneGeometry(100, 100, 2, 2)
+		let floorMat = new THREE.MeshBasicMaterial({ color: 0xefefef })
+		this.floor = new THREE.Mesh(floorGeo, floorMat)
+		this.floor.rotation.set(-Math.PI / 2, 0, 0)
 		this.addElement(new Bard.MeshElement({mesh:this.floor}))
 
-		//this.addElement( new Bard.CharacterElement( {group: "scene", name: "guy"} ) );
 		
-		var text = this.addElement( new Bard.TextElement({ 
-			nodes: [
-				"Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>", 
-				"Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>.", 
-			],
-			align: "bottom-left",
-			position: {x: "40px", y:"-20px"},
-			name: "mainText"
-		}));
+		/**
+		 * ACTIONS
+		 */
+
+		this.addAction("rocket-fly", (e) => {
+			this.rocket.anims.push(new Bard.Animation({
+				duration: 9000,
+				onProgress: (advancement, time) => {
+					var easeTime = Bard.Easing.easeInQeight(advancement)
+					this.rocket.mesh.position.x = Math.sin(easeTime) * 100.
+					this.rocket.mesh.position.y = advancement * 200
+					this.rocket.mesh.scale.x = 1 - advancement
+					this.rocket.mesh.scale.y = 1 - advancement
+					this.rocket.mesh.scale.z = 1 - advancement
+					this.book.scene.camera.lookAt(this.rocket.mesh.position)
+				}
+			}))
+		})
 
 		this.addAction("next",  e => text.next())
 
@@ -102,38 +116,13 @@ class StartFragment extends Bard.Fragment {
 	
 }
 
-
-class TestFragment extends Bard.Fragment {
-	constructor() {
-		super();	
-	}
-
-	start() {
-	
-		for(var i=0; i<this.elements.length; i++){
-			
-			this.elements[i].display();
-		}
-
-		super.start()
-	}
-	
-	render() {
-		super.render()
-
-		super.postRender()
-	}
-}
-
 window.addEventListener("load", function(){
 
     var book = new Bard.Book();
     var frag = new StartFragment();
-	var testFrag = new TestFragment()
 	
 	
 	book.addFragment(frag);
-	book.addFragment(testFrag);
     book.start();
 })
 
