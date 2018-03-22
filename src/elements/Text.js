@@ -51,6 +51,10 @@ class Text extends Element {
 		return `transform: translate3d(${this.position.x},${this.position.y},0); width: ${this.dimension.x}; height: ${this.dimension.y}`;
 	}
 
+	get current(){
+		return this.nodes[this.currentNode];
+	}
+
 	/**
 	 * Catpure commands
 	 */
@@ -87,20 +91,14 @@ class Text extends Element {
 	}
 
 
-	get current(){
-		return this.nodes[this.currentNode];
-	}
 
 	registerCommands(){
 		var self = this;
-		
 		for(var i=0; i<this.current.speechs.length; i++){
 			(function(rank){
-				console.log("Add command")
 				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
 					self.fragment.executeAction(self.current.speechs[rank].action)
 				});
-
 			})(i)
 		}
 	}

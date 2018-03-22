@@ -68,10 +68,8 @@ class StartFragment extends Bard.Fragment {
 		
 		var text = this.addElement( new Bard.TextElement({ 
 			nodes: [
-				"Un soir alors qu'ils <span data-speech='test_recognition'>observent le ciel étoilé</span> d'une <span data-speech='next'>belle nuit d'été</span>", 
-				"<span data-speech='test_recognition'>une étrange comète traverse l'atmosphère</span> ... pour disparaître <span data-speech='next'>non loin de là</span>.", 
-				"\"Allons voir cela de plus prêt !\" s'exclament en coeur <span data-speech='next'>nos deux héros</span>...", 
-				"<span data-speech='noises_forest'>Soundain <span data-speech='next'>des bruits étranges parviennent de la forêt</span>."
+				"Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>", 
+				"Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>.", 
 			],
 			align: "bottom-left",
 			position: {x: "40px", y:"-20px"},
@@ -88,9 +86,6 @@ class StartFragment extends Bard.Fragment {
 	}
 
 	initListeners() {			
-		document.getElementById("canvas").addEventListener("click", () => {
-			this.executeAction("rocket-fly")
-		})
 	}
 
 	render(){
