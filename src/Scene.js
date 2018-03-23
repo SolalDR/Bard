@@ -15,9 +15,11 @@ class Scene {
 	constructor(canvas){
 		this.canvas = document.getElementById("canvas");
 		this.threeScene = new THREE.Scene();
+		this.winWidth = window.innerWidth
+		this.winHeight = window.innerHeight
 		
 		this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
-		this.camera.position.set(0, 2, 20);
+		this.camera.position.set(0, 5, 25);
 
 		this.renderer = new THREE.WebGLRenderer( { 
 			canvas: this.canvas,
@@ -48,9 +50,25 @@ class Scene {
 
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 
+		this.initListeners()
 		this.initGroups();
 
 	}
+
+	initListeners() {
+		window.addEventListener('resize', this.onResize.bind(this))
+	}
+
+	onResize() {
+		this.winWidth = window.innerWidth
+		this.winHeight = window.innerHeight
+		this.winRatio = this.winWidth/this.winHeight
+
+		this.camera.aspect = this.winRatio;
+		this.camera.updateProjectionMatrix();	
+		this.renderer.setSize(this.winWidth, this.winHeight)
+	}
+
 
 	/**
 	 * Call the renderer
