@@ -71,7 +71,7 @@ body, html {
     line-height: 30px;
     padding: 15px;
     max-width: 45vw;
-    color: white;
+    color: black;
     font-weight: 100; }
   .text-node {
     transition: 0.4s;

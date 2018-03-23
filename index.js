@@ -55,30 +55,8 @@ class StartFragment extends Bard.Fragment {
 			);
 		}
 		
-		
-		let starGeo = new THREE.SphereGeometry(8,8,1)
-		let starMat = new THREE.MeshBasicMaterial({color: 0xffffff})
-
-		for(let i = 0; i < 100; i++) {
-			let star = new THREE.Mesh(starGeo, starMat)
-			star.position.x = Math.random()*500-250
-			star.position.y = Math.random()*100+100
-			star.position.z = Math.random()*500-250
-
-			star.scale.x = 0.3
-			star.scale.y = 0.3
-			star.scale.z = 0.3
-
-			this.addElement(new Bard.MeshElement({mesh:star}));
-		}
-
-
-		let floorGeo = new THREE.PlaneGeometry(100, 100, 2, 2)
-		let floorMat = new THREE.MeshBasicMaterial({ color: 0xefefef })
-		this.floor = new THREE.Mesh(floorGeo, floorMat)
-		this.floor.rotation.set(-Math.PI / 2, 0, 0)
-		this.addElement(new Bard.MeshElement({mesh:this.floor}))
-
+		this.floor = this.addElement(new Bard.FloorElement({}))
+		this.stars = this.addElement(new Bard.StarsElement({}));
 		
 		/**
 		 * ACTIONS

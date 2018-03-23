@@ -24,6 +24,9 @@ import SpeechRecognition from "./components/SpeechRecognition.js"
 /* Elements */
 
 import SpaceElement from "./elements/bg/Space.js"
+import StarsElement from "./elements/bg/Stars.js"
+import FloorElement from "./elements/Floor.js"
+
 import CharacterElement from "./elements/Character.js"
 import MeshElement from "./elements/Mesh.js"
 import TextElement from "./elements/Text.js"
@@ -55,7 +58,9 @@ export {
 	Event, 
 	OrbitControl,
 	Levenshtein,
-	
+
+	FloorElement,
+	StarsElement,
 	SpaceElement, 
 	CharacterElement, 
 	MeshElement, 
