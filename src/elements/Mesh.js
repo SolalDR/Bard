@@ -25,20 +25,20 @@ class Mesh extends Element {
 		}
 	}
 
-	setMesh(mesh, scale, position) {
+	setMesh(mesh, scale, position, rotation) {
 		this.mesh = mesh; 
 
 		if(scale) {
-			this.mesh.scale.x = scale
-			this.mesh.scale.y = scale
-			this.mesh.scale.z = scale
+			this.mesh.scale.set(scale, scale, scale)
 		}
 		
 		if(position) {
-			this.mesh.position.x = position.x
-			this.mesh.position.y = position.y
-			this.mesh.position.z = position.z
+			this.mesh.position.set(position.x, position.y, position.z)
 		}	
+
+		if(rotation) {
+			this.mesh.rotation.set(rotation.x, rotation.y, rotation.z)
+		}
 
 		this.loaded = true;
 		this.dispatch("load")
