@@ -45,4 +45,8 @@ utils
 - Scene                       | Scène de rendu 3D 
 ```
 
- 
+## TODO
+
+- Change three from devDependencies to dependencies
+- Change entry point to /src/Bard.js
+- Remove Control System (Bard should just deal with performing action, not provide a interface)
