@@ -1,8 +1,8 @@
 {
   "name": "js-bard",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "/src/Bard.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "budo index.js:bundle.js --live -t glslify -- -t [ babelify --presets [ es2015 ] ]  ",
