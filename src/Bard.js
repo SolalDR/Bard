@@ -40,10 +40,11 @@ import Easing from "./utils/Easing.js"
 import Event from "./utils/Event.js"
 import OrbitControl from "./utils/OrbitControl.js"
 import Levenshtein from "./utils/Levenshtein.js"
-
+import HTMLUtil from "./utils/HTMLUtil.js"
 
 
 export { 
+  HTMLUtil,
 	Action, 
 	Book, 
 	Navigator, 
@@ -58,7 +59,6 @@ export {
 	Event, 
 	OrbitControl,
 	Levenshtein,
-
 	FloorElement,
 	StarsElement,
 	SpaceElement, 

@@ -11,6 +11,21 @@ import Event from "./utils/Event.js";
 
 class Fragment extends Event {
 	
+  static build(name, protos) {
+    return new function() {
+
+      var fragment = new Fragment();
+      fragment.prototype = Object.create(Fragment.prototype);
+      
+      for(var i in protos){
+        fragment.__proto__[i] = protos[i];
+      }
+      
+      return fragment;
+
+    };
+  }
+
 	constructor(){
 		super();
 		this.eventsList = ["action:add", "action:execute", "action:remove", "element:add", "element:remove", "start"]
@@ -24,7 +39,7 @@ class Fragment extends Event {
 	/**
 	 * Overrided method. Create the first render and add element to Scene
 	 */
-	start(){
+	afterStart(){
 		this.render();
 		this.time = 0;
 		this.dispatch("start", {})
@@ -34,7 +49,7 @@ class Fragment extends Event {
 	 * @override 
 	 * Raf 
 	 */
-	render(){
+	beforeRender(){
 		this.raf = requestAnimationFrame( this.render.bind(this) );
 		this.clock.update();
 	}
@@ -43,7 +58,7 @@ class Fragment extends Event {
 	 * @override 
 	 * Post raf 
 	 */
-	postRender(preventDefault){
+	afterRender(preventDefault){
 
 		this.book.scene.render();
 		if( preventDefault !== true ){
