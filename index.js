@@ -107,7 +107,9 @@ var fragment = Bard.Fragment.build("StartFragment", {
 
 window.addEventListener("load", function(){
 
-  var book = new Bard.Book();
+  var book = new Bard.Book({
+    debug: true
+  });
 	
 	
 	book.addFragment(fragment);
