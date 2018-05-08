@@ -12,7 +12,9 @@ class Scene {
 	/**
 	 * Create the THREE.js Scene, camera, renderer and create layer groups
 	 */
-	constructor(canvas){
+	constructor(book){
+
+		this.book = book;
 		this.canvas = document.getElementById("canvas");
 		this.threeScene = new THREE.Scene();
 		this.winWidth = window.innerWidth
@@ -45,8 +47,11 @@ class Scene {
 		directionalLight.position.z  = 2
 		// this.threeScene.add( directionalLight );
 
-		this.controls = new OrbitControls( this.camera );
-		this.controls.update();
+		if( this.book.debug ){
+			this.controls = new OrbitControls( this.camera );
+			this.controls.update();
+		}
+
 
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 

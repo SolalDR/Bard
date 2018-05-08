@@ -15,7 +15,7 @@ class Book {
 		this.fragments = [];
 		this.author = null;
 		this.title = null;
-
+		this.debug = params && params.debug === true ? true : false;  
 		this.navigator = new Navigator(this);
 	}
 
@@ -25,7 +25,7 @@ class Book {
 	}
 
 	start(){
-		this.scene = new Scene();
+		this.scene = new Scene(this);
 		this.fragments[0].start();
 	}
 
