@@ -1,5 +1,4 @@
 import Mesh from "./../Mesh.js"
-import glslify from 'glslify'
 /**
  * An element in a THREE.js scene.
  * Can be animated and hooked thanks to event
