@@ -25,6 +25,7 @@ import SpeechRecognition from "./components/SpeechRecognition.js"
 
 import SpaceElement from "./elements/bg/Space.js"
 import StarsElement from "./elements/bg/Stars.js"
+import PlaneElement from "./elements/Plane/Plane.js"
 import FloorElement from "./elements/Floor.js"
 
 import CharacterElement from "./elements/Character.js"
@@ -65,5 +66,6 @@ export {
 	CharacterElement, 
 	MeshElement, 
 	TextElement,
-	SvgElement
+	SvgElement,
+	PlaneElement
 }

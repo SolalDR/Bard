@@ -1,4 +1,5 @@
 import OBJLoader from '../utils/OBJLoader'
+import MTLLoader from '../utils/MTLLoader'
 import Element from "./../Element.js"
 import Animation from "./../utils/Animation.js"
 
@@ -25,18 +26,22 @@ class Mesh extends Element {
 		}
 	}
 
-	setMesh(mesh, scale, position, rotation) {
+	setMesh(mesh, config) {
 		this.mesh = mesh; 
-
-		if(scale) {
-			this.mesh.scale.set(scale, scale, scale)
+		// this.mesh.material.side = THREE.DoubleSide
+		if(config.scale) {
+			this.mesh.scale.set(config.scale, config.scale, config.scale)
 		}
 		
-		if(position) {
-			this.mesh.position.set(position.x, position.y, position.z)
+		if(config.position) {
+			this.screenSize = this.fragment.book.scene.camera.right*2
+			let x = (config.position.x*this.screenSize)+this.fragment.book.scene.camera.left
+			let y = (config.position.y*this.screenSize)
+		
+			this.mesh.position.set(x, y, config.position.z)
 		}	
 
-		if(rotation) {
+		if(config.rotation) {
 			this.mesh.rotation.set(rotation.x, rotation.y, rotation.z)
 		}
 
@@ -48,28 +53,40 @@ class Mesh extends Element {
 		let mesh = new Mesh({
 			group:"scene"
 		}); 
+		if(params.mtl) {
+			let mtlLoader = new THREE.MTLLoader()
 		
-		let loader = new OBJLoader();
+			mtlLoader.load(params.mtl, (materials)=>{
+				materials.preload()
+				let loader = new OBJLoader();
+				loader.setMaterials(materials)
+				loader.load(
+					params.path,
+					(object)=> {
+						let obj = object
+						for(let i = 0; i< object.children.length; i++) {
+							
+							object.children[i].material.alphaTest = 0.
+							object.children[i].material.depthTest = false
+							object.children[i].material.depthWrite = false
+						}
+						mesh.setMesh(obj, params.config, params.position);							
+					},
+					( xhr ) => {
 
-		loader.load(
-			params.path,
-			(object)=> {
-				let obj = object
-
-				mesh.setMesh(obj, params.scale, params.position);							
-			},
-			 ( xhr ) => {
-
-				//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+						//console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+				
+					},
+					// called when loading has errors
+					( error ) => {
+				
+						console.log( 'An error happened' );
+				
+					}
+				);
+					})
+		}
 		
-			},
-			// called when loading has errors
-			 ( error ) => {
-		
-				console.log( 'An error happened' );
-		
-			}
-		);
 		
 		return mesh;
 	}

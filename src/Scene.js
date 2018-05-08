@@ -18,13 +18,13 @@ class Scene {
 		this.winWidth = window.innerWidth
 		this.winHeight = window.innerHeight
 		
-		this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 10000 );
-		this.camera.position.set(0, 5, 25);
+		this.camera = new THREE.OrthographicCamera(65*(this.winWidth/this.winHeight) / - 2,65*(this.winWidth/this.winHeight) / 2,60 ,-5, -1000, 1000 );
+		this.camera.position.set(0, 0, 1);
 
 		this.renderer = new THREE.WebGLRenderer( { 
 			canvas: this.canvas,
 		});
-		this.renderer.setClearColor( 0x676FE8, 1 );
+		this.renderer.setClearColor( 0xffffff, 1 );
 		
 		this.composer = new EffectComposer(this.renderer)
 		this.composer.addPass(new RenderPass(this.threeScene, this.camera))
@@ -37,13 +37,13 @@ class Scene {
 		fxaaPass.uniforms.resolution.value.y = window.innerHeight
 
 
-		this.threeScene.add( new THREE.AmbientLight( 0xe1e1e1, 1 ) );
+		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 0.9 ) );
 
-		var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+		var directionalLight = new THREE.DirectionalLight( 0xeeeeee, 1 );
 		directionalLight.position.x  = 2
 		directionalLight.position.y  = 2
 		directionalLight.position.z  = 2
-		this.threeScene.add( directionalLight );
+		// this.threeScene.add( directionalLight );
 
 		this.controls = new OrbitControls( this.camera );
 		this.controls.update();
@@ -64,7 +64,11 @@ class Scene {
 		this.winHeight = window.innerHeight
 		this.winRatio = this.winWidth/this.winHeight
 
-		this.camera.aspect = this.winRatio;
+		this.camera.left = 60*(this.winWidth/this.winHeight) / -2;
+		this.camera.right = 60*(this.winWidth/this.winHeight) / 2;
+		this.camera.top = 60;
+		this.camera.bottom = -5;
+
 		this.camera.updateProjectionMatrix();	
 		this.renderer.setSize(this.winWidth, this.winHeight)
 	}
@@ -74,7 +78,8 @@ class Scene {
 	 * Call the renderer
 	 */
 	render(){
-		this.composer.render();
+		this.renderer.sortObjects = false
+		this.composer.render(this.threeScene, this.camera);
 	}
 
 	/**	

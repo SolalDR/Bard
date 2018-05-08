@@ -12,39 +12,70 @@ class Character extends Mesh {
 		super(params);
 		this.type = "obj3D";
 		window.char = this;
-		this.resourceUrl = params.model ? params.model : "/src/model/marine.json";
-		this.action = "idle";
+		this.resourceUrl = params.model ? params.model : "/src/assets/obj/test.json";
+		this.action = "walk";
 		this.anims = [];
 		this.mode = 
 
 		this.config = {
 			skeleton: false,
-			stepSize: 0.05,
+			stepSize: 1.0,
 			defaultDuration: 3.5,
-			timeScale: 0.0,
+			timeScale: 1.0,
 			weight: {
-				idle: 1.0, 
-				walk: 0.0,
+				idle: 0.0, 
+				walk: .8,
 				run: 0.0
 			}
 		}
+		this.loader = new THREE.JSONLoader()
+		this.loader.load( "/src/assets/obj/head.json",  ( loadedObject ) => {
+			this.firstGeo = loadedObject
+			console.log(loadedObject)
+			let mat = new THREE.MeshBasicMaterial()
+			this.mesh2 = new THREE.SkinnedMesh(loadedObject,mat )
+			this.skinIndices = this.mesh2.geometry.skinIndices
+			this.skinWeights = this.mesh2.geometry.skinWeights
+			// this.mesh2.updateMatrix()
+		})
+		this.loader.load( this.resourceUrl,  ( loadedObject ) => {
+			loadedObject.merge(this.mesh2.geometry, this.mesh2.matrix)
+			let mat = new THREE.MeshBasicMaterial()
+			mat.skinning = true
+			for (let index = 0; index < this.skinIndices.length; index++) {
+				loadedObject.skinIndices.push(this.skinIndices[index ])
+				loadedObject.skinWeights.push(this.skinWeights[index ])
+				
+			}
+		
+			this.mesh = new THREE.SkinnedMesh(loadedObject,mat )
+			console.log(this.mesh)
+			this.mesh.rotation.set(0,Math.PI/3,0)
+			this.mesh.material.transparent = true
+			this.mesh.material.side = THREE.DoubleSide
+			this.mesh.material.opacity = 0.5
+			// this.mesh.children[0].children[0].add(new THREE.Mesh(new THREE.BoxGeometry(6,6,6), new THREE.MeshBasicMaterial({color:"black"})))
+			 this.mesh.scale.set(10.,10.,10.)
+			 var helper = new THREE.SkeletonHelper( this.mesh );
+			// loadedObject.traverse( ( child ) => {
+			// 	if ( child instanceof THREE.SkinnedMesh ) {
+			// 		this.mesh = child;
+			// 	}
+			// } );
+			// for (let index = 0; index < this.mesh.skeleton.bones.length; index++) {
+			// 	this.mesh.skeleton.bones[index].children[0].add(new THREE.Mesh(new THREE.BoxGeometry(2,2,2), new THREE.MeshBasicMaterial({color:"black"})))
 
-		this.loader = new THREE.ObjectLoader().load( this.resourceUrl,  ( loadedObject ) => {
-			loadedObject.traverse( ( child ) => {
-				if ( child instanceof THREE.SkinnedMesh ) {
-					this.mesh = child;
-				}
-			} );
+			// }
 			if ( this.mesh === undefined ) {
 				alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
 				return;
 			}
 			
 			this.mixer = new THREE.AnimationMixer( this.mesh );
-			this.idleAction = this.mixer.clipAction( 'idle' );
-			this.walkAction = this.mixer.clipAction( 'walk' );
-			this.runAction = this.mixer.clipAction( 'run' );
-			this.actions = [ this.idleAction, this.walkAction, this.runAction ];
+			console.log(loadedObject)
+			this.walkAction = this.mixer.clipAction(loadedObject.animations[0]);
+			this.walkAction.enabled = true
+			this.actions = [  this.walkAction ];
 			
 			this.loaded = true;
 			this.display();
@@ -219,9 +250,8 @@ class Character extends Mesh {
 	 * Activate all actions and set based status
 	 */
 	activateAllActions() {
-		this.setWeight( this.idleAction, this.config.weight.idle );
+		console.log(this.walkAction)
 		this.setWeight( this.walkAction, this.config.weight.walk );
-		this.setWeight( this.runAction, this.config.weight.run );
 		this.actions.forEach( function ( action ) {
 			action.play();
 		} );
@@ -256,9 +286,7 @@ class Character extends Mesh {
 
 	render(clock){
 		if( this.loaded ){
-			this.idleWeight = this.idleAction.getEffectiveWeight();
 			this.walkWeight = this.walkAction.getEffectiveWeight();
-			this.runWeight = this.runAction.getEffectiveWeight();
 
 			this.renderAnims();
 			
