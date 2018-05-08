@@ -83,8 +83,9 @@ class Scene {
 	 * Call the renderer
 	 */
 	render(){
-		this.renderer.sortObjects = false
-		this.composer.render(this.threeScene, this.camera);
+		// this.renderer.sortObjects = false
+		// console.log(this.threeScene, this.camera)
+		this.renderer.render(this.threeScene, this.camera);
 	}
 
 	/**	

@@ -3,6 +3,35 @@ import Mesh from "./../Mesh.js"
  * An element in a THREE.js scene.
  * Can be animated and hooked thanks to event
  */
+
+let vert = `
+varying vec2 vUv;
+
+void main() {
+    vUv = uv;
+    
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
+}`
+let frag = `
+uniform sampler2D texture;
+uniform vec2 textureRes;
+uniform vec2 resolution;
+
+ varying vec2 vUv;
+ 
+ void main() {
+     float imgRatio = textureRes.x/textureRes.y;
+     float screenRatio = resolution.x/resolution.y;
+     vec4 color = vec4(0.);
+     if(imgRatio > screenRatio) {
+         color = texture2D(texture, vec2(vUv.x, vUv.y));
+     } else {
+         color = texture2D(texture, vec2(vUv.x, vUv.y));
+     }
+
+     
+     gl_FragColor = color;
+ }`
  
 class Plane extends Mesh {
 	constructor(params){
@@ -12,38 +41,12 @@ class Plane extends Mesh {
         this.videoUrls = params.videoUrls
         this.alpha = params.alpha
 
-        let planeGeo = new THREE.PlaneBufferGeometry(1,1,1)
+        this.on("load", ()=>{
+            this.mesh.position.z = params.z
+        })
         
-        let vert = `
-        varying vec2 vUv;
-        
-        void main() {
-            vUv = uv;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
-        }`
-        let frag = `
-        uniform sampler2D texture;
-        uniform vec2 textureRes;
-        uniform vec2 resolution;
- 
-         varying vec2 vUv;
-         
-         void main() {
-             float imgRatio = textureRes.x/textureRes.y;
-             float screenRatio = resolution.x/resolution.y;
-             vec4 color = vec4(0.);
-             if(imgRatio > screenRatio) {
-                 color = texture2D(texture, vec2(vUv.x, vUv.y));
-             } else {
-                 color = texture2D(texture, vec2(vUv.x, vUv.y));
-             }
- 
-             
-             gl_FragColor = color;
-         }`
-
-		let planeMat = new THREE.ShaderMaterial({
+        this.geometry = new THREE.PlaneBufferGeometry(1,1,1)
+		this.material = new THREE.ShaderMaterial({
             vertexShader: vert,
             fragmentShader: frag,
             uniforms: {
@@ -62,37 +65,31 @@ class Plane extends Mesh {
                         y: window.innerHeight,
                     }
                 }
-
-
             },
             transparent: this.alpha
-
         })
-        this.mesh = new THREE.Mesh(planeGeo, planeMat)
-
-        this.mesh.position.z = params.z
+        
       
         if(this.imgUrls) {
-            console.log(this.imgUrls)
             this.loadTextureFromImg()
         }       
 
         if(this.videoUrls) {
             this.loadTextureFromVideo()
         }
-
-        this.mesh.name = "plane";
-
       
 	}
 
 
     onAttachToFragment() {
-        if(this.fit) {
+        if(this.fit && this.loaded ) {
             this.fitToScreen()
+        } 
+        if(!this.loaded) {
+            this.on("load", ()=>{
+                this.fitToScreen()
+            })
         }
-
-      
     }
 	/** 
 	 * Raf function. Can be override in all elements extending Mesh.
@@ -102,6 +99,12 @@ class Plane extends Mesh {
 
     }
 
+    createMesh(){
+        this.mesh = new THREE.Mesh(this.geometry, this.material)
+        
+        this.mesh.name = "plane";
+    }
+
     loadTextureFromVideo() {
         for(let i = 0; i < this.videoUrls.length; i++) {
             this.video = document.createElement('video')
@@ -109,30 +112,28 @@ class Plane extends Mesh {
             this.video.src = this.videoUrls[i]
 
             this.texture = new THREE.VideoTexture(this.video)
+            
 
             this.mesh.material.uniforms.texture.value = this.texture
         }
     }
 
     loadTextureFromImg() {
-      this.loader = new THREE.TextureLoader()
-
+        this.loader = new THREE.TextureLoader()
         this.loader.load(this.imgUrls[0], texture => {
-           
+            this.createMesh();
             this.texture = texture
             this.mesh.material.uniforms.texture.value = this.texture
+            console.log(this.mesh)
             this.mesh.material.uniforms.textureRes.value = {
                 x: this.texture.image.width,
                 y: this.texture.image.height
             }
-
-          
-        })
-        
-
-        console.log( this.mesh.material.uniforms)
-      
-        
+            this.material.uniforms.needsUpdate = true;
+            this.loaded = true;
+            this.display();
+            this.fitToScreen();
+        })    
     }
     
     fitToScreen() {

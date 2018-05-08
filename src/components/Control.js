@@ -57,8 +57,9 @@ class Control {
       if( view && target ) {
         view.classList.toggle("panel--hidden");
       }
-      
-      e.preventDefault();
+      if( !this.href ){
+        e.preventDefault();
+      }
     })
   }
 
