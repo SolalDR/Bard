@@ -40,11 +40,11 @@ class Animation {
 	
 		var value = this.from + (this.to - this.from) * this.advancement; 
 
-		if( this.onProgress) this.onProgress(this.advancement, value);
+		if( this.onProgress && !this.end ) this.onProgress(this.advancement, value);
 		if( this.advancement >= 1 ) {
 			this.end = true;
 			if( this.onFinish ){
-				this.onFinish(this);		
+				this.onFinish(this);	
 			}
 		}
 		

@@ -49,7 +49,7 @@ class Scene {
 
 		if( this.book.debug ){
 			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 0.005
+			this.controls.rotateSpeed = 0.03
 			this.controls.update();
 		}
 

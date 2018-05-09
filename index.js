@@ -40,10 +40,7 @@ var fragment = Bard.Fragment.build("StartFragment", {
         }
       })
     );
-
-    
-
-    
+          
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
@@ -86,9 +83,9 @@ var fragment = Bard.Fragment.build("StartFragment", {
           this.rocket.mesh.position.y = easeTime * 200.
           this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
           
-          // this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
+          this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
           // this.book.scene.camera.rotation.y = Math.cos(time*(Math.PI*100))/200
-          
+          console.log('ok')
         },
         onFinish: () => {
           this.fragmentTransitionOut()
@@ -123,7 +120,7 @@ var fragment = Bard.Fragment.build("StartFragment", {
 
 
     for (let i = 1; i < 25; i++) {
-      let planet = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/planets/planete'+i+'.png'], alpha: true, z: -6*(i), opacity:"0."}));
+      let planet = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/planets/planete'+i+'.png'], alpha: true, z: -0.5*(i), opacity:"0."}));
       this.planets.push(planet)
       
     }
@@ -135,7 +132,7 @@ var fragment = Bard.Fragment.build("StartFragment", {
           this.planets[i].anims.push(new Bard.Animation({
             duration: 1000,
             onProgress: (advancement, time) => {
-              var easeTime = Bard.Easing.easeInQeight(advancement)
+              var easeTime = Bard.Easing.easeOutQuint(advancement)
 
               this.planets[i].mesh.scale.set(this.planets[i].width+(50-(50*easeTime)),this.planets[i].height+(50-(50*easeTime)),1 )
                 this.planets[i].mesh.material.uniforms.opacity.value = ((advancement))
