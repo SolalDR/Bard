@@ -82,9 +82,7 @@ class Plane extends Mesh {
             depthWrite: false,
         })
         
-        if(params.opacity) {
-            console.log(params.opacity)
-            
+        if(params.opacity) {            
             this.material.uniforms.opacity.value = params.opacity 
         } else {
             this.material.uniforms.opacity.value = 1.

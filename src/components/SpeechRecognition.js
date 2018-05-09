@@ -16,18 +16,12 @@ class SpeechRecognition {
 			// Let's define a command. 
 			this.api.setLanguage('fr-FR')
 
-			this.api.addCommands({
-				'hello': ()=>{ console.log("bruh") }
-			})
-
-
 			window.annyang = this.api
-
 
 			this.api.addCallback('result', (phrases) => {
 				for(var i=0; i<phrases.length; i++){
 					for(var j=0; j<this.commands.length; j++){
-						if( phrases[i].match(this.commands[j].command)) {
+						if( phrases[i].match(this.commands[j].command) && this.commands[i].callback) {
 							this.commands[i].callback.call(this)
 						}
 					}

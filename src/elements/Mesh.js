@@ -34,11 +34,8 @@ class Mesh extends Element {
 		}
 		
 		if(config.position) {
-			this.screenSize = this.fragment.book.scene.camera.right*2
-			let x = (config.position.x*this.screenSize)+this.fragment.book.scene.camera.left
-			let y = (config.position.y*this.screenSize)
-		
-			this.mesh.position.set(x, y, config.position.z)
+			this.position = config.position		
+			this.mesh.position.set(config.position.x, config.position.y, config.position.z)
 		}	
 
 		if(config.rotation) {

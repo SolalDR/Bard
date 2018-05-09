@@ -95,8 +95,8 @@ class Fragment extends Event {
 	 * @param procedure Function : The Function to launched
 	 * @return boolean : Return true if action has been add
 	 */
-	addAction(name, procedure){
-		var action = new Action(name, this, procedure); 
+	addAction(name, procedure, args = {}){
+		var action = new Action(name, this, procedure, args); 
 		if( !this.actions[action.name] ){
 			this.actions[action.name] = action;
 			this.dispatch("action:add", { action: action })

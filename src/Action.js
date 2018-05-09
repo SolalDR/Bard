@@ -16,10 +16,8 @@ class Action {
 	 * @param args.id String : Unique id to represente the action in the fragment. 
 	 */
 
-	constructor(name, ctx, procedure, args){
+	constructor(name, ctx, procedure, args = {}){
 	
-		if(!args) var args = {};
-
 		this.once = args.once ? args.once : false; 
 		this.context = ctx;
 		this.procedure = procedure;
@@ -46,8 +44,7 @@ class Action {
 	 * Run action
 	 */
 	execute(){
-	
-		if( this.once && this.count < 0 || this.once == false) {
+		if( this.once && this.count <= 0 || this.once == false) {
 			this.count++; 
 			this.procedure.call(this.context, {
 				action: this, 

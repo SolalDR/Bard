@@ -14,18 +14,18 @@ var fragment = Bard.Fragment.build("StartFragment", {
     /**
      * SOUNDS
      */
-    // var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
-    // var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket_launch_start.mp3");
-    // forest.on("load", () => {
-    //   console.log("Load"),
-    //   forest.start();
-    // })
+    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
+    var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket-sound.wav");
+    forest.on("load", () => {
+      forest.start();
+    })
 
     /**
      * ELEMENTS
      */
     // this.char = this.addElement(new Bard.CharacterElement({}))
-    
+    this.screenSize = this.book.scene.camera.right*2
+
     this.rocket = this.addElement( 
       Bard.MeshElement.fromObj({
         path:"./src/assets/obj/fusee-plate5.obj",
@@ -33,19 +33,20 @@ var fragment = Bard.Fragment.build("StartFragment", {
         config: {
           scale:3.,
           position: {
-            x: 0.4,
-            y: 0.03,
+            x: (0.4*this.screenSize)+this.book.scene.camera.left,
+            y: 0.03*this.screenSize,
             z: -3
           }
         }
       })
     );
-          
+
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
           "Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>",
           "Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>.",
+          "C'est parti ! Nos héros partent à la découverte de la planète route !"
         ],
         align: "bottom-left",
         position: { x: "40px", y: "-20px" },
@@ -55,17 +56,17 @@ var fragment = Bard.Fragment.build("StartFragment", {
     );
     this.planes = []
 
-    this.plane2 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan3.png'], alpha: true, z:-20}));
+    this.plane2 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan3.png'], alpha: true, z:-20}));
     this.planes.push(this.plane2)
-    this.plane3 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan2.png'], alpha: true, z:-5}));
+    this.plane3 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan2.png'], alpha: true, z:-5}));
     this.planes.push(this.plane3)
-    this.plane = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan1.png'], alpha: true, z:0}));
+    this.plane = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan1.png'], alpha: true, z:0}));
     this.planes.push(this.plane)
 
     this.clouds = []
 
     for (let i = 1; i < 5; i++) {
-      let cloud = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
+      let cloud = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/clouds/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
       cloud.x = (Math.random()*60 ) -30
       this.clouds.push(cloud)
       this.planes.push(cloud)
@@ -79,19 +80,20 @@ var fragment = Bard.Fragment.build("StartFragment", {
         duration: 6000,
         onProgress: (advancement, time) => {
           var easeTime = Bard.Easing.easeInQeight(advancement)
-          this.rocket.mesh.position.x = (Math.sin(easeTime) * 30.)
-          this.rocket.mesh.position.y = easeTime * 200.
+          this.rocket.mesh.position.x = (Math.sin(easeTime) * 30.) + this.rocket.position.x
+          this.rocket.mesh.position.y = easeTime * 200. + this.rocket.position.y
           this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
           
           this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
           // this.book.scene.camera.rotation.y = Math.cos(time*(Math.PI*100))/200
-          console.log('ok')
         },
         onFinish: () => {
           this.fragmentTransitionOut()
         }
       }))
-     
+      rocketLaunch.start()
+    }, {
+      once: true
     })
 
     this.addAction("transitionOut", (e) => {
@@ -111,6 +113,7 @@ var fragment = Bard.Fragment.build("StartFragment", {
         },
         onFinish:() => {
           this.fragmentTransitionIn()
+          text.next()
         }
       }))
       }
