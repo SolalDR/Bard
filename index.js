@@ -56,17 +56,17 @@ var fragment = Bard.Fragment.build("StartFragment", {
     );
     this.planes = []
 
-    this.plane2 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan3.png'], alpha: true, z:-20}));
+    this.plane2 = this.addElement(new Bard.PlaneElement({imgUrls : ['./examples/images/plans/scene1-plan3.png'], alpha: true, z:-20}));
     this.planes.push(this.plane2)
-    this.plane3 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan2.png'], alpha: true, z:-5}));
+    this.plane3 = this.addElement(new Bard.PlaneElement({imgUrls : ['./examples/images/plans/scene1-plan2.png'], alpha: true, z:-5}));
     this.planes.push(this.plane3)
-    this.plane = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/plans/scene1-plan1.png'], alpha: true, z:0}));
+    this.plane = this.addElement(new Bard.PlaneElement({imgUrls : ['./examples/images/plans/scene1-plan1.png'], alpha: true, z:0}));
     this.planes.push(this.plane)
 
     this.clouds = []
 
     for (let i = 1; i < 5; i++) {
-      let cloud = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/clouds/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
+      let cloud = this.addElement(new Bard.PlaneElement({imgUrls : ['./examples/images/clouds/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
       cloud.x = (Math.random()*60 ) -30
       this.clouds.push(cloud)
       this.planes.push(cloud)
@@ -123,7 +123,7 @@ var fragment = Bard.Fragment.build("StartFragment", {
 
 
     for (let i = 1; i < 25; i++) {
-      let planet = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/planets/planete'+i+'.png'], alpha: true, z: -0.5*(i), opacity:"0."}));
+      let planet = this.addElement(new Bard.PlaneElement({imgUrls : ['./examples/images/planets/planete'+i+'.png'], alpha: true, z: -0.5*(i), opacity:"0."}));
       this.planets.push(planet)
       
     }
