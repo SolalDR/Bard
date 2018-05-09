@@ -16,6 +16,7 @@ let frag = `
 uniform sampler2D texture;
 uniform vec2 textureRes;
 uniform vec2 resolution;
+uniform float opacity; 
 
  varying vec2 vUv;
  
@@ -30,7 +31,7 @@ uniform vec2 resolution;
      }
 
      
-     gl_FragColor = color;
+     gl_FragColor = vec4(color.rgb, color.a*opacity);
  }`
  
 class Plane extends Mesh {
@@ -40,10 +41,15 @@ class Plane extends Mesh {
         this.imgUrls = params.imgUrls
         this.videoUrls = params.videoUrls
         this.alpha = params.alpha
+        this.z = params.z
+        this.position = {
+            x: null,
+            y: null,
+            z: params.z
+        }
 
-        this.on("load", ()=>{
-            this.mesh.position.z = params.z
-        })
+      
+       
         
         this.geometry = new THREE.PlaneBufferGeometry(1,1,1)
 		this.material = new THREE.ShaderMaterial({
@@ -64,11 +70,25 @@ class Plane extends Mesh {
                         x:window.innerWidth,
                         y: window.innerHeight,
                     }
+                },
+                opacity : {
+                    type:'f',
+                    value : null
                 }
             },
-            transparent: this.alpha
+            
+            transparent: this.alpha,
+            depthTest:false,
+            depthWrite: false,
         })
         
+        if(params.opacity) {
+            console.log(params.opacity)
+            
+            this.material.uniforms.opacity.value = params.opacity 
+        } else {
+            this.material.uniforms.opacity.value = 1.
+        }
       
         if(this.imgUrls) {
             this.loadTextureFromImg()
@@ -95,13 +115,10 @@ class Plane extends Mesh {
 	 * Raf function. Can be override in all elements extending Mesh.
 	 * @param clock (Clock) : The general clock of fragment   
 	 */
-	render(clock){
 
-    }
-
-    createMesh(){
+    createMesh(params){
         this.mesh = new THREE.Mesh(this.geometry, this.material)
-        
+        this.mesh.position.z = this.z
         this.mesh.name = "plane";
     }
 
@@ -124,7 +141,7 @@ class Plane extends Mesh {
             this.createMesh();
             this.texture = texture
             this.mesh.material.uniforms.texture.value = this.texture
-            console.log(this.mesh)
+
             this.mesh.material.uniforms.textureRes.value = {
                 x: this.texture.image.width,
                 y: this.texture.image.height
@@ -132,24 +149,26 @@ class Plane extends Mesh {
             this.material.uniforms.needsUpdate = true;
             this.loaded = true;
             this.display();
-            this.fitToScreen();
+            
+            let imgRatio = this.texture.image.width/this.texture.image.height
+            this.fitToScreen(imgRatio);
         })    
     }
     
-    fitToScreen() {
+    fitToScreen(imgRatio) {
         let camera = this.fragment.book.scene.camera
         var vFOV = camera.fov * Math.PI / 180;
         // Get the visible height 
-        console.log(camera.top)
         let distanceOfPlaneFromCamera = camera.position.z - this.mesh.position.z
-        var height =  camera.top  +8;
+        this.height =  camera.top  +8;
 
         // If we want a width that follows the aspect ratio of the camera, then get the aspect ratio and multiply by the height.
         var aspect = window.innerWidth / window.innerHeight;
-        var width = height * aspect;
-        height = width * 2
-        this.mesh.scale.set(width, height, 1)
-        this.mesh.position.y = (height/2)-8 
+        this.width = this.height * aspect;
+        this.height = this.width / imgRatio
+        this.mesh.scale.set(this.width, this.height, 1)
+        this.position.y = (this.height/2)-8 
+        this.mesh.position.y = (this.height/2)-8 
     }
 }
 

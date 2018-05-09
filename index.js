@@ -14,12 +14,12 @@ var fragment = Bard.Fragment.build("StartFragment", {
     /**
      * SOUNDS
      */
-    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
-    var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket_launch_start.mp3");
-    forest.on("load", () => {
-      console.log("Load"),
-      forest.start();
-    })
+    // var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
+    // var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket_launch_start.mp3");
+    // forest.on("load", () => {
+    //   console.log("Load"),
+    //   forest.start();
+    // })
 
     /**
      * ELEMENTS
@@ -42,6 +42,8 @@ var fragment = Bard.Fragment.build("StartFragment", {
     );
 
     
+
+    
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
@@ -54,10 +56,23 @@ var fragment = Bard.Fragment.build("StartFragment", {
         color: '#ffffff'
       })
     );
+    this.planes = []
 
     this.plane2 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan3.png'], alpha: true, z:-20}));
+    this.planes.push(this.plane2)
     this.plane3 = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan2.png'], alpha: true, z:-5}));
+    this.planes.push(this.plane3)
     this.plane = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/scene1-plan1.png'], alpha: true, z:0}));
+    this.planes.push(this.plane)
+
+    this.clouds = []
+
+    for (let i = 1; i < 5; i++) {
+      let cloud = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
+      cloud.x = (Math.random()*60 ) -30
+      this.clouds.push(cloud)
+      this.planes.push(cloud)
+    }
 
     /**
      * ACTIONS
@@ -69,13 +84,72 @@ var fragment = Bard.Fragment.build("StartFragment", {
           var easeTime = Bard.Easing.easeInQeight(advancement)
           this.rocket.mesh.position.x = (Math.sin(easeTime) * 30.)
           this.rocket.mesh.position.y = easeTime * 200.
- 
-          this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
-          this.book.scene.camera.rotation.y = Math.cos(time*(Math.PI*100))/200
+          this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
+          
+          // this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
+          // this.book.scene.camera.rotation.y = Math.cos(time*(Math.PI*100))/200
+          
+        },
+        onFinish: () => {
+          this.fragmentTransitionOut()
         }
       }))
-      rocketLaunch.start();
+     
     })
+
+    this.addAction("transitionOut", (e) => {
+     for (let i = 0; i < this.planes.length; i++) {
+     
+      this.planes[i].anims.push(new Bard.Animation({
+        duration: 2000,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInQeight(advancement)
+          // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+          this.planes[i].mesh.scale.x = ((easeTime*(i+1))*(100+(20*i)))+this.planes[i].width
+          this.planes[i].mesh.scale.y = ((easeTime*(i+1))*(100+(20*i)))+this.planes[i].height
+
+          if(advancement > 0.5) {
+            this.planes[i].mesh.material.uniforms.opacity.value = 1-((advancement-0.5)*2.)
+          }
+        },
+        onFinish:() => {
+          this.fragmentTransitionIn()
+        }
+      }))
+      }
+    })
+
+    this.planets = []
+
+
+    for (let i = 1; i < 25; i++) {
+      let planet = this.addElement(new Bard.PlaneElement({imgUrls : ['./src/assets/planets/planete'+i+'.png'], alpha: true, z: -6*(i), opacity:"0."}));
+      this.planets.push(planet)
+      
+    }
+
+    this.addAction("transitionIn", (e) => {
+      for (let i = 0; i < this.planets.length; i++) {
+      
+        setTimeout(()=> {
+          this.planets[i].anims.push(new Bard.Animation({
+            duration: 1000,
+            onProgress: (advancement, time) => {
+              var easeTime = Bard.Easing.easeInQeight(advancement)
+
+              this.planets[i].mesh.scale.set(this.planets[i].width+(50-(50*easeTime)),this.planets[i].height+(50-(50*easeTime)),1 )
+                this.planets[i].mesh.material.uniforms.opacity.value = ((advancement))
+             
+            },
+            onFinish:() => {
+            }
+          }))
+        }, i*20)
+       
+       }
+     })
+ 
+    
 
     this.addAction("next",  e => text.next())
 
@@ -87,6 +161,23 @@ var fragment = Bard.Fragment.build("StartFragment", {
     this.afterStart();  
   },
 
+  fragmentTransitionOut: function() {
+    if(!this.fragmentEnd) {
+      this.fragmentEnd = true
+      
+      this.executeAction('transitionOut')
+
+    }
+  },
+
+  fragmentTransitionIn: function() {
+    if(!this.fragmentNew) {
+      this.fragmentNew = true
+
+      this.executeAction('transitionIn')
+    }
+  },
+
   render: function() {
     this.beforeRender();
     
@@ -96,6 +187,13 @@ var fragment = Bard.Fragment.build("StartFragment", {
       }
     }
 
+    if(this.clouds.length ) {
+      for (let i = 0; i < this.clouds.length; i++) {
+        if(this.clouds[i].mesh) {
+          this.clouds[i].mesh.position.x = (Math.sin(this.clock.elapsed/(2000.*((i*0.5)+1)))*40)+this.clouds[i].x
+        }
+      }
+    }
     this.afterRender();
   },
 

@@ -49,6 +49,7 @@ class Scene {
 
 		if( this.book.debug ){
 			this.controls = new OrbitControls( this.camera );
+			this.controls.rotateSpeed = 0.005
 			this.controls.update();
 		}
 
@@ -83,8 +84,7 @@ class Scene {
 	 * Call the renderer
 	 */
 	render(){
-		// this.renderer.sortObjects = false
-		// console.log(this.threeScene, this.camera)
+		this.renderer.sortObjects = false
 		this.renderer.render(this.threeScene, this.camera);
 	}
 

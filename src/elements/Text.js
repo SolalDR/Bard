@@ -99,6 +99,7 @@ class Text extends Element {
 			(function(rank){
 				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
 					self.fragment.executeAction(self.current.speechs[rank].action)
+					
 				});
 			})(i)
 		}

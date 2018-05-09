@@ -34,10 +34,10 @@ class Animation {
 			this.isStart = true; 
 			if( this.onStart) this.onStart();
 		}
-
+		
 		this.current += delta;
 		this.advancement = this.timingFunction(Math.min(1., this.current / this.duration))
-
+	
 		var value = this.from + (this.to - this.from) * this.advancement; 
 
 		if( this.onProgress) this.onProgress(this.advancement, value);
