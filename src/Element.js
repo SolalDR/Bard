@@ -14,6 +14,9 @@ class Element extends Event {
 	 */
 	static get AVAILABLES_TYPES() { return ["text", "image", "sound", "obj3D", "obj2D", "svg"]; }
 
+	static randomName() {
+		return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 14);
+	}
 
 	/**
 	 * @constructor

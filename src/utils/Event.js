@@ -21,7 +21,7 @@ class Event {
     return exist;
   }
 
-  dispatch(e, args){
+  dispatch(e, args = {}){
 
     var list = e instanceof Array ? e : [e];
     for(var j=0; j<list.length; j++){

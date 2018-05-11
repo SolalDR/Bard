@@ -190,6 +190,9 @@ class Text extends Element {
 	
 	hide(){
 		this.el.classList.add("text--hide");
+		setTimeout(()=>{
+			this.el.parentNode.removeChild(this.el);
+		}, 500)
 	}
 
 

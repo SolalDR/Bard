@@ -11,11 +11,17 @@ import Animation from "./../utils/Animation.js"
 class Mesh extends Element {
 	constructor(params){
 		super(params);
-		this.type = "obj3D"
-		this.eventsList = ["load"]
-
+		this.type = "obj3D";
+		this.eventsList = ["load"];
 		this.fragment = null; // Lateinit
-		this.group = params.group;
+		this.group = params.group ? params.group : "main";
+
+		if( params.name ){
+			this.name = params.name
+		} else {
+			this.name = Element.randomName();
+			console.warn("Name is randomly : "+this.name);
+		}
 
 		if( params.mesh ){
 			this.mesh = params.mesh;
@@ -28,6 +34,7 @@ class Mesh extends Element {
 
 	setMesh(mesh, config) {
 		this.mesh = mesh; 
+		this.mesh.name = this.name;
 		// this.mesh.material.side = THREE.DoubleSide
 		if(config.scale) {
 			this.mesh.scale.set(config.scale, config.scale, config.scale)
@@ -156,7 +163,11 @@ class Mesh extends Element {
 	 * Minimum required to detach an element to the scene
 	 */ 
 	hide(){
-
+		if( this.fragment && this.fragment.book && this.fragment.book.scene ){
+			this.fragment.book.scene.removeElement(this); 
+			return;
+		}
+		console.warn("Book not started. Cannot remove elements to fragment");
 	}
 
 

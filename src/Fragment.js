@@ -4,6 +4,7 @@ import SpeechRecognition from "./components/SpeechRecognition.js"
 import SoundManager from "./components/SoundManager.js"
 import AlertManager from "./components/AlertManager.js";
 import Event from "./utils/Event.js";
+import AsyncScriptLoad from "./utils/AsyncScriptLoad.js";
 
 /**
  * Represent a fragment of history
@@ -11,16 +12,20 @@ import Event from "./utils/Event.js";
 
 class Fragment extends Event {
 	
-  static build(name, protos) {
+  static build(name, protos, params = {}) {
     return new function() {
 
       var fragment = new Fragment();
       fragment.prototype = Object.create(Fragment.prototype);
+
       
       for(var i in protos){
         fragment.__proto__[i] = protos[i];
       }
       
+      if( params.id ) fragment.id = params.id;
+      if( params.children ) fragment.childrenLinks = params.children
+
       return fragment;
 
     };
@@ -28,11 +33,15 @@ class Fragment extends Event {
 
 	constructor(){
 		super();
-		this.eventsList = ["action:add", "action:execute", "action:remove", "element:add", "element:remove", "start"]
+		this.id = null;
+		this.type = "Fragment";
+		this.eventsList = ["action:add", "action:execute", "action:remove", "element:add", "element:remove", "start", "beforeLeave", "leave"];
 		this.book = null;
 		this.clock = new Clock();
 		this.elements = [];
 		this.actions = {};
+		this.children = [];
+		this.childrenLinks = [];
 		this.speechRecognition = null;
 	}
 
@@ -59,10 +68,8 @@ class Fragment extends Event {
 	 * Post raf 
 	 */
 	afterRender(preventDefault){
-
 		this.book.scene.render();
 		if( preventDefault !== true ){
-
 			for(var i=0; i<this.elements.length; i++){
 				if( this.elements[i].render) {
 					this.elements[i].render(this.clock);
@@ -76,7 +83,8 @@ class Fragment extends Event {
 	 * Add a speech recognition, the speechRecognition will be automatically passed to Text 
 	 */
 	addSpeechRecognition() {
-		this.speechRecognition = new SpeechRecognition();
+		if( !this.book.speechRecognition ) this.book.speechRecognition = new SpeechRecognition();
+		this.speechRecognition = this.book.speechRecognition;
 		if(!this.speechRecognition.loaded) {
 			AlertManager.error("La reconnaissance vocale ne fonctionne pas sur ce navigateur. Privilégiez un navigateur comme Google Chrome.")
 		}
@@ -86,7 +94,8 @@ class Fragment extends Event {
 	 * Add SoundManager
 	 */
 	addSoundManager() {
-		this.soundManager = new SoundManager();
+		if( !this.book.soundManager ) this.book.soundManager = new SoundManager();
+		this.soundManager = this.book.soundManager;
 	}
 
 	/**
@@ -132,7 +141,6 @@ class Fragment extends Event {
 		} else {
 			console.warn(`Action with name "${name}" doesn't exist.`);
 		}
-			
 	}
 
 
@@ -143,7 +151,6 @@ class Fragment extends Event {
 	addElement(element){
 		element.fragment = this;
 		this.elements.push(element);
-
 		element.onAttachToFragment();
 		this.dispatch("element:add", { element: element })
 		return element;
@@ -154,16 +161,31 @@ class Fragment extends Event {
 	 * @param element Element
 	 */
 	removeElement(element){
+		console.log("Element remove", element.name)
 		if( this.elements.indexOf(element) >= 0) {
-			
-			element.hide();
-			this.dispatch("element:remove", { element: element })
-			for(var i=0; i<this.elements.length; i++){
-				this.elements.splice(i, 1);
-			}
+			if( element.hide ) element.hide();
+			this.dispatch("element:remove", { element: element });
+			this.elements.splice(this.elements.indexOf(element), 1)
 		}
 	}
 
+	stop() {
+		console.log("------- Stop Fragment process -------");
+
+		this.elements.forEach(element => {
+			if( element.hide ) element.hide();
+		})
+		this.elements = [];
+
+		console.log("Stop raf");
+		cancelAnimationFrame(this.raf);
+	}
+
+	runChild(i) {
+		if( this.children[i] ){
+			this.book.currentFragment = this.children[i];
+		}
+	}
 }
 
 

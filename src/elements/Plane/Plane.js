@@ -46,10 +46,7 @@ class Plane extends Mesh {
             x: null,
             y: null,
             z: params.z
-        }
-
-      
-       
+        }    
         
         this.geometry = new THREE.PlaneBufferGeometry(1,1,1)
 		this.material = new THREE.ShaderMaterial({
@@ -82,7 +79,7 @@ class Plane extends Mesh {
             depthWrite: false,
         })
         
-        if(params.opacity) {            
+        if(params.opacity >= 0) {            
             this.material.uniforms.opacity.value = params.opacity 
         } else {
             this.material.uniforms.opacity.value = 1.
@@ -117,7 +114,7 @@ class Plane extends Mesh {
     createMesh(params){
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.position.z = this.z
-        this.mesh.name = "plane";
+        this.mesh.name = this.name;
     }
 
     loadTextureFromVideo() {

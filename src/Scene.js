@@ -99,6 +99,10 @@ class Scene {
 		this.fgGroup = new THREE.Group();
 		this.mainGroup = new THREE.Group();
 
+		this.bgGroup.name = "background";
+		this.fgGroup.name = "foreground";
+		this.mainGroup.name = "main";
+
 		this.bgGroup.position.y = -5
 		this.mainGroup.position.y = 0
 		this.fgGroup.position.y = 1
@@ -139,10 +143,11 @@ class Scene {
 	 * @param element : Element
 	 */
 	removeElement(element){
+		console.log(element, element.group, element.name);
 		switch( element.group ){
-			case "background" : this.bgGroup.remove(element.name); break;
-			case "foreground" : this.fgGroup.remove(element.name); break;
-			default: this.mainGroup.remove(element.name);
+			case "background" : this.bgGroup.remove(element.mesh); break;
+			case "foreground" : this.fgGroup.remove(element.mesh); break;
+			default: this.mainGroup.remove(element.mesh);
 		}
 	}
 
