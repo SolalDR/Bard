@@ -14,6 +14,7 @@ class Floor extends Mesh {
 		this.mesh = new THREE.Mesh(floorGeo, floorMat)
 		this.mesh.rotation.set(-Math.PI / 2, 0, 0)
 		this.mesh.name = "floor";
+		this.loaded = true;
 	}
 
 	/** 

@@ -24,6 +24,7 @@ class Text extends Element {
 
 		super(params);
 		this.eventsList = ["update", "end"]
+		this.loaded = true;
 		this.currentNode = null;
 		this.speechRecognition = params.speechRecognition ? params.speechRecognition : null
 		this.type = "text";
@@ -34,7 +35,7 @@ class Text extends Element {
 		this.position = params.position ? params.position : {x: 0, y: 0};
 		this.dimension = params.dimension ? params.dimension : {x: "100%", y: "auto"};
 		this.color = params.color ? params.color : "#000000"
-
+		
 		this.nodes = [];
 		for(var i=0; i<params.nodes.length; i++) {
 			this.nodes.push(new TextNode({
@@ -74,7 +75,7 @@ class Text extends Element {
 	/**
 	 *	Create the html text element
 	 */
-	initTextElement(){
+	init(){
 		this.el = document.createElement("div");
 		this.el.classList.add("text");
 		
@@ -203,7 +204,9 @@ class Text extends Element {
 	 onAttachToFragment() {
 	 	if(this.fragment && this.fragment.speechRecognition) {
 	 		this.speechRecognition = this.fragment.speechRecognition;
-	 		this.initTextElement();
+	 		this.fragment.on("start", ()=>{
+	 			this.init();
+	 		})
 	 	}
 	 }
 }

@@ -6,7 +6,7 @@ export default class Fragment2 extends Bard.Fragment {
     super();
   }
 
-  start() {    
+  init() {    
     var self = this;
 
     this.addSpeechRecognition();
@@ -17,9 +17,6 @@ export default class Fragment2 extends Bard.Fragment {
      */
     var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
     var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket-sound.wav");
-    forest.on("load", () => {
-      forest.start();
-    })
 
     /**
      * ELEMENTS
@@ -100,19 +97,22 @@ export default class Fragment2 extends Bard.Fragment {
           onFinish: this.executeAction.bind(this, "rocket-fly")
         }))
       })
-     })
+    })
 
-    
-    for(var i=0; i<this.elements.length; i++)
-      this.elements[i].display();
+    this.on("start", ()=>{
+      
+      for(var i=0; i<this.elements.length; i++)
+        this.elements[i].display();
 
-    this.initListeners();
+      this.initListeners();
 
-    this.executeAction("planet-appear");
+      this.executeAction("planet-appear");
+      forest.on("load", () => {
+        forest.start();
+      })
+    })
 
-    this.afterStart();
   }
-
 
 
   render() {

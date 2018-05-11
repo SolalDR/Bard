@@ -21,6 +21,7 @@ class Book extends Event {
 		this.title = null;
 		this.debug = params && params.debug === true ? true : false;  
 		this.navigator = new Navigator(this);
+		this.scene = new Scene(this);
 	}
 
 	addFragment(fragment){
@@ -28,6 +29,11 @@ class Book extends Event {
 		this.dispatch("fragment:add", { fragment: fragment });
 		this.fragments.push(fragment);
 		this.mapChildren(fragment);
+
+		if( this.scene ){
+			fragment.init();	
+		}
+		
 	}
 
 	mapChildren(fragment) {
@@ -49,7 +55,7 @@ class Book extends Event {
 			}	
 		}
 		
-		this._currentFragment = current; 
+		this._currentFragment = current;
 		this._currentFragment.start();
 
 		this.dispatch("fragment:start", current);
@@ -59,11 +65,8 @@ class Book extends Event {
 		return this._currentFragment;
 	}
 
-	start(fragment = null){
-		this.scene = new Scene(this);
-		
-		this.currentFragment = fragment ? fragment : this.fragments[0]
-
+	start(fragment = null){		
+		this.currentFragment = this.fragments[0];
 		this.dispatch("start", this.currentFragment);
 	}
 

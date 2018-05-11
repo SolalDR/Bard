@@ -125,7 +125,9 @@ class Scene {
 		if(!element.mesh){
 			console.warn("Element not loaded yet, it will be append to scene later.")
 			element.on("load", ()=>{
-				this.addElement(element)
+				// element.fragment.on("load", ()=>{
+					this.addElement(element)	
+				// })
 			})
 			return;
 		}

@@ -13,6 +13,7 @@ class Space extends Mesh {
 		this.material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
 		this.mesh = new THREE.Mesh( this.geometry, this.material );
 		this.mesh.name = "space";
+		this.loaded = true;
 	}
 
 	/** 

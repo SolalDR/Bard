@@ -6,7 +6,7 @@ export default class Fragment1 extends Bard.Fragment {
     super()
   }
 
-  start() {
+  init() {
 
     this.addSpeechRecognition();
     this.addSoundManager();
@@ -16,9 +16,6 @@ export default class Fragment1 extends Bard.Fragment {
      */
     var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
     var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket-sound.wav");
-    forest.on("load", () => {
-      forest.start();
-    })
 
     /**
      * ELEMENTS
@@ -86,10 +83,9 @@ export default class Fragment1 extends Bard.Fragment {
           this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
           
           this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
-          // this.book.scene.camera.rotation.y = Math.cos(time*(Math.PI*100))/200
         },
         onFinish: () => {
-          this.fragmentTransitionOut()
+          this.executeAction('transitionOut');
         }
       }))
       rocketLaunch.start()
@@ -121,21 +117,16 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.addAction("next",  e => text.next())
 
-    for(var i=0; i<this.elements.length; i++)
-      this.elements[i].display();
+    this.on("start", ()=>{
+      for(var i=0; i<this.elements.length; i++)
+        this.elements[i].display();
 
-    this.initListeners()
-    
-    this.afterStart();
-  }
+      forest.on("load", () => {
+        forest.start();
+      })
 
-  fragmentTransitionOut() {
-    if(!this.fragmentEnd) {
-      this.fragmentEnd = true
-      
-      this.executeAction('transitionOut')
-
-    }
+      this.initListeners();
+    })
   }
 
   render() {

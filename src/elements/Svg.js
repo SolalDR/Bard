@@ -21,6 +21,8 @@ class Svg extends Element {
 		this.dimension = params.dimension ? params.dimension : {x: 0, y: 0};
 		this.position = params.position ? params.position : {x: 0, y: 0};
 
+		this.loaded = true;
+		
 		this.initSVGElement()
 	}
 

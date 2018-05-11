@@ -12,6 +12,7 @@ import AsyncScriptLoad from "./utils/AsyncScriptLoad.js";
 
 class Fragment extends Event {
 	
+  
   static build(name, protos, params = {}) {
     return new function() {
 
@@ -27,32 +28,63 @@ class Fragment extends Event {
       if( params.children ) fragment.childrenLinks = params.children
 
       return fragment;
-
     };
   }
 
+
 	constructor(){
 		super();
+
+		// Attributes 
 		this.id = null;
 		this.type = "Fragment";
-		this.eventsList = ["action:add", "action:execute", "action:remove", "element:add", "element:remove", "start", "beforeLeave", "leave"];
+		this.eventsList = ["action:add", "action:execute", "action:remove", "element:add", "element:remove", "start", "load", "beforeLeave", "stop"];
 		this.book = null;
-		this.clock = new Clock();
+
+		// Components
+		this.clock = null; // Setup when starting
 		this.elements = [];
 		this.actions = {};
 		this.children = [];
 		this.childrenLinks = [];
 		this.speechRecognition = null;
+
+		// States
+		this.loaded = false;
+		this.started = false;
 	}
+
+
+	isLoad() {
+		this.elements.forEach(e => { 
+			if(e.hasEvent("load") && !e.loaded) return false;
+		})
+		this.loaded = true;
+		this.dispatch("load")
+		return true;
+	}
+
+
+	start() {
+		if( !this.isLoad() ){
+			this.on("load", this.start.bind(this))
+			console.warn("Fragment is not loaded yet");
+			return; 
+		}
+		this.afterStart();
+	}
+
 
 	/**
 	 * Overrided method. Create the first render and add element to Scene
 	 */
 	afterStart(){
+		this.dispatch("start")
+		this.clock = new Clock();
 		this.render();
 		this.time = 0;
-		this.dispatch("start", {})
 	}
+
 
 	/**
 	 * @override 
@@ -153,6 +185,14 @@ class Fragment extends Event {
 		this.elements.push(element);
 		element.onAttachToFragment();
 		this.dispatch("element:add", { element: element })
+
+		if(element.hasEvent("load")) {
+			element.on("load", ()=> {
+				if( this.isLoad ) {
+					this.dispatch("load");
+				}
+			})
+		}
 		return element;
 	}
 
@@ -170,15 +210,12 @@ class Fragment extends Event {
 	}
 
 	stop() {
-		console.log("------- Stop Fragment process -------");
-
-		this.elements.forEach(element => {
-			if( element.hide ) element.hide();
-		})
+		this.elements.forEach(element => { if( element.hide ) element.hide(); })
 		this.elements = [];
 
-		console.log("Stop raf");
 		cancelAnimationFrame(this.raf);
+
+		this.dispatch("stop");
 	}
 
 	runChild(i) {

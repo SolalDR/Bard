@@ -9,6 +9,10 @@ class Event {
     this.eventsList = [];
   }
 
+  hasEvent(event) {
+    return this.eventsList.indexOf(event) >= 0 ? true : false;
+  }
+
   eventExist(event, callback){
     var exist = false;
     if( this.events[event] ) {

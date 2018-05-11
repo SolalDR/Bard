@@ -6,7 +6,7 @@ class Animation {
 	constructor(args){
 
 		this.start = false;
-		this.end = false;
+		this.ended = false;
 
 		this.current = 0 
 
@@ -30,6 +30,7 @@ class Animation {
 
 
 	render(delta){
+		if( this.ended ) return;
 		if( !this.isStart ){
 			this.isStart = true; 
 			if( this.onStart) this.onStart();
@@ -40,9 +41,9 @@ class Animation {
 	
 		var value = this.from + (this.to - this.from) * this.advancement; 
 
-		if( this.onProgress && !this.end ) this.onProgress(this.advancement, value);
+		if( this.onProgress ) this.onProgress(this.advancement, value);
 		if( this.advancement >= 1 ) {
-			this.end = true;
+			this.ended = true;
 			if( this.onFinish ){
 				this.onFinish(this);	
 			}
