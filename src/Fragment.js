@@ -12,14 +12,19 @@ import AsyncScriptLoad from "./utils/AsyncScriptLoad.js";
 
 class Fragment extends Event {
 	
-  
+  /**
+   * Static method to construct a new fragment
+   * Don't used it anymore, use ES6 Syntax instead
+   * @param {String} name
+   * @param {Object} protos : A prototype to defined the object
+   * @param {Object} params : Defined children
+   */
   static build(name, protos, params = {}) {
     return new function() {
 
       var fragment = new Fragment();
       fragment.prototype = Object.create(Fragment.prototype);
 
-      
       for(var i in protos){
         fragment.__proto__[i] = protos[i];
       }
@@ -31,7 +36,9 @@ class Fragment extends Event {
     };
   }
 
-
+  /**
+   * @constructor
+   */
 	constructor(){
 		super();
 
@@ -52,19 +59,34 @@ class Fragment extends Event {
 		// States
 		this.loaded = false;
 		this.started = false;
-	}
-
-
+  }
+  
+  /**
+   * Test if all elements are loaded, if true dispatch load event
+   * @returns boolean
+   */
 	isLoad() {
 		this.elements.forEach(e => { 
 			if(e.hasEvent("load") && !e.loaded) return false;
 		})
 		this.loaded = true;
-		this.dispatch("load")
+		this.dispatch("load");
 		return true;
 	}
 
+  /**
+   * Hide all elements, cancel raf & dispatch stop event
+   */
+	stop() {
+		this.elements.forEach(element => { if( element.hide ) element.hide(); })
+		this.elements = [];
+		cancelAnimationFrame(this.raf);
+		this.dispatch("stop");
+	}
 
+  /**
+   * If fragment is loaded, start the fragment  
+   */
 	start() {
 		if( !this.isLoad() ){
 			this.on("load", this.start.bind(this))
@@ -74,9 +96,8 @@ class Fragment extends Event {
 		this.afterStart();
 	}
 
-
 	/**
-	 * Overrided method. Create the first render and add element to Scene
+	 * Create the first render
 	 */
 	afterStart(){
 		this.dispatch("start")
@@ -85,10 +106,9 @@ class Fragment extends Event {
 		this.time = 0;
 	}
 
-
 	/**
-	 * @override 
-	 * Raf 
+	 * Manage raf & clock
+   * Launched before each render  
 	 */
 	beforeRender(){
 		this.raf = requestAnimationFrame( this.render.bind(this) );
@@ -96,7 +116,6 @@ class Fragment extends Event {
 	}
 
 	/**
-	 * @override 
 	 * Post raf 
 	 */
 	afterRender(preventDefault){
@@ -108,11 +127,10 @@ class Fragment extends Event {
 				}
 			}
 		}
-		
 	}
 
 	/**
-	 * Add a speech recognition, the speechRecognition will be automatically passed to Text 
+	 * Add a speech recognition
 	 */
 	addSpeechRecognition() {
 		if( !this.book.speechRecognition ) this.book.speechRecognition = new SpeechRecognition();
@@ -161,7 +179,6 @@ class Fragment extends Event {
 		return false; 
 	}
 
-
 	/**
 	 * Run action 
 	 * @param name string
@@ -175,7 +192,6 @@ class Fragment extends Event {
 		}
 	}
 
-
 	/**
 	 * If possible, add a new element to Fragment
 	 * @param element Element
@@ -185,7 +201,6 @@ class Fragment extends Event {
 		this.elements.push(element);
 		element.onAttachToFragment();
 		this.dispatch("element:add", { element: element })
-
 		if(element.hasEvent("load")) {
 			element.on("load", ()=> {
 				if( this.isLoad ) {
@@ -209,18 +224,13 @@ class Fragment extends Event {
 		}
 	}
 
-	stop() {
-		this.elements.forEach(element => { if( element.hide ) element.hide(); })
-		this.elements = [];
-
-		cancelAnimationFrame(this.raf);
-
-		this.dispatch("stop");
-	}
-
-	runChild(i) {
-		if( this.children[i] ){
-			this.book.currentFragment = this.children[i];
+  /**
+   * Run a fragment 
+   * @param {integer} id
+   */
+	runChild(id) {
+		if( this.children[id] ){
+			this.book.currentFragment = this.children[id];
 		}
 	}
 }

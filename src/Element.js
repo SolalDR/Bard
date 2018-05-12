@@ -14,6 +14,10 @@ class Element extends Event {
 	 */
 	static get AVAILABLES_TYPES() { return ["text", "image", "sound", "obj3D", "obj2D", "svg"]; }
 
+  /**
+   * Generate a random name
+   * @returns {string}
+   */
 	static randomName() {
 		return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 14);
 	}
@@ -51,9 +55,7 @@ class Element extends Event {
 		return this._type;
 	}
 
-
 	/************* ACTIONS *************/
-
 
 	/**
 	 * Register a new action
@@ -67,7 +69,6 @@ class Element extends Event {
 			console.warn("Cannot override this action, use force=true to override");
 			return; 
 		}
-
 		this.actions[name] = action.bind(this)
 	}
 
@@ -78,7 +79,6 @@ class Element extends Event {
 	deleteAction(name){
 		this.actions[name] = null;
 	}
-
 
 	/**
 	 * Execute an action with his name

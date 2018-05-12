@@ -12,6 +12,10 @@ import Event from "./utils/Event.js";
 
 class Book extends Event {
 
+  /**
+   * @constructor
+   * @param {Object} params 
+   */
 	constructor(params){
 		super();
 		this.id = params.id ? params.id : null; 
@@ -22,8 +26,29 @@ class Book extends Event {
 		this.debug = params && params.debug === true ? true : false;  
 		this.navigator = new Navigator(this);
 		this.scene = new Scene(this);
+  }
+  
+  /**
+   * @param {Fragment} fragment
+   */
+  set currentFragment(fragment) {
+		if( this._currentFragment)
+			if( this._currentFragment.stop )
+				this._currentFragment.stop();
+
+		this._currentFragment = fragment;
+		this._currentFragment.start();
+		this.dispatch("fragment:start", fragment);
 	}
 
+	get currentFragment() {
+		return this._currentFragment;
+	}
+
+  /**
+   * Add a fragment to book
+   * @param {Fragment} fragment 
+   */
 	addFragment(fragment){
 		fragment.book = this;
 		this.dispatch("fragment:add", { fragment: fragment });
@@ -31,11 +56,15 @@ class Book extends Event {
 		this.mapChildren(fragment);
 
 		if( this.scene ){
+      // Init fragment to register all actions & element and start aynchronous loading
 			fragment.init();	
 		}
-		
 	}
 
+  /**
+   * Create links between fragments
+   * @param {Fragment} fragment
+   */
 	mapChildren(fragment) {
 		if( fragment.id ) {
 			var i = null;
@@ -48,22 +77,7 @@ class Book extends Event {
 		}
 	}
 
-	set currentFragment(current) {
-		if( this._currentFragment) {
-			if( this._currentFragment.stop ) {
-				this._currentFragment.stop();
-			}	
-		}
-		
-		this._currentFragment = current;
-		this._currentFragment.start();
 
-		this.dispatch("fragment:start", current);
-	}
-
-	get currentFragment() {
-		return this._currentFragment;
-	}
 
 	start(fragment = null){		
 		this.currentFragment = this.fragments[0];
