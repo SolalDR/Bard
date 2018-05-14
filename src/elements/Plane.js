@@ -53,7 +53,7 @@ class Plane extends Mesh {
     this.videoUrls = params.videoUrls // @TODO
 
     this.init();
-
+    
     if(this.map) this.loadMap();
   }
 
@@ -71,7 +71,6 @@ class Plane extends Mesh {
     }
   }
 
-
   /**
    * @TODO
    */
@@ -84,6 +83,9 @@ class Plane extends Mesh {
     }
   }
 
+  /**
+   * Load map texture & dispatch load when done
+   */
   loadMap() {
     this.loader = new THREE.TextureLoader()
     this.loader.load(this.map, texture => {
@@ -102,16 +104,19 @@ class Plane extends Mesh {
       this.loaded = true;
       this.dispatch("load");
 
-      let imgRatio = this.texture.image.width/this.texture.image.height
-      this.fitToScreen(imgRatio);
+      this.fitToScreen();
     })
   }
-    
-  fitToScreen(imgRatio) {
+   
+  /**
+   * Adjust mesh scaling to fit the window 
+   */
+  fitToScreen() {
+    let imgRatio = this.texture.image.width/this.texture.image.height;
     let camera = this.fragment.book.scene.camera
     var vFOV = camera.fov * Math.PI / 180;
     // Get the visible height 
-    let distanceOfPlaneFromCamera = new THREE.Vector3().copy(camera.position).sub(this.mesh.position)
+    // let distanceOfPlaneFromCamera = new THREE.Vector3().copy(camera.position).sub(this.mesh.position)
     this.height =  camera.top + 8;
 
     // If we want a width that follows the aspect ratio of the camera, then get the aspect ratio and multiply by the height.
@@ -123,6 +128,10 @@ class Plane extends Mesh {
     this.mesh.position.y = (this.height/2)-8 
   }
 
+
+  /**
+   * Init geometry, material & mesh
+   */
   init(){
     this.geometry = new THREE.PlaneBufferGeometry(1,1,1)
     this.material = new THREE.ShaderMaterial({
@@ -142,7 +151,7 @@ class Plane extends Mesh {
       depthWrite: false,
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
-    this.mesh.position.z = this.depth
+    this.mesh.position.z = this.depth;
     this.mesh.name = this.name;
   }
 }

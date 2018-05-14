@@ -60,7 +60,7 @@ class Fragment extends Event {
 		this.loaded = false;
 		this.started = false;
   }
-  
+
   /**
    * Test if all elements are loaded, if true dispatch load event
    * @returns boolean

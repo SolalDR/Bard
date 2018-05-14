@@ -47,48 +47,49 @@ class Mesh extends Element {
 
 		if(config.rotation) {
 			this.mesh.rotation.set(rotation.x, rotation.y, rotation.z)
-		}
-
+    }
     
-
     this.loaded = true;
     console.log(this)
     this.dispatch("load")
 	}
 
 	static fromObj(params) {
-		let mesh = new Mesh({
-			group:"scene"
-    }); 
-    console.log(params)
+		let mesh = new Mesh({ group: params.group ? params.group : "scene" });
+
+    function loadObj(materials = null) {
+      let loader = new OBJLoader();
+      if( materials ) loader.setMaterials(materials)
+      loader.load(
+        params.obj,
+        (object)=> {
+          let obj = object
+          for(let i = 0; i< object.children.length; i++) {	
+            object.children[i].material.alphaTest = 0.
+            object.children[i].material.depthTest = false
+            object.children[i].material.depthWrite = false
+          }
+          mesh.setMesh(obj, params.config, params.position);
+        },
+        ( xhr ) => {},
+        ( error ) => {
+          console.log( 'An error happened' );
+        }
+      );
+    };
+
 		if(params.mtl) {
 			let mtlLoader = new THREE.MTLLoader()
-		
 			mtlLoader.load(params.mtl, (materials)=>{
-				materials.preload()
-				let loader = new OBJLoader();
-				loader.setMaterials(materials)
-				loader.load(
-					params.obj,
-					(object)=> {
-						let obj = object
-						for(let i = 0; i< object.children.length; i++) {	
-							object.children[i].material.alphaTest = 0.
-							object.children[i].material.depthTest = false
-							object.children[i].material.depthWrite = false
-						}
-            mesh.setMesh(obj, params.config, params.position);
-					},
-          ( xhr ) => {},
-          ( error ) => {
-						console.log( 'An error happened' );
-					}
-				);
+        materials.preload()
+        loadObj(materials);
 			})
-		}
-	
+    } else if(params.obj) {
+      loadObj();
+    }
+    
 		return mesh;
-	}
+  }
 
 	/*************************
 	*
