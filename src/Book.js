@@ -29,6 +29,10 @@ class Book extends Event {
   }
   
   /**
+   * Update the current fragment
+   * - Stop actual fragment
+   * - Update fragment
+   * - Start new fragment
    * @param {Fragment} fragment
    */
   set currentFragment(fragment) {
@@ -41,6 +45,10 @@ class Book extends Event {
 		this.dispatch("fragment:start", fragment);
 	}
 
+  /**
+   * The current fragment played in scene
+   * @return {Fragment}
+   */
 	get currentFragment() {
 		return this._currentFragment;
 	}
@@ -77,8 +85,10 @@ class Book extends Event {
 		}
 	}
 
-
-
+  /**
+   * Start the book
+   * @param {Fragment} fragment 
+   */
 	start(fragment = null){		
 		this.currentFragment = this.fragments[0];
 		this.dispatch("start", this.currentFragment);

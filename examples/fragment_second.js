@@ -25,8 +25,8 @@ export default class Fragment2 extends Bard.Fragment {
     this.screenSize = this.book.scene.camera.right*2
     this.rocket = this.addElement( 
       Bard.MeshElement.fromObj({
-        path:"./src/assets/obj/fusee-plate5.obj",
-        mtl:'./src/assets/obj/fusee-plate2.mtl',
+        obj: "./src/assets/obj/fusee-plate5.obj",
+        mtl: './src/assets/obj/fusee-plate2.mtl',
         config: {
           scale:3.,
           position: {
@@ -73,8 +73,8 @@ export default class Fragment2 extends Bard.Fragment {
     var planets = []
     for (let i = 0; i < 24; i++) {
       planets.push(this.addElement(new Bard.PlaneElement({
-        imgUrls : ['./examples/images/planets/planete'+(i+1)+'.png'], 
-        alpha: true, 
+        map : './examples/images/planets/planete'+(i+1)+'.png', 
+        transparent: true,
         z: -0.5*(i), 
         opacity: 0.
       })));

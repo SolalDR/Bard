@@ -26,7 +26,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.rocket = this.addElement(
       Bard.MeshElement.fromObj({
-        path:"./src/assets/obj/fusee-plate5.obj",
+        obj:"./src/assets/obj/fusee-plate5.obj",
         mtl:'./src/assets/obj/fusee-plate2.mtl',
         name: "rocket",
         config: {
@@ -57,12 +57,17 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.planes = [];
     this.clouds = [];
-    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan3", imgUrls : ['./examples/images/plans/scene1-plan3.png'], alpha: true, z:-20})))
-    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan2",imgUrls : ['./examples/images/plans/scene1-plan2.png'], alpha: true, z:-5})))
-    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan1",imgUrls : ['./examples/images/plans/scene1-plan1.png'], alpha: true, z:0})))
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan3", 
+      map: './examples/images/plans/scene1-plan3.png', 
+      transparent: true, 
+      depth:-20})))
+
+    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan2",map: './examples/images/plans/scene1-plan2.png', transparent: true, depth:-5})))
+    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan1",map: './examples/images/plans/scene1-plan1.png', transparent: true, depth:0})))
 
     for (let i = 1; i < 5; i++) {
-      let cloud = this.addElement(new Bard.PlaneElement({name: "nuage"+i, imgUrls : ['./examples/images/clouds/nuage'+i+'.png'], alpha: true, z: -6*(i)}));
+      let cloud = this.addElement(new Bard.PlaneElement({name: "nuage"+i, map: './examples/images/clouds/nuage'+i+'.png', transparent: true, depth: -6*(i)}));
       cloud.x = (Math.random()*60 ) - 30
       this.clouds.push(cloud);
       this.planes.push(cloud);
@@ -118,8 +123,11 @@ export default class Fragment1 extends Bard.Fragment {
     this.addAction("next",  e => text.next())
 
     this.on("start", ()=>{
-      for(var i=0; i<this.elements.length; i++)
+      for(var i=0; i<this.elements.length; i++){
         this.elements[i].display();
+      }
+
+      this.rocket.display();
 
       forest.on("load", () => {
         forest.start();

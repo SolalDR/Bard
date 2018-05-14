@@ -122,12 +122,16 @@ class Scene {
 	 * @param element : Element
 	 */
 	addElement(element){
-		if(!element.mesh){
-			console.warn("Element not loaded yet, it will be append to scene later.")
+    if( element.type !== "obj3D" ) {
+      return; 
+    }
+    
+		if (!element.loaded) {
+			console.warn("Element \""+element.name+"\" not loaded yet, it will be append to scene later.")
 			element.on("load", ()=>{
-				// element.fragment.on("load", ()=>{
-					this.addElement(element)	
-				// })
+        if( element.mesh ){
+          this.addElement(element);
+        }
 			})
 			return;
 		}
