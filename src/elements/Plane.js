@@ -147,8 +147,8 @@ class Plane extends Mesh {
         }
       },
       transparent: this.transparent,
-      depthTest: true,
-      depthWrite: true,
+      depthTest: false,
+      depthWrite: false,
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.position.z = this.depth;

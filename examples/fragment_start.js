@@ -44,7 +44,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan3", 
       group: "background",
-      map: './examples/images/plans/scene1-plan3.png', 
+      map: '/examples/img/plans/scene1-plan3.png', 
       transparent: true, 
       depth: -3
     })))
@@ -52,7 +52,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan2",
       group: "background",
-      map: './examples/images/plans/scene1-plan2.png', 
+      map: '/examples/img/plans/scene1-plan2.png', 
       transparent: true, 
       depth: 0}
     )))
@@ -60,7 +60,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan1",
       group: "foreground",
-      map: './examples/images/plans/scene1-plan1.png', 
+      map: '/examples/img/plans/scene1-plan1.png', 
       transparent: true, 
       depth: 0
     })))
@@ -69,7 +69,7 @@ export default class Fragment1 extends Bard.Fragment {
       let cloud = this.addElement(new Bard.PlaneElement({
         name: "nuage"+i, 
         group: "background",
-        map: './examples/images/clouds/nuage'+i+'.png', 
+        map: '/examples/img/clouds/nuage'+i+'.png', 
         transparent: true, 
         depth: 3+i*1
       }));
@@ -80,8 +80,8 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.rocket = this.addElement(
       Bard.MeshElement.fromObj({
-        obj:"./src/assets/obj/fusee-plate5.obj",
-        mtl:'./src/assets/obj/fusee-plate2.mtl',
+        obj:"/examples/obj/fusee-plate5.obj",
+        mtl:'/examples/obj/fusee-plate2.mtl',
         name: "rocket",
         config: {
           scale:3.,

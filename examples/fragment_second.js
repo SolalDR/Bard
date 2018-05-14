@@ -15,8 +15,8 @@ export default class Fragment2 extends Bard.Fragment {
     /**
      * SOUNDS
      */
-    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
-    var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket-sound.wav");
+    var forest = this.soundManager.load("forest", "/examples/sounds/forest_ambiance.mp3");
+    var rocketLaunch = this.soundManager.load("forest", "/examples/sounds/rocket-sound.wav");
 
     /**
      * ELEMENTS
@@ -25,8 +25,8 @@ export default class Fragment2 extends Bard.Fragment {
     this.screenSize = this.book.scene.camera.right*2
     this.rocket = this.addElement( 
       Bard.MeshElement.fromObj({
-        obj: "./src/assets/obj/fusee-plate5.obj",
-        mtl: './src/assets/obj/fusee-plate2.mtl',
+        obj: "/examples/obj/fusee-plate5.obj",
+        mtl: '/examples/obj/fusee-plate2.mtl',
         config: {
           scale:3.,
           position: {
@@ -73,7 +73,7 @@ export default class Fragment2 extends Bard.Fragment {
     var planets = []
     for (let i = 23; i >= 0; i--) {
       planets.push(this.addElement(new Bard.PlaneElement({
-        map : './examples/images/planets/planete'+(i+1)+'.png', 
+        map : '/examples/img/planets/planete'+(i+1)+'.png', 
         transparent: true,
         depth: -0.5*(i), 
         opacity: 0.
@@ -113,7 +113,6 @@ export default class Fragment2 extends Bard.Fragment {
         forest.start();
       })
     })
-
   }
 
 
