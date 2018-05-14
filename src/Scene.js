@@ -2,7 +2,7 @@ window.THREE = require("three")
 import OrbitControls from './utils/OrbitControl.js'
 import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6'
 import Event from "./utils/Event.js"
-
+import ParallaxControl from './utils/ParallaxControls'
 var fxaa = require('three-shader-fxaa')
 
 /** 
@@ -45,11 +45,13 @@ class Scene extends Event {
    * Init orbit control OR paralax
    */
   initControls(){
-		if( this.book.debug ){
-			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 1
-			this.controls.update();
-		}
+		// if( this.book.debug ){
+		// 	this.controls = new OrbitControls( this.camera );
+		// 	this.controls.rotateSpeed = 1
+		// 	this.controls.update();
+    // }
+    
+    this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas})
   }
 
   /**
@@ -121,6 +123,11 @@ class Scene extends Event {
       var intersects = this.raycaster.intersectObjects( this.mainGroup.children, true );
       this.dispatch("click", intersects );
     }
+    if(this.pControls) {
+      
+      this.pControls.update()
+    }
+
 		this.composer.render(this.threeScene, this.camera);
 	}
 

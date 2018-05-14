@@ -163,9 +163,9 @@ export default class Fragment1 extends Bard.Fragment {
 
       this.rocket.display();
 
-      forest.on("load", () => {
-        forest.start();
-      })
+      // forest.on("load", () => {
+      //   forest.start();
+      // })
 
       this.initListeners();
     })
