@@ -16,7 +16,7 @@ export default class Fragment2 extends Bard.Fragment {
      * SOUNDS
      */
     var forest = this.soundManager.load("forest", "/examples/sounds/forest_ambiance.mp3");
-    var rocketLaunch = this.soundManager.load("forest", "/examples/sounds/rocket-sound.wav");
+    var rocketLaunch = this.soundManager.load("forest", "/examples/sounds/rocket_launch.mp3");
 
     /**
      * ELEMENTS
