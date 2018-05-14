@@ -17,75 +17,91 @@ class Scene {
 		this.book = book;
 		this.canvas = document.getElementById("canvas");
 		this.threeScene = new THREE.Scene();
-		this.winWidth = window.innerWidth
-		this.winHeight = window.innerHeight
-		
-		this.camera = new THREE.OrthographicCamera(65*(this.winWidth/this.winHeight) / - 2,65*(this.winWidth/this.winHeight) / 2,60 ,-5, -1000, 1000 );
-		this.camera.position.set(0, 0, 1);
+    
+    this.fov = 65;
+		this.camera = new THREE.OrthographicCamera(this.fov/- 2, this.fov / 2, this.fov ,-5, -1000, 1000 );
+    this.camera.position.set(0, 0, 1);
 
-		this.renderer = new THREE.WebGLRenderer( { 
-			canvas: this.canvas,
-		});
+		this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
 		this.renderer.setClearColor( 0xffffff, 1 );
-		
-		this.composer = new EffectComposer(this.renderer)
+    this.composer = new EffectComposer(this.renderer)
 		this.composer.addPass(new RenderPass(this.threeScene, this.camera))
-	
+    
+    this.onResize();
+    this.initAntialias();
+    this.initLights();
+    this.initControls();
+		this.initListeners()
+    this.initGroups();
+    
+    this.renderer.sortObjects = false
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+  }
+
+  /**
+   * Init orbit control OR paralax
+   */
+  initControls(){
+		if( this.book.debug ){
+			this.controls = new OrbitControls( this.camera );
+			this.controls.rotateSpeed = 1
+			this.controls.update();
+		}
+  }
+  
+  /**
+   * Init ShaderPass to manage antialias
+   */
+  initAntialias(){
 		const fxaaPass = new ShaderPass(fxaa())
 		fxaaPass.renderToScreen = true
 		this.composer.addPass(fxaaPass)
 
 		fxaaPass.uniforms.resolution.value.x = window.innerWidth
 		fxaaPass.uniforms.resolution.value.y = window.innerHeight
+  }
 
-
+  /**
+   * Init ambient light
+   */
+  initLights(){
 		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 0.9 ) );
-
 		var directionalLight = new THREE.DirectionalLight( 0xeeeeee, 1 );
 		directionalLight.position.x  = 2
 		directionalLight.position.y  = 2
 		directionalLight.position.z  = 2
-		// this.threeScene.add( directionalLight );
+  }
 
-		if( this.book.debug ){
-			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 1
-			this.controls.update();
-		}
-
-
-		this.renderer.setSize( window.innerWidth, window.innerHeight );
-
-		this.initListeners()
-		this.initGroups();
-
-	}
-
+  /**
+   * Manage listener
+   */
 	initListeners() {
-		window.addEventListener('resize', this.onResize.bind(this))
-	}
+    window.addEventListener('resize', this.onResize.bind(this))
+    window.addEventListener('click', this.onClick.bind(this))
+  }
 
 	onResize() {
-		this.winWidth = window.innerWidth
-		this.winHeight = window.innerHeight
-		this.winRatio = this.winWidth/this.winHeight
+		var winWidth = window.innerWidth
+		var winHeight = window.innerHeight
 
-		this.camera.left = 60*(this.winWidth/this.winHeight) / -2;
-		this.camera.right = 60*(this.winWidth/this.winHeight) / 2;
-		this.camera.top = 60;
+		this.camera.left = this.fov*(winWidth/winHeight) / -2;
+		this.camera.right = this.fov*(winWidth/winHeight) / 2;
+		this.camera.top = this.fov;
 		this.camera.bottom = -5;
 
 		this.camera.updateProjectionMatrix();	
-		this.renderer.setSize(this.winWidth, this.winHeight)
+		this.renderer.setSize(winWidth, winHeight)
 	}
 
+  onClick(){
+    
+  }
 
 	/**
 	 * Call the renderer
 	 */
 	render(){
-		this.renderer.sortObjects = false
-		this.renderer.render(this.threeScene, this.camera);
+		this.composer.render(this.threeScene, this.camera);
 	}
 
 	/**	

@@ -90,9 +90,10 @@ export default class Fragment1 extends Bard.Fragment {
             y: 0.03*this.screenSize,
             z: 0
           }
-        }
+        }      
       })
     );
+
     
     /**
      * ACTIONS
