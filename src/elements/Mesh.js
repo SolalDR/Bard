@@ -64,7 +64,7 @@ class Mesh extends Element {
         (object)=> {
           let obj = object
           for(let i = 0; i< object.children.length; i++) {	
-            object.children[i].material.alphaTest = 0.
+            // object.children[i].material.alphaTest = 0.5
             object.children[i].material.depthTest = false
             object.children[i].material.depthWrite = false
           }

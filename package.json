@@ -17,7 +17,14 @@
     "three-effectcomposer-es6": "0.0.4",
     "three-shader-fxaa": "^5.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "budo": "^11.1.7",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.1.0",
+    "glslify": "^6.1.0"
+  },
   "browserify": {
     "transform": [
       [

@@ -49,7 +49,7 @@ class Scene {
 
 		if( this.book.debug ){
 			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 0.03
+			this.controls.rotateSpeed = 1
 			this.controls.update();
 		}
 
@@ -103,13 +103,14 @@ class Scene {
 		this.fgGroup.name = "foreground";
 		this.mainGroup.name = "main";
 
-		this.bgGroup.position.y = -5
-		this.mainGroup.position.y = 0
-		this.fgGroup.position.y = 1
+		this.bgGroup.position.z = -6
+		this.mainGroup.position.z = 0
+		this.fgGroup.position.z = 6
 
 		this.threeScene.add(this.bgGroup);
-		this.threeScene.add(this.fgGroup);
-		this.threeScene.add(this.mainGroup);
+    this.threeScene.add(this.mainGroup);
+    this.threeScene.add(this.fgGroup);
+
 	}
 
 
@@ -134,7 +135,9 @@ class Scene {
         }
 			})
 			return;
-		}
+    }
+    
+    console.log(element.group);
 		
 		switch( element.group ){
 			case "background" : this.bgGroup.add(element.mesh); break;

@@ -22,7 +22,7 @@ fragment2.childrenLinks = [3, 4];
 window.addEventListener("load", function(){
 
   var book = new Bard.Book({
-    debug: false
+    debug: true
   });
 	
 	book.addFragment(fragment1);

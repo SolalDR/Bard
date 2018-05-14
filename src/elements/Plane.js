@@ -53,7 +53,7 @@ class Plane extends Mesh {
     this.videoUrls = params.videoUrls // @TODO
 
     this.init();
-    
+
     if(this.map) this.loadMap();
   }
 
@@ -147,8 +147,8 @@ class Plane extends Mesh {
         }
       },
       transparent: this.transparent,
-      depthTest:false,
-      depthWrite: false,
+      depthTest: true,
+      depthWrite: true,
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.position.z = this.depth;

@@ -71,7 +71,7 @@ export default class Fragment2 extends Bard.Fragment {
 
 
     var planets = []
-    for (let i = 0; i < 24; i++) {
+    for (let i = 23; i >= 0; i--) {
       planets.push(this.addElement(new Bard.PlaneElement({
         map : './examples/images/planets/planete'+(i+1)+'.png', 
         transparent: true,

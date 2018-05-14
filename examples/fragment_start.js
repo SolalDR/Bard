@@ -24,22 +24,6 @@ export default class Fragment1 extends Bard.Fragment {
     // this.char = this.addElement(new Bard.CharacterElement({}))
     this.screenSize = this.book.scene.camera.right*2
 
-    this.rocket = this.addElement(
-      Bard.MeshElement.fromObj({
-        obj:"./src/assets/obj/fusee-plate5.obj",
-        mtl:'./src/assets/obj/fusee-plate2.mtl',
-        name: "rocket",
-        config: {
-          scale:3.,
-          position: {
-            x: (0.4*this.screenSize)+this.book.scene.camera.left,
-            y: 0.03*this.screenSize,
-            z: -3
-          }
-        }
-      })
-    );
-
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
@@ -56,23 +40,60 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.planes = [];
     this.clouds = [];
+   
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan3", 
+      group: "background",
       map: './examples/images/plans/scene1-plan3.png', 
       transparent: true, 
-      depth:-20})))
+      depth: -3
+    })))
 
-    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan2",map: './examples/images/plans/scene1-plan2.png', transparent: true, depth:-5})))
-    this.planes.push(this.addElement(new Bard.PlaneElement({name: "plan1",map: './examples/images/plans/scene1-plan1.png', transparent: true, depth:0})))
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan2",
+      group: "background",
+      map: './examples/images/plans/scene1-plan2.png', 
+      transparent: true, 
+      depth: 0}
+    )))
+    
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan1",
+      group: "foreground",
+      map: './examples/images/plans/scene1-plan1.png', 
+      transparent: true, 
+      depth: 0
+    })))
 
     for (let i = 1; i < 5; i++) {
-      let cloud = this.addElement(new Bard.PlaneElement({name: "nuage"+i, map: './examples/images/clouds/nuage'+i+'.png', transparent: true, depth: -6*(i)}));
+      let cloud = this.addElement(new Bard.PlaneElement({
+        name: "nuage"+i, 
+        group: "background",
+        map: './examples/images/clouds/nuage'+i+'.png', 
+        transparent: true, 
+        depth: 3+i*1
+      }));
       cloud.x = (Math.random()*60 ) - 30
       this.clouds.push(cloud);
       this.planes.push(cloud);
     }
 
-
+    this.rocket = this.addElement(
+      Bard.MeshElement.fromObj({
+        obj:"./src/assets/obj/fusee-plate5.obj",
+        mtl:'./src/assets/obj/fusee-plate2.mtl',
+        name: "rocket",
+        config: {
+          scale:3.,
+          position: {
+            x: (0.4*this.screenSize)+this.book.scene.camera.left,
+            y: 0.03*this.screenSize,
+            z: 0
+          }
+        }
+      })
+    );
+    
     /**
      * ACTIONS
      */
