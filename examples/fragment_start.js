@@ -83,6 +83,7 @@ export default class Fragment1 extends Bard.Fragment {
         obj:"/examples/obj/fusee-plate5.obj",
         mtl:'/examples/obj/fusee-plate2.mtl',
         name: "rocket",
+        clickable: true,
         config: {
           scale:3.,
           position: {
@@ -90,9 +91,21 @@ export default class Fragment1 extends Bard.Fragment {
             y: 0.03*this.screenSize,
             z: 0
           }
-        }      
+        }
       })
     );
+
+    this.cube = this.addElement(new Bard.MeshElement({
+      clickable: true,
+      name: "Hello",
+      mesh: new THREE.Mesh(
+        new THREE.BoxGeometry( 1, 1, 1 ), 
+        new THREE.MeshBasicMaterial({color: 0xFF0000}))
+    }))
+
+    this.cube.on("click", ()=>{
+      console.log("Clicked in scene");
+    })
 
     
     /**

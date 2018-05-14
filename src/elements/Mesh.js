@@ -12,10 +12,10 @@ class Mesh extends Element {
 	constructor(params){
 		super(params);
 		this.type = "obj3D";
-		this.eventsList = ["load"];
+		this.eventsList = ["load", "click"];
 		this.fragment = null; // Lateinit
 		this.group = params.group ? params.group : "main";
-
+    this.clickable = params.clickable ? params.clickable : false;
 		if( params.name ){
 			this.name = params.name
 		} else {

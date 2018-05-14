@@ -50,13 +50,11 @@ class Event {
     }
   }
 
-
   off(event, callback){
-    if( this.events[event] ){
-      for(i=0; i<this.events[event].length; i++){
-        if( this.events[event][i] == callback ){
-          this.events[event].slice(i, 1);
-        }
+    if(this.events[event]){
+      var i = this.events[event].indexOf(callback);
+      if( i >= 0){
+        this.events[event].splice(i, 1);
       }
     }
   }

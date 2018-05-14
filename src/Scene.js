@@ -1,19 +1,21 @@
 window.THREE = require("three")
 import OrbitControls from './utils/OrbitControl.js'
 import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6'
+import Event from "./utils/Event.js"
 
 var fxaa = require('three-shader-fxaa')
 
 /** 
  * The threejs scene. It persist during the all livecycle of Book
  */
-class Scene {
+class Scene extends Event {
 
 	/**
 	 * Create the THREE.js Scene, camera, renderer and create layer groups
 	 */
 	constructor(book){
-
+    super();
+    this.eventsList = ["click"];
 		this.book = book;
 		this.canvas = document.getElementById("canvas");
 		this.threeScene = new THREE.Scene();
@@ -33,6 +35,7 @@ class Scene {
     this.initControls();
 		this.initListeners()
     this.initGroups();
+    this.initRaycaster();
     
     this.renderer.sortObjects = false
     this.renderer.setSize( window.innerWidth, window.innerHeight );
@@ -47,6 +50,15 @@ class Scene {
 			this.controls.rotateSpeed = 1
 			this.controls.update();
 		}
+  }
+
+  /**
+   * Init Raycaster
+   */
+  initRaycaster(){
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.clicked = false;
   }
   
   /**
@@ -93,14 +105,22 @@ class Scene {
 		this.renderer.setSize(winWidth, winHeight)
 	}
 
-  onClick(){
-    
+  onClick(event){
+    this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    this.clicked = true; 
   }
 
 	/**
-	 * Call the renderer
+	 * Call the renderer & manage raycaster
 	 */
 	render(){
+    if( this.clicked ) {
+      this.clicked = false;
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects( this.mainGroup.children, true );
+      this.dispatch("click", intersects );
+    }
 		this.composer.render(this.threeScene, this.camera);
 	}
 
@@ -126,10 +146,8 @@ class Scene {
 		this.threeScene.add(this.bgGroup);
     this.threeScene.add(this.mainGroup);
     this.threeScene.add(this.fgGroup);
-
 	}
-
-
+  
 	findElement(){
 
 	}

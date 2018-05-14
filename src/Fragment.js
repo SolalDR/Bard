@@ -53,7 +53,8 @@ class Fragment extends Event {
 		this.elements = [];
 		this.actions = {};
 		this.children = [];
-		this.childrenLinks = [];
+    this.childrenLinks = [];
+    this.clickables = [];
 		this.speechRecognition = null;
 
 		// States
@@ -72,12 +73,23 @@ class Fragment extends Event {
 		this.loaded = true;
 		this.dispatch("load");
 		return true;
-	}
+  }
+  
+  onClick(intersects){
+    for(var i=0; i<intersects.length; i++){
+      for(var j=0; j<this.elements.length; j++){
+        if(this.elements[j].clickable && intersects[i].object.name == this.elements[j].name){
+          this.elements[j].dispatch("click");
+        }
+      }
+    }
+  }
 
   /**
    * Hide all elements, cancel raf & dispatch stop event
    */
 	stop() {
+    if(this.onClickBind) this.book.scene.off("click", this.onClickBind);
 		this.elements.forEach(element => { if( element.hide ) element.hide(); })
 		this.elements = [];
 		cancelAnimationFrame(this.raf);
@@ -92,21 +104,15 @@ class Fragment extends Event {
 			this.on("load", this.start.bind(this))
 			console.warn("Fragment is not loaded yet");
 			return; 
-		}
-		this.afterStart();
-	}
-
-	/**
-	 * Create the first render
-	 */
-	afterStart(){
-		this.dispatch("start")
+    }
+    this.onClickBind = this.onClick.bind(this);
+    this.book.scene.on("click", this.onClickBind);
+    this.dispatch("start")
     this.clock = new Clock(false);
     this.clock.start();
     this.time = 0;
-
     this.render();
-  }
+	}
 
 	/**
 	 * Manage raf & clock
@@ -210,7 +216,11 @@ class Fragment extends Event {
 					this.dispatch("load");
 				}
 			})
-		}
+    }
+    
+    if(element.type === "obj3D" && element.clickable) {
+      this.clickables.push(element.name);
+    }
 		return element;
 	}
 

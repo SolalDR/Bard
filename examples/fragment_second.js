@@ -101,6 +101,19 @@ export default class Fragment2 extends Bard.Fragment {
       })
     })
 
+    this.cube = this.addElement(new Bard.MeshElement({
+      clickable: true,
+      name: "Hello",
+      mesh: new THREE.Mesh(
+        new THREE.BoxGeometry( 1, 1, 1 ), 
+        new THREE.MeshBasicMaterial({color: 0xFF0000}))
+    }))
+
+    this.cube.on("click", ()=>{
+      console.log("Clicked in scene 2");
+    })
+
+
     this.on("start", ()=>{
       
       for(var i=0; i<this.elements.length; i++)

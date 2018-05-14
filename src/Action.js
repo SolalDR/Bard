@@ -6,7 +6,6 @@
  */
 class Action {
 
-	
 	/**
 	 * @constructor
 	 * @param callback Function : callback which will be executed to perform the action
@@ -15,9 +14,7 @@ class Action {
 	 * @param args.once Boolean : If true, the action will be able to execute once
 	 * @param args.id String : Unique id to represente the action in the fragment. 
 	 */
-
 	constructor(name, ctx, procedure, args = {}){
-	
 		this.once = args.once ? args.once : false; 
 		this.context = ctx;
 		this.procedure = procedure;
@@ -25,7 +22,6 @@ class Action {
 		
 		// Increment when "execute" is call
 		this.count = 0;
-	
 	}
 
 
@@ -34,9 +30,7 @@ class Action {
 	 * Used when name is not defined 
 	 */
 	getRandomName(){
-	
 		return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-	
 	}
 
 
