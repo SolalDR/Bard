@@ -7,11 +7,12 @@
 
 class Clock {
 	
-	constructor ( autoStart ) {
+	constructor ( autoStart = true ) {
 
 		this.autoStart = ( autoStart !== undefined ) ? autoStart : true;
 		this._start = 0; 
-		
+    
+    this.delta = 0;
 		this.old = 0; 
 		this.running = false; 
 		this.elapsed = 0; 

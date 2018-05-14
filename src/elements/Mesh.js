@@ -43,14 +43,13 @@ class Mesh extends Element {
 		if(config.position) {
 			this.position = config.position		
 			this.mesh.position.set(config.position.x, config.position.y, config.position.z)
-		}	
+		}
 
 		if(config.rotation) {
 			this.mesh.rotation.set(rotation.x, rotation.y, rotation.z)
     }
     
     this.loaded = true;
-    console.log(this)
     this.dispatch("load")
 	}
 
@@ -190,7 +189,7 @@ class Mesh extends Element {
 	 * @param clock (Clock) : The general clock of fragment   
 	 */
 	render(clock){
-		this.renderAnims(clock.delta);
+		this.renderAnims(17);
 	}
 }
 

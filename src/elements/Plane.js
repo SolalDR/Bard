@@ -116,16 +116,16 @@ class Plane extends Mesh {
     let camera = this.fragment.book.scene.camera
     var vFOV = camera.fov * Math.PI / 180;
     // Get the visible height 
-    // let distanceOfPlaneFromCamera = new THREE.Vector3().copy(camera.position).sub(this.mesh.position)
-    this.height =  camera.top + 8;
+    //let distanceOfPlaneFromCamera = new THREE.Vector3().copy(camera.position).sub(this.mesh.position)
+    this.height =  camera.top + Math.abs(camera.bottom)*2;
 
     // If we want a width that follows the aspect ratio of the camera, then get the aspect ratio and multiply by the height.
     var aspect = window.innerWidth / window.innerHeight;
     this.width = this.height * aspect;
     this.height = this.width / imgRatio
     this.mesh.scale.set(this.width, this.height, 1)
-    this.position.y = (this.height/2)-8 
-    this.mesh.position.y = (this.height/2)-8 
+    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2
+    this.mesh.position.y = (this.height/2) - Math.abs(camera.bottom)*2
   }
 
 

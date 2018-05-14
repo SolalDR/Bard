@@ -101,10 +101,12 @@ class Fragment extends Event {
 	 */
 	afterStart(){
 		this.dispatch("start")
-		this.clock = new Clock();
-		this.render();
-		this.time = 0;
-	}
+    this.clock = new Clock(false);
+    this.clock.start();
+    this.time = 0;
+
+    this.render();
+  }
 
 	/**
 	 * Manage raf & clock
@@ -119,14 +121,15 @@ class Fragment extends Event {
 	 * Post raf 
 	 */
 	afterRender(preventDefault){
-		this.book.scene.render();
 		if( preventDefault !== true ){
 			for(var i=0; i<this.elements.length; i++){
 				if( this.elements[i].render) {
 					this.elements[i].render(this.clock);
 				}
 			}
-		}
+    }
+    
+    this.book.scene.render();
 	}
 
 	/**

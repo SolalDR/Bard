@@ -75,24 +75,26 @@ export default class Fragment2 extends Bard.Fragment {
       planets.push(this.addElement(new Bard.PlaneElement({
         map : './examples/images/planets/planete'+(i+1)+'.png', 
         transparent: true,
-        z: -0.5*(i), 
+        depth: -0.5*(i), 
         opacity: 0.
       })));
     }
 
 
     this.addAction("planet-appear", (e) => {
-      planets.forEach(planet => {
+      planets.forEach((planet, i) => {
         planet.anims.push(new Bard.Animation({
-          duration: 1000,
-          onProgress: (advancement) => {
+          onStart: () => {
+            console.log("Planet appear launch anim")
+          },
+          onProgress: (advancement, value, anim) => {
             if( !planet.mesh ) return;
             var ease = Bard.Easing.easeOutQuint(advancement);
+            if( i == 0) console.log(advancement, value, anim)
             planet.mesh.scale.x = planet.width+(50-(50*ease))
             planet.mesh.scale.y = planet.width+(50-(50*ease))
             planet.mesh.scale.z = 1
             planet.mesh.material.uniforms.opacity.value = advancement;
-            planet.mesh.material.uniforms.needsUpdate = true;
           },
           onFinish: this.executeAction.bind(this, "rocket-fly")
         }))
@@ -117,13 +119,6 @@ export default class Fragment2 extends Bard.Fragment {
 
   render() {
     this.beforeRender();
-    
-    for(var i=0; i<this.elements.length; i++){
-      if(this.elements[i].type == "Mesh"){
-        this.elements[i].render(this.clock);
-      }
-    }
-
     this.afterRender();
   }
 

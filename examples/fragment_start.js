@@ -44,8 +44,7 @@ export default class Fragment1 extends Bard.Fragment {
       new Bard.TextElement({
         nodes: [
           "Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>",
-          "Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>.",
-          "C'est parti ! Nos héros partent à la découverte de la planète route !"
+          "Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>."
         ],
         align: "bottom-left",
         position: { x: "40px", y: "-20px" },
