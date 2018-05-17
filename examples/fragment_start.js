@@ -37,6 +37,9 @@ export default class Fragment1 extends Bard.Fragment {
       })
     );
 
+    this.getElement("mainText").on("word:click", function(e){
+      console.log(e);
+    })
 
     this.planes = [];
     this.clouds = [];

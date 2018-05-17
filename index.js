@@ -22,6 +22,15 @@ window.addEventListener("load", function(){
   var book = new Bard.Book({
     debug: true
   });
+
+  book.dictionnary = [
+    {
+      "id": 1,
+      "name": "Cockpit",
+      "match": "(cockpit)",
+      "url": "/examples/img/clouds/nuage1.png"
+    }
+  ]
 	
 	book.addFragment(fragment1);
   book.addFragment(fragment2);

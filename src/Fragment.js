@@ -85,6 +85,14 @@ class Fragment extends Event {
     }
   }
 
+  getElement(name = null){
+    for(var i=0; i<this.elements.length; i++){
+      if( this.elements[i].name == name){
+        return this.elements[i];
+      }
+    }
+  }
+
   /**
    * Hide all elements, cancel raf & dispatch stop event
    */

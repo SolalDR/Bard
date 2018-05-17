@@ -23,7 +23,7 @@ class Text extends Element {
 	constructor(params){
 
 		super(params);
-		this.eventsList = ["update", "end"]
+		this.eventsList = ["update", "end", "word:click"]
 		this.loaded = true;
 		this.currentNode = null;
 		this.speechRecognition = params.speechRecognition ? params.speechRecognition : null
@@ -40,10 +40,10 @@ class Text extends Element {
 		for(var i=0; i<params.nodes.length; i++) {
 			this.nodes.push(new TextNode({
 				text: params.nodes[i],
-				rank: i
+        rank: i,
+        parent: this
 			}));
 		}
-
 	}
 
 	/**
@@ -203,7 +203,9 @@ class Text extends Element {
 	 */
 	 onAttachToFragment() {
 	 	if(this.fragment && this.fragment.speechRecognition) {
-	 		this.speechRecognition = this.fragment.speechRecognition;
+      this.speechRecognition = this.fragment.speechRecognition;
+      this.nodes.forEach(node => node.init());
+
 	 		this.fragment.on("start", ()=>{
 	 			this.init();
 	 		})
