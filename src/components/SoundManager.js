@@ -1,7 +1,6 @@
 import Event from "./../utils/Event.js"
 import Sound from "./Sound.js"
 
-
 /**
  * Manage all the sounds of a fragment
  */

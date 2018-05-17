@@ -65,7 +65,7 @@ class TextNode {
 
       var splitedText = item.innerHTML.split("")
       for(var i=0; i<splitedText.length; i++)
-        splitedText[i] = "<span class='ckickable__letter'>"+splitedText[i]+"</span>";
+        splitedText[i] = "<span class='clickable__letter'>"+splitedText[i]+"</span>";
 
       item.innerHTML = splitedText.join("");
       item.addEventListener("click", (e)=>{
