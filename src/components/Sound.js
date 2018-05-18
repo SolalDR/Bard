@@ -1,5 +1,6 @@
 import Event from "./../utils/Event.js"
 import { POINT_CONVERSION_HYBRID } from "constants";
+import * as Effects from "./SoundEffects.js";
 
 /**
  * Represent a single sound
@@ -21,14 +22,23 @@ class Sound extends Event {
     this.loaded = false;
     this.loop = params.loop ? true : false;
     this.gain = this.manager.context.createGain();
-
+    
+    if( params.effect ) {
+      this.effect = Effects[params.effect]
+      this.effectIntensity = params.effectIntensity ? params.effectIntensity : 50;
+    }
     if( arg.constructor.name == "AudioBuffer" ) {
       this.init(arg, params);
     } else {
       this.load(arg, params);
-    } 
+    }
   }
 
+  /**
+   * Launch XHR Request to load an audio file
+   * @param {String} url 
+   * @param {Object} args 
+   */
   load(url, args){
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
@@ -45,16 +55,28 @@ class Sound extends Event {
     request.send();
   }
 
+  /**
+   * Init buffer and effects
+   * @param {AudioBuffer} buffer 
+   * @param {Object} args 
+   */
   init(buffer, args){
     this.buffer = buffer;
     this.dispatch("load");
     this.loaded = true;
-  
+
+    if( this.effect ){
+      this.effectNode = this.manager.context.createWaveShaper();
+      this.effectNode.curve = this.effect(this.effectIntensity);
+      this.effectNode.oversample = '4x';
+    }
+
     if( args.volume >= 0 ) this.volume = args.volume;
   }
 
   /**
    * Get and set volume
+   * @param {Int} volume
    */
   set volume(volume){
     this.gain.gain.value = volume;
@@ -73,8 +95,14 @@ class Sound extends Event {
     this.source = this.manager.context.createBufferSource()
     this.source.loop = this.loop;
     this.source.buffer = this.buffer
+    
     this.gain.connect(this.manager.gain);
-    this.source.connect(this.gain);
+    if( this.effect ){
+      this.source.connect(this.effectNode);
+      this.effectNode.connect(this.gain);
+    } else {
+      this.source.connect(this.gain);
+    }
     this.source.start(0);
   }
 

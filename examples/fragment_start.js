@@ -23,7 +23,7 @@ export default class Fragment1 extends Bard.Fragment {
     var recorder = new Bard.Recorder(this.soundManager);
     recorder.init();
     recorder.on("record:stop", (event) => {
-      this.soundManager.load("record", event.buffer, { loop: true }); 
+      this.soundManager.load("record", event.buffer, { loop: true, effect: "distortionCurve", effectIntensity: 0 }); 
       this.soundManager.sounds.record.start();
     })
     window.recorder = recorder;

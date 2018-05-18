@@ -1,7 +1,9 @@
 import Event from "./../utils/Event.js"
 import Recorder from 'recorder-js';
  
- 
+/**
+ * @constructor
+ */
 class SoundRecorder extends Event {
   constructor(manager){
     super();
@@ -17,17 +19,26 @@ class SoundRecorder extends Event {
     });
   }
 
+  /**
+   * Init recorder
+   */
   init(){
     navigator.mediaDevices.getUserMedia({audio: true})
       .then(stream => this.recorder.init(stream))
       .catch(err => console.log('Uh oh... unable to get stream...', err));
   }
 
+  /**
+   * Launch a new record
+   */
   record(){
     this.recorder.start().then(() => this.isRecording = true);
     this.dispatch("record:start");
   }
 
+  /**
+   * Stop recording, create blank buffer and hydrate it 
+   */
   stop(){
     this.recorder.stop()
     .then(({blob, buffer}) => {
@@ -45,6 +56,10 @@ class SoundRecorder extends Event {
     });
   }
 
+  /**
+   * @TODO
+   * @param {String} file : Name of file 
+   */
   download(file){
     Recorder.download(blob, file); // downloads a .wav file
   }
