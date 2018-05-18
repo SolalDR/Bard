@@ -14,9 +14,19 @@ export default class Fragment1 extends Bard.Fragment {
     /**
      * SOUNDS
      */
-    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3");
-    var rocketLaunch = this.soundManager.load("forest", "./examples/sounds/rocket_launch.mp3");
+    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3", {
+      loop: true,
+      volume: 0
+    });
+    var rocketLaunch = this.soundManager.load("rocket", "./examples/sounds/rocket_launch.mp3");
 
+    var recorder = new Bard.Recorder(this.soundManager);
+    recorder.init();
+    recorder.on("record:stop", (event) => {
+      this.soundManager.load("record", event.buffer, { loop: true }); 
+      this.soundManager.sounds.record.start();
+    })
+    window.recorder = recorder;
     /**
      * ELEMENTS
      */
@@ -163,13 +173,9 @@ export default class Fragment1 extends Bard.Fragment {
       for(var i=0; i<this.elements.length; i++){
         this.elements[i].display();
       }
-
+      forest.on("load", ()=>{forest.start()})
       this.rocket.display();
-
-      // forest.on("load", () => {
-      //   forest.start();
-      // })
-
+      console.log(this.soundManager)
       this.initListeners();
     })
   }

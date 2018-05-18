@@ -19,6 +19,8 @@ import Scene from "./Scene.js"
 
 import AlertManager from "./components/AlertManager.js"
 import SpeechRecognition from "./components/SpeechRecognition.js"
+import Recorder from "./components/SoundRecorder.js"
+import Sound from "./components/Sound.js"
 
 
 /* Elements */
@@ -44,6 +46,8 @@ import HTMLUtil from "./utils/HTMLUtil.js"
 
 
 export { 
+  Sound, 
+  Recorder,
   HTMLUtil,
 	Action, 
 	Book, 

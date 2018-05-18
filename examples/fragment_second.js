@@ -15,7 +15,6 @@ export default class Fragment2 extends Bard.Fragment {
     /**
      * SOUNDS
      */
-    var forest = this.soundManager.load("forest", "/examples/sounds/forest_ambiance.mp3");
     var rocketLaunch = this.soundManager.load("forest", "/examples/sounds/rocket_launch.mp3");
 
     /**
@@ -122,9 +121,8 @@ export default class Fragment2 extends Bard.Fragment {
       this.initListeners();
 
       this.executeAction("planet-appear");
-      forest.on("load", () => {
-        forest.start();
-      })
+      // this.soundManager.stop("forest");
+      // this.soundManager.play("rocket");
     })
   }
 
