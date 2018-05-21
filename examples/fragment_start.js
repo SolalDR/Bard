@@ -53,7 +53,9 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.planes = [];
     this.clouds = [];
-   
+
+    this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/clouds/nuage1.png', count: 20}))
+
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan3", 
       group: "background",

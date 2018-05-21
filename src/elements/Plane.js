@@ -1,5 +1,4 @@
 import Mesh from "./Mesh.js"
-import * as THREE from "three"
 /**
  * An element in a THREE.js scene.
  * Can be animated and hooked thanks to event
@@ -104,7 +103,6 @@ class Plane extends Mesh {
       this.loaded = true;
       this.dispatch("load");
 
-      this.fitToScreen();
     })
   }
    

@@ -1,5 +1,4 @@
 import Mesh from "./../Mesh.js"
-import Animation from "./../../utils/Animation.js"
 
 /**
  * An element in a THREE.js scene.
@@ -9,23 +8,43 @@ import Animation from "./../../utils/Animation.js"
 class Stars extends Mesh {
 	constructor(params){
 		super(params);
-		let starGeo = new THREE.SphereGeometry(8,8,1)
-		let starMat = new THREE.MeshBasicMaterial({color: 0xffffff})
-        this.mesh = new THREE.Group()
+		super(params);
+		this.eventsList.push("load:map");
+		this.fit = params.fit || true;
+		this.map = params.map;
+		this.depth = params.depth;
+		this.transparent = params.transparent;
+		this.opacity = this.opacity >= 0 ? this.opacity : 1;
+		this.count = params.count;
+		this.init()
+		this.loadMap()
+	}
 
-		for(let i = 0; i < 100; i++) {
-			let star = new THREE.Mesh(starGeo, starMat)
-			star.position.x = Math.random()*500-250
-			star.position.y = Math.random()*100+100
-			star.position.z = Math.random()*500-250
+	init() {
+		this.geometry = new THREE.BufferGeometry()
+		this.material = new THREE.PointsMaterial({color: 0x888888, size: 0.1})
 
-			star.scale.x = 0.3
-			star.scale.y = 0.3
-            star.scale.z = 0.3
-            this.mesh.add(star)
-
+		this.positions = new Float32Array(this.count*3)
+		let positionsIterator = 0
+		for (let i = 0; i < this.count; i++) {
+			this.positions[positionsIterator++] = Math.random()*20
+			this.positions[positionsIterator++] = Math.random()*20
+			this.positions[positionsIterator++] = -1
 		}
-		this.mesh.name = "stars";
+
+		this.geometry.addAttribute('position', new THREE.BufferAttribute(this.positions, 3))	
+		this.mesh = new THREE.Points(this.geometry, this.material) 
+	}
+
+	loadMap() {
+		// this.loader = new THREE.TextureLoader()
+		// this.loader.load(this.map, map => {
+		// 	this.mesh.material.map = map
+			
+		// })
+
+		this.loaded = true
+		this.dispatch('load')
 	}
 
 	/** 
