@@ -33,7 +33,7 @@ class Stars extends Mesh {
 		this.depth = params.depth;
 		this.transparent = params.transparent;
 		this.opacity = this.opacity >= 0 ? this.opacity : 1;
-		this.count = params.count;
+    this.count = params.count;
 		this.init()
 		this.loadMap()
 	}
