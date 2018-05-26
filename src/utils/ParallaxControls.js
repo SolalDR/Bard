@@ -6,7 +6,7 @@ class ParallaxControl {
     this.spherical = new THREE.Spherical();
 	  this.sphericalDelta = new THREE.Spherical();
 
-    this.rotateSpeed = params.rotateSpeed ? params.rotateSpeed: 0.008
+    this.rotateSpeed = params.rotateSpeed ? params.rotateSpeed: 0.005
     this.rotateStart =   new THREE.Vector2(window.innerWidth/2, window.innerHeight/2)
     this.rotateEnd = new THREE.Vector2()
     this.rotateDelta = new THREE.Vector2()

@@ -110,19 +110,23 @@ export default class Fragment1 extends Bard.Fragment {
       })
     );
 
-    this.cube = this.addElement(new Bard.MeshElement({
+
+    this.test = this.addElement(new Bard.MeshElement({
       clickable: true,
-      name: "Hello",
+      name: "cube",
       mesh: new THREE.Mesh(
         new THREE.BoxGeometry( 1, 1, 1 ), 
-        new THREE.MeshBasicMaterial({color: 0xFF0000}))
+        new THREE.MeshBasicMaterial({color: 0xFFF000 }))
     }))
 
-    this.cube.on("click", ()=>{
+    this.test.mesh.position.y = 10
+    this.test.mesh.position.x = 10
+    this.test.mesh.position.z = 10 
+
+    this.test.on("click", ()=>{
       console.log("Clicked in scene");
     })
 
-    
     /**
      * ACTIONS
      */
@@ -176,9 +180,12 @@ export default class Fragment1 extends Bard.Fragment {
         this.elements[i].display();
       }
       forest.on("load", ()=>{forest.start()})
-      this.rocket.display();
-      console.log(this.soundManager)
       this.initListeners();
+
+      this.waitAndAlert("chrome_exception", "next")
+      this.book.on("alert", (e)=>{
+        console.log(e);
+      })
     })
   }
 

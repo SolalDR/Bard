@@ -6,7 +6,8 @@ import Control from "./components/Control.js"
 class Navigator {
 	
 	constructor(book){
-		this.book = book;
+    this.book = book;
+  
 		this.control = new Control();
 	}
 

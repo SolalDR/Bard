@@ -17,7 +17,6 @@ import Scene from "./Scene.js"
 
 /* Components */
 
-import AlertManager from "./components/AlertManager.js"
 import SpeechRecognition from "./components/SpeechRecognition.js"
 import Recorder from "./components/SoundRecorder.js"
 import Sound from "./components/Sound.js"
@@ -55,7 +54,6 @@ export {
 	Element, 
 	Fragment, 
 	Scene, 
-	AlertManager, 
 	SpeechRecognition, 
 	Animation, 
 	Clock, 

@@ -2,7 +2,6 @@ import Clock from "./utils/Clock.js"
 import Action from "./Action.js"
 import SpeechRecognition from "./components/SpeechRecognition.js"
 import SoundManager from "./components/SoundManager.js"
-import AlertManager from "./components/AlertManager.js";
 import Event from "./utils/Event.js";
 import AsyncScriptLoad from "./utils/AsyncScriptLoad.js";
 
@@ -57,9 +56,80 @@ class Fragment extends Event {
     this.clickables = [];
 		this.speechRecognition = null;
 
+    // actions pipeline 
+    this.pipeline = { actions: [], current: 0, custom: false }
+
 		// States
 		this.loaded = false;
 		this.started = false;
+  }
+  
+  set customPipeline(pipeline) {
+    this.pipeline.custom = true; 
+    this.pipeline.actions = pipeline; 
+  }
+
+  get customPipeline() {
+    return this.pipeline.actions;
+  }
+
+  get currentAction() {
+    return this.pipeline.actions[this.pipeline.current];
+  }
+  
+  set currentAction(arg) {
+    if( arg.constructor.name === "String" ) arg = this.pipeline.actions.indexOf(arg);
+    if( !isNaN(arg) && arg >= 0 && arg < this.pipeline.actions.length ){
+      this.pipeline.current = arg;
+    }
+  }
+
+  /**
+   * Alert system
+   * @param {String} messageName The message code
+   * @param {String} waitingAction Name of waiting action 
+   * @param {*} time Timeout before throw the alert
+   */
+  waitAndAlert(messageName, waitingAction = null, time = 5000) {
+    if( !waitingAction ) waitingAction = this.currentAction;
+
+    var timeout = setTimeout((()=>{
+      this.book.dispatch("alert", {
+        name : messageName
+      });
+    }), time)
+
+    this.on("action:execute", (event)=>{
+      if( waitingAction === event.action.name ) {
+        clearTimeout(timeout)
+      }
+    })
+  }
+  
+  /**
+   * Forward to the next pipeline checkpoint (execute current action is "executeBefore" is true)
+   * @param {Boolean} executeBefore 
+   * @return {Boolean} | Return false if cannot increment current actions 
+   */
+  next(executeBefore = false) {
+    if( executeBefore ){ this.executeAction() }
+    if(this.pipeline.actions[this.pipeline.current + 1]){
+      this.pipeline.current++;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Go back to previous pipeline action
+   * @return {Boolean}
+   */
+  previous() {
+    if(this.pipeline.actions[this.pipeline.current - 1]){
+      this.pipeline.current--;      
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -75,6 +145,10 @@ class Fragment extends Event {
 		return true;
   }
   
+  /**
+   * @private
+   * @param {Array} intersects 
+   */
   onClick(intersects){
     for(var i=0; i<intersects.length; i++){
       for(var j=0; j<this.elements.length; j++){
@@ -85,6 +159,10 @@ class Fragment extends Event {
     }
   }
 
+  /**
+   * Return element by his name
+   * @param {String} name 
+   */
   getElement(name = null){
     for(var i=0; i<this.elements.length; i++){
       if( this.elements[i].name == name){
@@ -153,7 +231,9 @@ class Fragment extends Event {
 		if( !this.book.speechRecognition ) this.book.speechRecognition = new SpeechRecognition();
 		this.speechRecognition = this.book.speechRecognition;
 		if(!this.speechRecognition.loaded) {
-			AlertManager.error("La reconnaissance vocale ne fonctionne pas sur ce navigateur. Privilégiez un navigateur comme Google Chrome.")
+			this.book.dispatch("alert", {
+        name : "chrome_exception"
+      });
 		}
 	}
 
@@ -174,9 +254,10 @@ class Fragment extends Event {
 	addAction(name, procedure, args = {}){
 		var action = new Action(name, this, procedure, args); 
 		if( !this.actions[action.name] ){
-			this.actions[action.name] = action;
+      this.actions[action.name] = action;
+      if( !this.pipeline.custom ) this.pipeline.actions.push(action.name);
 			this.dispatch("action:add", { action: action })
-			return; 
+			return;
 		}
 		console.warn(`Action cannot be add. You need to remove action with name \"${action.name}\" first.`);
 		return this.actions[action.name]; 
@@ -190,17 +271,19 @@ class Fragment extends Event {
 	removeAction(name){
 		if( this.actions[name] ){
 			this.dispatch("action:remove", { action: this.actions[name] })
-			this.actions[name] = null; 
+      this.actions[name] = null;
+      if( !this.pipeline.custom ) this.pipeline.actions.splice(this.pipeline.actions.indexOf(name), 1);
 			return true; 
 		}
 		return false; 
 	}
 
 	/**
-	 * Run action 
-	 * @param name string
+	 * Run action if specify, else run the default actions register in the pipeline
+	 * @param name string|null
 	 */
-	executeAction(name){
+	executeAction(name = null){
+    if( !name ) name = this.pipeline.actions[this.pipeline.current];
 		if( this.actions[name] ) {
 			this.actions[name].execute();
 			this.dispatch("action:execute", { action: this.actions[name] })

@@ -19,11 +19,11 @@ class Book extends Event {
 	constructor(params){
 		super();
 		this.id = params.id ? params.id : null; 
-		this.eventsList = ["fragment:add", "fragment:start", "start"];
+		this.eventsList = ["fragment:add", "fragment:start", "start", "alert"];
 		this.fragments = [];
 		this.author = null;
 		this.title = null;
-		this.debug = params && params.debug === true ? true : false;  
+    this.debug = params && params.debug === true ? true : false; 
 		this.navigator = new Navigator(this);
 		this.scene = new Scene(this);
   }

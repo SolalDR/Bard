@@ -72,9 +72,7 @@ class Control {
     for(var i=0; i<this.items.length; i++){
       this.initEvent(this.items[i]);
     }
-
   }
-
 }
 
 

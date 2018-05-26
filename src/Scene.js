@@ -22,7 +22,7 @@ class Scene extends Event {
     
     this.fov = 65;
 		this.camera = new THREE.OrthographicCamera(this.fov/- 2, this.fov / 2, this.fov ,-5, -1000, 1000 );
-    this.camera.position.set(0, 0, 1);
+    this.camera.position.set(0, 0, 20);
 
 		this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
 		this.renderer.setClearColor( 0xffffff, 1 );
@@ -45,11 +45,11 @@ class Scene extends Event {
    * Init orbit control OR paralax
    */
   initControls(){
-		// if( this.book.debug ){
-		// 	this.controls = new OrbitControls( this.camera );
-		// 	this.controls.rotateSpeed = 1
-		// 	this.controls.update();
-    // }
+		if( this.book.debug ){
+			this.controls = new OrbitControls( this.camera );
+			this.controls.rotateSpeed = 1
+			this.controls.update();
+    }
     
     this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas})
   }
@@ -121,6 +121,7 @@ class Scene extends Event {
       this.clicked = false;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.mainGroup.children, true );
+      
       this.dispatch("click", intersects );
     }
     if(this.pControls) {
@@ -177,9 +178,7 @@ class Scene extends Event {
 			})
 			return;
     }
-    
-    console.log(element.group);
-		
+    console.log("Add element", element.name);
 		switch( element.group ){
 			case "background" : this.bgGroup.add(element.mesh); break;
 			case "foreground" : this.fgGroup.add(element.mesh); break;
