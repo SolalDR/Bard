@@ -98,13 +98,23 @@ class Scene extends Event {
 		var winWidth = window.innerWidth
 		var winHeight = window.innerHeight
 
+    this.camera.aspect = window.innerWidth/window.innerHeight
 		this.camera.left = this.fov*(winWidth/winHeight) / -2;
 		this.camera.right = this.fov*(winWidth/winHeight) / 2;
 		this.camera.top = this.fov;
 		this.camera.bottom = -5;
 
 		this.camera.updateProjectionMatrix();	
-		this.renderer.setSize(winWidth, winHeight)
+    this.renderer.setSize(winWidth, winHeight)
+    
+    if(this.book._currentFragment) {
+      this.book._currentFragment.elements.forEach(mesh => {
+        if(mesh.type == "obj3D") {
+          mesh.resize(this.winWidth, this.winHeight)
+        }
+      });
+    }
+   
 	}
 
   onClick(event){

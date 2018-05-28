@@ -6,10 +6,11 @@ import Mesh from "./Mesh.js"
 
 let vert = `
 varying vec2 vUv;
+varying vec3 vPos;
 
 void main() {
     vUv = uv;
-    
+    vPos = position;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
 }`
 let frag = `
@@ -17,18 +18,36 @@ uniform sampler2D texture;
 uniform vec2 textureRes;
 uniform vec2 resolution;
 uniform float opacity; 
+uniform bool displacement;
 
- varying vec2 vUv;
- 
+varying vec2 vUv;
+ varying vec3 vPos;
+
+  uniform float time;
  void main() {
      float imgRatio = textureRes.x/textureRes.y;
      float screenRatio = resolution.x/resolution.y;
      vec4 color = vec4(0.);
-     if(imgRatio > screenRatio) {
-         color = texture2D(texture, vec2(vUv.x, vUv.y));
+
+     float hFrequency = 1.;
+     float hAmplitude = 0.0005;
+     float hSpeed = .1;
+    vec2 noiseDispPos;
+     if(displacement) {
+      noiseDispPos = vec2(
+        vUv.x,
+        (sin(time*hAmplitude)*0.5+1.)*vUv.y
+      );
      } else {
-         color = texture2D(texture, vec2(vUv.x, vUv.y));
+      noiseDispPos = vec2(
+        vUv.x,
+        vUv.y
+      );
      }
+    
+
+     color = texture2D(texture, vec2(noiseDispPos.x, noiseDispPos.y));
+     
 
      
      gl_FragColor = vec4(color.rgb, color.a*opacity);
@@ -48,7 +67,7 @@ class Plane extends Mesh {
     this.transparent = params.transparent;
     this.opacity = this.opacity >= 0 ? this.opacity : 1;
     this.position = params.position ? params.position : {x: 0, y: 0, z: 0 + this.depth};
-    
+    this.displacement = params.displacement || false
     this.videoUrls = params.videoUrls // @TODO
 
     this.init();
@@ -91,6 +110,9 @@ class Plane extends Mesh {
 
       // this.createMesh();
       this.texture = texture
+      this.texture.anisotropy = 0;
+      this.texture.magFilter = THREE.NearestFilter;
+      this.texture.minFilter = THREE.NearestFilter;
       this.mesh.material.uniforms.texture.value = this.texture
 
       this.mesh.material.uniforms.textureRes.value = {
@@ -120,10 +142,18 @@ class Plane extends Mesh {
     // If we want a width that follows the aspect ratio of the camera, then get the aspect ratio and multiply by the height.
     var aspect = window.innerWidth / window.innerHeight;
     this.width = this.height * aspect;
-    this.height = this.width / imgRatio
+    if(imgRatio > 1) {
+      this.height = this.width
+      this.width = this.width * imgRatio
+    } else {
+      this.height = this.width / imgRatio
+    }
+   
     this.mesh.scale.set(this.width, this.height, 1)
     this.position.y = (this.height/2) - Math.abs(camera.bottom)*2
     this.mesh.position.y = (this.height/2) - Math.abs(camera.bottom)*2
+    this.position.x = (this.width/2)-Math.abs(camera.left)-5.
+    this.mesh.position.x = (this.width/2)-Math.abs(camera.left)-5.
   }
 
 
@@ -142,15 +172,31 @@ class Plane extends Mesh {
         opacity : {
           type:'f',
           value : this.opacity
+        },
+        time : {
+          type:'f',
+          value : 0
+        },
+        displacement : {
+          type:'b',
+          value : this.displacement
         }
       },
       transparent: this.transparent,
       depthTest: false,
       depthWrite: false,
+      // alphaTest: 0.5
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.position.z = this.depth;
     this.mesh.name = this.name;
+  }
+  render(clock) {
+    this.renderAnims(17)
+    this.mesh.material.uniforms.time.value += clock.delta
+  }
+  resize(width, height) {
+    this.fitToScreen()
   }
 }
 

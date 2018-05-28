@@ -7,9 +7,9 @@ import Mesh from "./../Mesh.js"
 
 let vert = `
 varying vec2 vUv;
-
+uniform float size;
 void main() {
-	gl_PointSize = 20.;
+	gl_PointSize = size;
     vUv = uv;
     
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
@@ -20,7 +20,7 @@ uniform sampler2D texture;
  varying vec2 vUv;
  
  void main() {
-     gl_FragColor = texture2D(texture, gl_PointCoord);
+     gl_FragColor = texture2D(texture, gl_PointCoord.xy);
  }`
  
 class Stars extends Mesh {
@@ -69,8 +69,8 @@ class Stars extends Mesh {
 
 		for (let i = 0; i < this.mesh.geometry.attributes.position.array.length; i++) {
 			this.mesh.geometry.attributes.position.array[positionIterator++] = (i*starOffset + Math.random()*2-1)+camera.left
-			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*40+20
-			this.mesh.geometry.attributes.position.array[positionIterator++] = -20
+			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*40+30
+			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*(-10)-20
 			
 		}
 		console.log(this.mesh.geometry.attributes.position.array)
@@ -83,7 +83,11 @@ class Stars extends Mesh {
 				texture: {
 					type:'t',
 					value: null
-				}
+        }, 
+        size: {
+          type:'f',
+          value: 30
+        }
 			},
 			vertexShader: vert,
 			fragmentShader: frag,
@@ -124,7 +128,11 @@ class Stars extends Mesh {
 	 */
 	render(clock){
 
-	}
+  }
+  
+  resize() {
+    // this.positionStars()
+  }
 }
 
 export default Stars;

@@ -189,7 +189,11 @@ class Mesh extends Element {
 	 */
 	render(clock){
 		this.renderAnims(17);
-	}
+  }
+  
+  resize(width, height) {
+
+  }
 }
 
 export default Mesh;

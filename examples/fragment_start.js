@@ -37,8 +37,8 @@ export default class Fragment1 extends Bard.Fragment {
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
-          "Tout le monde a mis sa <span>ceinture de sécurité</span> et est bien installé <span data-speech='next'>dans le cockpit</span>",
-          "Il ne reste plus qu’à <span>démarrer la fusée</span>. <span data-speech='rocket-fly'>vers l'infini et l'au-delà</span>."
+          "Un soir, alors qu’il observe le ciel étoilé d’une belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
+          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais pour s’aventurer dehors,<span data-speech='scene-2'>il doit être bien équipé</span>."
         ],
         align: "bottom-left",
         position: { x: "40px", y: "-20px" },
@@ -55,30 +55,79 @@ export default class Fragment1 extends Bard.Fragment {
     this.clouds = [];
 
     this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-128.png', count: 20, group: "background"}))
+   
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan3",
+      group: "background",
+      map: '/examples/scene-1/scene-1-bg.png', 
+      transparent: true, 
+      depth: -30}
+    )))
 
     this.planes.push(this.addElement(new Bard.PlaneElement({
-      name: "plan3", 
+      name: "plan5", 
       group: "background",
-      map: '/examples/img/plans/scene1-plan3.png', 
+      map: '/examples/scene-1/scene-1-plan5.png', 
       transparent: true, 
-      depth: -3
+      depth: -20
     })))
+
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan4",
+      group: "background",
+      map: '/examples/scene-1/scene-1-plan4.png', 
+      transparent: true, 
+      depth: -17}
+    )))
+    
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "plan3",
+      group: "background",
+      map: '/examples/scene-1/scene-123-plan3-min.png', 
+      transparent: true, 
+      depth: -13}
+    )))
 
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan2",
       group: "background",
-      map: '/examples/img/plans/scene1-plan2.png', 
+      map: '/examples/scene-1/scene-123-plan2.png', 
       transparent: true, 
-      depth: 0}
+      depth: -9}
     )))
-    
+
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan1",
       group: "foreground",
-      map: '/examples/img/plans/scene1-plan1.png', 
+      map: '/examples/scene-1/scene-1-plan1.png', 
       transparent: true, 
-      depth: 0
-    })))
+      depth: 0}
+    )))
+
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "degradeSol",
+      group: "background",
+      map: '/examples/scene-1/scene-1-degrade-sol.png', 
+      transparent: true, 
+      depth: 2,    
+      displacement: 1.}
+    )))
+    this.planes.push(this.addElement(new Bard.PlaneElement({
+      name: "degradeCiel",
+      group: "background",
+      map: '/examples/scene-1/scene-1-degrade-ciel.png', 
+      transparent: true, 
+      depth: 3,
+    }
+    )))
+
+    // this.planes.push(this.addElement(new Bard.PlaneElement({
+    //   name: "plan1",
+    //   group: "foreground",
+    //   map: '/examples/img/plans/scene1-plan1.png', 
+    //   transparent: true, 
+    //   depth: 0
+    // })))
 
     for (let i = 1; i < 5; i++) {
       let cloud = this.addElement(new Bard.PlaneElement({
@@ -90,25 +139,25 @@ export default class Fragment1 extends Bard.Fragment {
       }));
       cloud.x = (Math.random()*60 ) - 30
       this.clouds.push(cloud);
-      this.planes.push(cloud);
+      // this.planes.push(cloud);
     }
 
-    this.rocket = this.addElement(
-      Bard.MeshElement.fromObj({
-        obj:"/examples/obj/fusee-plate5.obj",
-        mtl:'/examples/obj/fusee-plate2.mtl',
-        name: "rocket",
-        clickable: true,
-        config: {
-          scale:3.,
-          position: {
-            x: (0.4*this.screenSize)+this.book.scene.camera.left,
-            y: 0.03*this.screenSize,
-            z: 0
-          }
-        }
-      })
-    );
+    // this.rocket = this.addElement(
+    //   Bard.MeshElement.fromObj({
+    //     obj:"/examples/obj/fusee-plate5.obj",
+    //     mtl:'/examples/obj/fusee-plate2.mtl',
+    //     name: "rocket",
+    //     clickable: true,
+    //     config: {
+    //       scale:3.,
+    //       position: {
+    //         x: (0.4*this.screenSize)+this.book.scene.camera.left,
+    //         y: 0.03*this.screenSize,
+    //         z: 0
+    //       }
+    //     }
+    //   })
+    // );
 
 
     this.test = this.addElement(new Bard.MeshElement({
@@ -131,24 +180,43 @@ export default class Fragment1 extends Bard.Fragment {
      * ACTIONS
      */
 
-    this.addAction("rocket-fly", (e) => {
-      this.rocket.anims.push(new Bard.Animation({
-        duration: 6000,
-        onProgress: (advancement, time) => {
-          var easeTime = Bard.Easing.easeInQeight(advancement)
-          this.rocket.mesh.position.x = (Math.sin(easeTime) * 30.) + this.rocket.position.x
-          this.rocket.mesh.position.y = easeTime * 200. + this.rocket.position.y
-          this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
+    // this.addAction("rocket-fly", (e) => {
+    //   this.rocket.anims.push(new Bard.Animation({
+    //     duration: 6000,
+    //     onProgress: (advancement, time) => {
+    //       var easeTime = Bard.Easing.easeInQeight(advancement)
+    //       this.rocket.mesh.position.x = (Math.sin(easeTime) * 30.) + this.rocket.position.x
+    //       this.rocket.mesh.position.y = easeTime * 200. + this.rocket.position.y
+    //       this.rocket.mesh.rotation.z = -(Math.sin(easeTime))
           
-          this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
-        },
-        onFinish: () => {
-          this.executeAction('transitionOut');
-        }
-      }))
-      rocketLaunch.start()
-    }, {
-      once: true
+    //       this.book.scene.camera.rotation.x = Math.cos(time*(Math.PI*100))/100
+    //     },
+    //     onFinish: () => {
+    //       this.executeAction('transitionOut');
+    //     }
+    //   }))
+    //   rocketLaunch.start()
+    // }, {
+    //   once: true
+    // })
+
+    this.addAction("scene-2", (e)=>{
+      for (let i = 0; i < this.planes.length; i++) {
+     
+        this.planes[i].anims.push(new Bard.Animation({
+          duration: 2000,
+          onProgress: (advancement, time) => {
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)
+            // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+            console.log(easeTime)
+           this.planes[i].mesh.position.x = this.planes[i].position.x - ((this.book.scene.camera.right*(2*i/this.planes.length))*easeTime)
+            
+          },
+          onFinish:() => {
+            // this.runChild(0);
+          }
+        }))
+       }
     })
 
     this.addAction("transitionOut", (e) => {
