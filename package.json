@@ -1,6 +1,6 @@
 {
   "name": "js-bard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "/src/Bard.js",
   "scripts": {
@@ -10,14 +10,7 @@
   },
   "author": "solaldr",
   "license": "ISC",
-  "dependencies": {
-    "annyang": "^2.6.0",
-    "babel-plugin-glslify": "^2.0.0",
-    "three": "0.91.0",
-    "three-effectcomposer-es6": "0.0.4",
-    "three-shader-fxaa": "^5.1.1",
-    "recorder-js": "1.0.7"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "browserify": {
     "transform": [
