@@ -13,11 +13,19 @@ class Scene extends Event {
 	/**
 	 * Create the THREE.js Scene, camera, renderer and create layer groups
 	 */
-	constructor(book){
+	constructor(book, canvas = null){
     super();
     this.eventsList = ["click"];
-		this.book = book;
-		this.canvas = document.getElementById("canvas");
+    this.book = book;
+    
+    if( canvas ){
+      this.canvas = canvas
+    } else {
+      this.canvas = document.createElement("canvas");
+      this.canvas.id = "canvas";
+      document.body.appendChild(this.canvas);
+    }
+		
 		this.threeScene = new THREE.Scene();
     
     this.fov = 65;
