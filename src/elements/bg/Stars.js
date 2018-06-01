@@ -69,8 +69,8 @@ class Stars extends Mesh {
 
 		for (let i = 0; i < this.mesh.geometry.attributes.position.array.length; i++) {
 			this.mesh.geometry.attributes.position.array[positionIterator++] = (i*starOffset + Math.random()*2-1)+camera.left
-			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*40+30
-			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*(-10)-20
+			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*camera.top/2+camera.top/2
+			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*(-100)-20
 			
 		}
 		console.log(this.mesh.geometry.attributes.position.array)

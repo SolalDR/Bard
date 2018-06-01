@@ -26,7 +26,8 @@ class Mesh extends Element {
 		if( params.mesh ){
 			this.mesh = params.mesh;
 			this.mesh.name = this.name;
-			this.loaded = true; 
+      this.loaded = true; 
+      this.position = this.mesh.position
 		} else {
 			this.mesh = null;	
 		}

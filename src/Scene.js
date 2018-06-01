@@ -21,8 +21,8 @@ class Scene extends Event {
 		this.threeScene = new THREE.Scene();
     
     this.fov = 65;
-		this.camera = new THREE.OrthographicCamera(this.fov/- 2, this.fov / 2, this.fov ,-5, -1000, 1000 );
-    this.camera.position.set(0, 0, 20);
+		this.camera = new THREE.OrthographicCamera(window.innerWidth/- 2, window.innerWidth / 2, window.innerHeight ,-5, -1000, 1000 );
+    this.camera.position.set(0, 0, 120);
 
 		this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
 		this.renderer.setClearColor( 0xffffff, 1 );
@@ -45,11 +45,11 @@ class Scene extends Event {
    * Init orbit control OR paralax
    */
   initControls(){
-		if( this.book.debug ){
-			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 1
-			this.controls.update();
-    }
+		// if( this.book.debug ){
+		// 	this.controls = new OrbitControls( this.camera );
+		// 	this.controls.rotateSpeed = 1
+		// 	this.controls.update();
+    // }
     
     this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas})
   }
@@ -98,11 +98,11 @@ class Scene extends Event {
 		var winWidth = window.innerWidth
 		var winHeight = window.innerHeight
 
-    this.camera.aspect = window.innerWidth/window.innerHeight
-		this.camera.left = this.fov*(winWidth/winHeight) / -2;
-		this.camera.right = this.fov*(winWidth/winHeight) / 2;
-		this.camera.top = this.fov;
-		this.camera.bottom = -5;
+    // this.camera.aspect = window.innerWidth/window.innerHeight
+		this.camera.left =0;
+		this.camera.right = winWidth ;
+		this.camera.top = winHeight;
+		this.camera.bottom = 0;
 
 		this.camera.updateProjectionMatrix();	
     this.renderer.setSize(winWidth, winHeight)
@@ -131,7 +131,7 @@ class Scene extends Event {
       this.clicked = false;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.mainGroup.children, true );
-      
+      console.log(intersects)
       this.dispatch("click", intersects );
     }
     if(this.pControls) {
@@ -157,9 +157,9 @@ class Scene extends Event {
 		this.fgGroup.name = "foreground";
 		this.mainGroup.name = "main";
 
-		this.bgGroup.position.z = -6
+		this.bgGroup.position.z = -30
 		this.mainGroup.position.z = 0
-		this.fgGroup.position.z = 6
+		this.fgGroup.position.z = 30
 
 		this.threeScene.add(this.bgGroup);
     this.threeScene.add(this.mainGroup);
@@ -188,7 +188,7 @@ class Scene extends Event {
 			})
 			return;
     }
-    console.log("Add element", element.name);
+    
 		switch( element.group ){
 			case "background" : this.bgGroup.add(element.mesh); break;
 			case "foreground" : this.fgGroup.add(element.mesh); break;

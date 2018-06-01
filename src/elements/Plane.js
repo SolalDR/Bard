@@ -150,10 +150,10 @@ class Plane extends Mesh {
     }
    
     this.mesh.scale.set(this.width, this.height, 1)
-    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2
-    this.mesh.position.y = (this.height/2) - Math.abs(camera.bottom)*2
-    this.position.x = (this.width/2)-Math.abs(camera.left)-5.
-    this.mesh.position.x = (this.width/2)-Math.abs(camera.left)-5.
+    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2-((camera.top)*0.05)
+    this.mesh.position.y = this.position.y
+    this.position.x = (this.width/2)-Math.abs(camera.left)-((camera.right*2)*0.025)
+    this.mesh.position.x = this.position.x
   }
 
 
