@@ -9,7 +9,7 @@ class SpeechRecognition {
 	
 	constructor(args) {
 		if( !args ) var args = {}
-		this.commands = args.commands ? args.commands : {};
+		this.commands = args.commands ? args.commands : [];
 		this.api = annyang;	
 			
   		if (this.api) {
@@ -32,8 +32,12 @@ class SpeechRecognition {
 				console.warn('SpeechRecognition : There was an error in Annyang!', e);
 			});
 
-			// Add our commands to annyang 
-			this.api.addCommands(this.commands);
+      // Add our commands to annyang 
+      var commands = {};
+      this.commands.forEach(command => {
+        commands[command] = { command: command, callback: command.callback }
+      })
+			this.api.addCommands(commands);
 
 			// Start listening. 
 			this.api.start({ autoRestart: true, continuous: false });
