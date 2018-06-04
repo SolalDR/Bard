@@ -1,6 +1,6 @@
 import Mesh from "./Mesh.js"
 import * as THREE from "three"
-
+import GLTFLoader from './../utils/glTFLoader'
 /**
  * A character with rigs
  */
@@ -9,14 +9,13 @@ class Character extends Mesh {
 	static get MODE_DEBUG(){ return 1; }
 
 	constructor(params){
-		super(params);
+    super(params);
 		this.type = "obj3D";
 		window.char = this;
-		this.resourceUrl = params.model ? params.model : "/src/assets/obj/test.json";
+		this.resourceUrl = params.model ? params.model : "/examples/obj/rig2.glb";
 		this.action = "walk";
 		this.anims = [];
 		this.mode = 
-
 		this.config = {
 			skeleton: false,
 			stepSize: 1.0,
@@ -28,52 +27,70 @@ class Character extends Mesh {
 				run: 0.0
 			}
 		}
-		this.loader = new THREE.JSONLoader()
-		this.loader.load( "/src/assets/obj/head.json",  ( loadedObject ) => {
-			this.firstGeo = loadedObject
-			console.log(loadedObject)
-			let mat = new THREE.MeshBasicMaterial()
-			this.mesh2 = new THREE.SkinnedMesh(loadedObject,mat )
-			this.skinIndices = this.mesh2.geometry.skinIndices
-			this.skinWeights = this.mesh2.geometry.skinWeights
-			// this.mesh2.updateMatrix()
-		})
-		this.loader.load( this.resourceUrl,  ( loadedObject ) => {
-			loadedObject.merge(this.mesh2.geometry, this.mesh2.matrix)
-			let mat = new THREE.MeshBasicMaterial()
-			mat.skinning = true
-			for (let index = 0; index < this.skinIndices.length; index++) {
-				loadedObject.skinIndices.push(this.skinIndices[index ])
-				loadedObject.skinWeights.push(this.skinWeights[index ])
-				
-			}
-		
-			this.mesh = new THREE.SkinnedMesh(loadedObject,mat )
-			console.log(this.mesh)
-			this.mesh.rotation.set(0,Math.PI/3,0)
-			this.mesh.material.transparent = true
-			this.mesh.material.side = THREE.DoubleSide
-			this.mesh.material.opacity = 0.5
-			// this.mesh.children[0].children[0].add(new THREE.Mesh(new THREE.BoxGeometry(6,6,6), new THREE.MeshBasicMaterial({color:"black"})))
-			 this.mesh.scale.set(10.,10.,10.)
-			 var helper = new THREE.SkeletonHelper( this.mesh );
-			// loadedObject.traverse( ( child ) => {
-			// 	if ( child instanceof THREE.SkinnedMesh ) {
-			// 		this.mesh = child;
-			// 	}
-			// } );
-			// for (let index = 0; index < this.mesh.skeleton.bones.length; index++) {
-			// 	this.mesh.skeleton.bones[index].children[0].add(new THREE.Mesh(new THREE.BoxGeometry(2,2,2), new THREE.MeshBasicMaterial({color:"black"})))
+    this.loader = new GLTFLoader()
+    this.loader.setCrossOrigin = "anonymous"
+		this.loader.load( this.resourceUrl,  ( gltf ) => {
+			gltf.scene.traverse(function (child) {
+        if(child.scale.x == 100) {
+        }
+        if (child.type = "Mesh") {
+          if(child.name == "Curve003") {
+            child['visible'] == null
+            child.children[0].children[0].visible = false
+            
+          }
+    
+          if(child['material']) {
+            child.material.transparent = true
+            child.material.depthTest = false
+            child.material.depthWrite = false
+            child.name = child.parent.parent.name+1
+            var matches = child.name.match(/\d+/g);
+            if (matches != null) {
+            }
+          }
+        }
+      })
 
-			// }
+
+      this.mesh = new THREE.Group()
+      this.mesh.position.set(params.position.x, params.position.y, params.position.z)
+      this.mesh.name = this.name;
+      this.mesh.add(gltf.scene)
+      this.mesh.rotation.x = Math.PI/2
+      
+      var helper = new THREE.BoxHelper(this.mesh, 0xff0000);
+      let box = new THREE.Box3().setFromObject(this.mesh)
+      let boundingBuffer = [
+        box.min.x, box.min.y, 1,
+        box.max.x, box.min.y, 1,
+        box.max.x, box.max.y, 1,
+
+        box.min.x, box.min.y, 1,
+        box.max.x, box.max.y, 1,
+        box.min.x, box.max.y, 1,
+      ]
+      
+      let boundingGeo = new THREE.BufferGeometry()
+      boundingGeo.addAttribute('position', new THREE.BufferAttribute(new Float32Array(boundingBuffer),3))
+      helper.update();
+      let geo = helper.geometry
+      console.log(geo)
+      let bbMesh = new THREE.Mesh(boundingGeo, new THREE.MeshBasicMaterial({color: 'red', transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSie}))
+      bbMesh.name = "bb-"+this.name;
+      bbMesh.position.z = -1
+      bbMesh.rotation.x = -Math.PI/2
+      bbMesh.material.opacity = 0.000
+      this.mesh.add(bbMesh)
+      // If you want a visible bounding box
+      console.log(this)
 			if ( this.mesh === undefined ) {
 				alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
 				return;
 			}
 			
 			this.mixer = new THREE.AnimationMixer( this.mesh );
-			console.log(loadedObject)
-			this.walkAction = this.mixer.clipAction(loadedObject.animations[0]);
+			this.walkAction = this.mixer.clipAction(gltf.animations[0]);
 			this.walkAction.enabled = true
 			this.actions = [  this.walkAction ];
 			
@@ -287,10 +304,9 @@ class Character extends Mesh {
 	render(clock){
 		if( this.loaded ){
 			this.walkWeight = this.walkAction.getEffectiveWeight();
-
-			this.renderAnims();
-			
-			this.mixerUpdateDelta = clock.delta / 1000
+      
+		  this.mixerUpdateDelta = clock.delta / 1000
+      this.renderAnims(clock.delta );
 
 			// If in single step mode, make one step and then do nothing (until the user clicks again)
 			if ( this.singleStepMode ) {

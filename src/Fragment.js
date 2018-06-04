@@ -152,7 +152,7 @@ class Fragment extends Event {
   onClick(intersects){
     for(var i=0; i<intersects.length; i++){
       for(var j=0; j<this.elements.length; j++){
-        if(this.elements[j].clickable && intersects[i].object.name == this.elements[j].name){
+        if(this.elements[j].clickable && intersects[i].object.name == "bb-"+this.elements[j].name){
           this.elements[j].dispatch("click");
         }
       }

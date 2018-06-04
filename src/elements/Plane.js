@@ -121,7 +121,7 @@ class Plane extends Mesh {
       }
 
       this.material.uniforms.needsUpdate = true;
-
+      this.currentPos = new THREE.Vector2(0,0)
       this.loaded = true;
       this.dispatch("load");
 
@@ -150,13 +150,16 @@ class Plane extends Mesh {
     }
    
     this.mesh.scale.set(this.width, this.height, 1)
-    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2-((camera.top)*0.05)
+    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2-((camera.top)*0.05)-this.currentPos.y
     this.mesh.position.y = this.position.y
-    this.position.x = (this.width/2)-Math.abs(camera.left)-((camera.right*2)*0.025)
+    this.position.x = (this.width/2)-Math.abs(camera.left)-((camera.right*2)*0.025)-this.currentPos.x
     this.mesh.position.x = this.position.x
+    console.log(this.currentPos.x)
   }
 
-
+  meshScale() {
+    this.mesh.scale.set(this.width*0.5, this.height*0.5, 1)
+  }
   /**
    * Init geometry, material & mesh
    */
@@ -196,7 +199,7 @@ class Plane extends Mesh {
     this.mesh.material.uniforms.time.value += clock.delta
   }
   resize(width, height) {
-    this.fitToScreen()
+    // this.fitToScreen()
   }
 }
 

@@ -29,10 +29,10 @@ class Scene extends Event {
 		this.threeScene = new THREE.Scene();
     
     this.fov = 65;
-		this.camera = new THREE.OrthographicCamera(window.innerWidth/- 2, window.innerWidth / 2, window.innerHeight ,-5, -1000, 1000 );
+		this.camera = new THREE.OrthographicCamera(0, window.innerWidth, 0,window.innerHeight, -1000, 1000 );
     this.camera.position.set(0, 0, 120);
 
-		this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
+		this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
 		this.renderer.setClearColor( 0xffffff, 1 );
     this.composer = new EffectComposer(this.renderer)
 		this.composer.addPass(new RenderPass(this.threeScene, this.camera))
@@ -53,11 +53,11 @@ class Scene extends Event {
    * Init orbit control OR paralax
    */
   initControls(){
-		// if( this.book.debug ){
-		// 	this.controls = new OrbitControls( this.camera );
-		// 	this.controls.rotateSpeed = 1
-		// 	this.controls.update();
-    // }
+		if( this.book.debug ){
+			this.controls = new OrbitControls( this.camera );
+			this.controls.rotateSpeed = 1
+			this.controls.update();
+    }
     
     this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas})
   }
@@ -88,10 +88,10 @@ class Scene extends Event {
    */
   initLights(){
 		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 0.9 ) );
-		var directionalLight = new THREE.DirectionalLight( 0xeeeeee, 1 );
-		directionalLight.position.x  = 2
-		directionalLight.position.y  = 2
-		directionalLight.position.z  = 2
+	
+    var light1 = new THREE.PointLight( 0xffffff, 2, 10000 );
+    light1.position.z = 60
+    this.threeScene.add(light1)
   }
 
   /**
@@ -106,23 +106,24 @@ class Scene extends Event {
 		var winWidth = window.innerWidth
 		var winHeight = window.innerHeight
 
-    // this.camera.aspect = window.innerWidth/window.innerHeight
+    this.camera.aspect = window.innerWidth/window.innerHeight
 		this.camera.left =0;
-		this.camera.right = winWidth ;
-		this.camera.top = winHeight;
+    this.camera.right = winWidth/this.camera.aspect ;
+    
 		this.camera.bottom = 0;
+		this.camera.top = winHeight/this.camera.aspect;
 
 		this.camera.updateProjectionMatrix();	
     this.renderer.setSize(winWidth, winHeight)
     
     if(this.book._currentFragment) {
+      this.book._currentFragment.resize()
       this.book._currentFragment.elements.forEach(mesh => {
         if(mesh.type == "obj3D") {
           mesh.resize(this.winWidth, this.winHeight)
         }
       });
-    }
-   
+    }  
 	}
 
   onClick(event){
@@ -139,6 +140,7 @@ class Scene extends Event {
       this.clicked = false;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.mainGroup.children, true );
+      
       console.log(intersects)
       this.dispatch("click", intersects );
     }
@@ -146,8 +148,8 @@ class Scene extends Event {
       
       this.pControls.update()
     }
-
-		this.composer.render(this.threeScene, this.camera);
+    
+		this.renderer.render(this.threeScene, this.camera);
 	}
 
 	/**	
@@ -183,6 +185,9 @@ class Scene extends Event {
 	 * @param element : Element
 	 */
 	addElement(element){
+    if(element.type == 'helper') {
+      this.mainGroup.add(element)
+    }
     if( element.type !== "obj3D" ) {
       return; 
     }

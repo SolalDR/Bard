@@ -12,7 +12,8 @@ export default class Fragment1 extends Bard.Fragment {
     this.addSoundManager();
     this.winWidth = window.innerWidth
     this.winHeight = window.innerHeight
-
+    this.aspect = window.innerWidth/window.innerHeight
+    this.fondPerdu = (this.winWidth/15)
     /**
      * SOUNDS
      */
@@ -29,6 +30,12 @@ export default class Fragment1 extends Bard.Fragment {
       this.soundManager.sounds.record.start();
     })
     window.recorder = recorder;
+    /***
+     * Fragment variables
+     */
+
+
+    
     /**
      * ELEMENTS
      */
@@ -55,11 +62,19 @@ export default class Fragment1 extends Bard.Fragment {
       })
     );
    
+    this.char = this.addElement(new Bard.CharacterElement({
+      clickable: true,
+      position: {
+        x:this.winWidth*0.3/this.aspect,
+        y: this.winWidth*0.1/this.aspect,
+        z: -29
+      }
+    }))
 
-    this.getElement("mainText").on("word:click", function(e){
-      console.log(e);
+    this.char.on('click', ()=>{
+      console.log("Hello")
     })
-
+    
     this.planes = [];
     this.clouds = [];
 
@@ -90,8 +105,6 @@ export default class Fragment1 extends Bard.Fragment {
       depth: -120}
     )))
     
-    
-
     this.animatedPlanes.push(this.addElement(new Bard.PlaneElement({
       name: "plan3",
       group: "background",
@@ -105,7 +118,7 @@ export default class Fragment1 extends Bard.Fragment {
       group: "background",
       map: '/examples/scene-1/scenes-123-parallaxe-plan2.png', 
       transparent: true, 
-      depth: -40}
+      depth: 0}
     )))
 
     this.animatedPlanes.push(this.addElement(new Bard.PlaneElement({
@@ -113,23 +126,23 @@ export default class Fragment1 extends Bard.Fragment {
       group: "foreground",
       map: '/examples/scene-1/scenes-123-parallaxe-plan1.png', 
       transparent: true, 
-      depth: 0}
+      depth: 20}
     )))
 
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "degradeSol",
-      group: "background",
+      group: "foreground",
       map: '/examples/scene-1/scene-1-degrade-sol.png', 
       transparent: true, 
-      depth: 2,    
+      depth: 30,    
       displacement: 1.}
     )))
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "degradeCiel",
-      group: "background",
+      group: "foreground",
       map: '/examples/scene-1/scene-1-degrade-ciel.png', 
       transparent: true, 
-      depth: 3,
+      depth: 31,
     }
     )))
 
@@ -146,44 +159,7 @@ export default class Fragment1 extends Bard.Fragment {
       // this.planes.push(cloud);
     }
 
-    // this.rocket = this.addElement(
-    //   Bard.MeshElement.fromObj({
-    //     obj:"/examples/obj/fusee-plate5.obj",
-    //     mtl:'/examples/obj/fusee-plate2.mtl',
-    //     name: "rocket",
-    //     clickable: true,
-    //     config: {
-    //       scale:3.,
-    //       position: {
-    //         x: (0.4*this.screenSize)+this.book.scene.camera.left,
-    //         y: 0.03*this.screenSize,
-    //         z: 0
-    //       }
-    //     }
-    //   })
-    // );
 
-    this.ocelotFound = false
-    this.caracalFound = false
-    this.parcheminFound = false
-
-    this.roar = false
-    this.char = this.addElement(new Bard.MeshElement({
-      clickable: true,
-      name: "char",
-      mesh: new THREE.Mesh(
-        new THREE.BoxGeometry( 100, 100, 1 ), 
-        new THREE.MeshBasicMaterial({color: 0xFFF000, transparent: true, depthTest: false, depthWrite: false }))
-    }))
-
-    this.char.mesh.position.y = this.winHeight*0.25
-    this.char.mesh.position.x = this.winWidth*0.35
-    this.char.mesh.position.z = -30
-
-    this.char.position.y = this.winHeight*0.25
-    this.char.position.x = this.winWidth*0.35
-    this.char.position.z = -30
-    console.log(this.char)
 
     this.ocelot = this.addElement(new Bard.MeshElement({
       clickable: true,
@@ -209,12 +185,12 @@ export default class Fragment1 extends Bard.Fragment {
       clickable: true,
       name: "pierre",
       mesh: new THREE.Mesh(
-        new THREE.BoxGeometry( 50, 50, 1 ), 
+        new THREE.BoxGeometry( 50/this.aspect, 50/this.aspect, 1 ), 
         new THREE.MeshBasicMaterial({color: 0xF26000, transparent: true, depthTest: false, depthWrite: false, opacity: 0.5 }))
     }))
 
-    this.pierre.mesh.position.y = this.winHeight*0.5
-    this.pierre.mesh.position.x = this.winWidth*0.75
+    this.pierre.mesh.position.y = this.winHeight*0.5/(this.winWidth/this.winHeight)
+    this.pierre.mesh.position.x = this.winWidth*0.75/(this.winWidth/this.winHeight)
 
    
 
@@ -231,7 +207,7 @@ export default class Fragment1 extends Bard.Fragment {
 
       this.ocelotFound = true
       this.executeAction('fallOcelot')
-      if(this.characalFound ) {
+      if(this.caracalFound ) {
         this.executeAction('next')
       }
       
@@ -313,10 +289,13 @@ export default class Fragment1 extends Bard.Fragment {
     this.addAction('fallCaracal', (e)=> {
       this.ocelot.anims.push(new Bard.Animation({
         duration: 500,
+        from: this.caracal.mesh.position.y,
+        to: this.winHeight*0.3,
         onProgress: (advancement, time) => {
-          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          
+          var easeTime = Bard.Easing.easeInOutQuint(time)
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-          this.caracal.mesh.position.y =this.winHeight*0.7-(this.winHeight*0.4*easeTime)
+          this.caracal.mesh.position.y = time 
         },
       })) 
     })
@@ -332,11 +311,11 @@ export default class Fragment1 extends Bard.Fragment {
         },
       })) 
     })
-
+  
     this.addAction("scene-2", (e)=>{
       this.char.anims.push(new Bard.Animation({
         duration: 3500,
-        onProgress: (advancement, time) => {
+        onProgress: (advancement, time, anim) => {
           var easeTime = Bard.Easing.easeInOutQuint(advancement)
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
           let offset = ((this.book.scene.camera.right))+(((this.book.scene.camera.right)/15))
@@ -347,16 +326,17 @@ export default class Fragment1 extends Bard.Fragment {
           this.executeAction('next')
         }
       })) 
+      
       for (let i = 0; i < this.animatedPlanes.length; i++) {
-     
+      
         this.animatedPlanes[i].anims.push(new Bard.Animation({
           duration: 3500,
           onProgress: (advancement, time) => {
             var easeTime = Bard.Easing.easeInOutQuint(advancement)
             // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
         
-            let offset = ((this.book.scene.camera.right))+(((this.book.scene.camera.right)/15)*i)
-           this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
+            let offset = (this.winWidth+(this.fondPerdu*i))/this.aspect
+            this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
           },
           onFinish:() => {
             
@@ -372,7 +352,7 @@ export default class Fragment1 extends Bard.Fragment {
             var easeTime = Bard.Easing.easeInOutQuint(advancement)
             // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
             
-            let offset = ((this.book.scene.camera.right))+((this.book.scene.camera.right)/15)
+            let offset = (this.winWidth+this.fondPerdu)/this.aspect
            this.planes[i].mesh.position.x = this.planes[i].position.x - (offset*easeTime)
             
           },
@@ -393,7 +373,7 @@ export default class Fragment1 extends Bard.Fragment {
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
           this.planes[i].mesh.scale.x = ((easeTime*(i+1))*(100+(20*i)))+this.planes[i].width
           this.planes[i].mesh.scale.y = ((easeTime*(i+1))*(100+(20*i)))+this.planes[i].height
-
+          
           if(advancement > 0.5) {
             this.planes[i].mesh.material.uniforms.opacity.value = 1-((advancement-0.5)*2.)
           }
@@ -420,7 +400,13 @@ export default class Fragment1 extends Bard.Fragment {
       })
     })
   }
-
+  resize() {
+    this.winWidth = window.innerWidth
+    this.winHeight = window.innerHeight
+    this.aspect = this.winWidth/this.winHeight
+  
+    this.fondPerdu = this.winWidth/15
+  }
   render() {
     this.beforeRender();
     

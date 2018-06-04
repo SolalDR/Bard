@@ -10,7 +10,7 @@ class Animation {
 
 		this.current = 0 
 
-		this.from = args.from ? args.from : 0;
+    this.from = args.from ? args.from : 0;
 		this.to = args.to != null ? args.to : 1;
 		
 		this.speed = args.speed ? args.speed : 0.01;
