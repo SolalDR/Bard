@@ -1,12 +1,9 @@
 import * as THREE from "three"; 
-import * as Bard from "./src/bard.js"
-
-window.Bard = Bard
-
-
+import * as Bard from "./src/bard.js";
 import fragmentConstructor1 from "./examples/fragment_start.js"
 import fragmentConstructor2 from "./examples/fragment_second.js"
 
+window.Bard = Bard
 
 // Custom Fragment
 var fragment1 = new fragmentConstructor1();

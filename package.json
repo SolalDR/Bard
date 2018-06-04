@@ -1,16 +1,21 @@
 {
   "name": "js-bard",
-  "version": "0.2.1",
+  "version": "0.2.6",
   "description": "",
   "main": "/src/Bard.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "budo index.js:bundle.js --live -- -t ",
-    "build": "browserify  -t glslify -t [babelify --presets [ es2015 ]] index.js > bundle.js  "
+    "dev": "budo index.js:bundle.js --live -- -t "
   },
   "author": "solaldr",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "annyang": "^2.6.0",
+    "three": "0.91.0",
+    "three-effectcomposer-es6": "0.0.4",
+    "three-shader-fxaa": "^5.1.1",
+    "recorder-js": "1.0.7"
+  },
   "devDependencies": {},
   "browserify": {
     "transform": [
