@@ -87,11 +87,11 @@ class Scene extends Event {
    * Init ambient light
    */
   initLights(){
-		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 0.9 ) );
+		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 1. ) );
 	
     var light1 = new THREE.PointLight( 0xffffff, 2, 10000 );
     light1.position.z = 60
-    this.threeScene.add(light1)
+    // this.threeScene.add(light1)
   }
 
   /**

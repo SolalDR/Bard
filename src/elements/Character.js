@@ -10,11 +10,17 @@ class Character extends Mesh {
 
 	constructor(params){
     super(params);
-		this.type = "obj3D";
-		window.char = this;
+    this.type = "obj3D";
+    this.isChar = true;
+    this.morphTargets = params.morphTargets ? true : false
+    window.char = this;
+    this.visible = params.visible ? true : false
+    this.mainChar = params.mainChar ? true : false
+    this.hide = params.hide ? true : false
 		this.resourceUrl = params.model ? params.model : "/examples/obj/rig2.glb";
-		this.action = "walk";
-		this.anims = [];
+    this.action = "walk";
+    this.actions = []
+    this.anims = [];
 		this.mode = 
 		this.config = {
 			skeleton: false,
@@ -30,23 +36,58 @@ class Character extends Mesh {
     this.loader = new GLTFLoader()
     this.loader.setCrossOrigin = "anonymous"
 		this.loader.load( this.resourceUrl,  ( gltf ) => {
-			gltf.scene.traverse(function (child) {
+			gltf.scene.traverse((child)=> {
         if(child.scale.x == 100) {
         }
-        if (child.type = "Mesh") {
-          if(child.name == "Curve003") {
-            child['visible'] == null
-            child.children[0].children[0].visible = false
-            
-          }
-    
-          if(child['material']) {
-            child.material.transparent = true
-            child.material.depthTest = false
-            child.material.depthWrite = false
-            child.name = child.parent.parent.name+1
-            var matches = child.name.match(/\d+/g);
-            if (matches != null) {
+        if (child.isMesh) {
+
+          if(this.morphTargets) {
+            let mat = new THREE.MeshBasicMaterial()
+              let color = child.material.color
+              let opacity = child.material.opacity
+              child.material = mat
+              child.material.color = color
+              if(this.hide) {
+                child.material.opacity = 0
+              } else {
+                child.material.opacity = opacity
+              }
+
+              child.material.realOpacity = opacity
+              child.material.transparent = true
+              child.material.depthTest = false
+              child.material.depthWrite = false
+              child.material.morphTargets = true
+          } else {
+            if(child.name == "Curve003") {
+              child['visible'] == null
+              child.children[0].children[0].visible = false
+              
+            }
+      
+            if(child['material']) {
+              let mat = new THREE.MeshBasicMaterial()
+              let color = child.material.color
+              let opacity = child.material.opacity
+              child.material = mat
+              child.material.color = color
+              if(this.hide) {
+                child.material.opacity = 0
+              } else {
+                child.material.opacity = opacity
+              }
+              
+              child.material.realOpacity = opacity
+              child.material.transparent = true
+              child.name = child.parent.parent.name
+              
+              if(this.mainChar) {
+                var matches = child.name.match(/\d+/g);
+                if (matches[0] != 3) {
+                  child.visible = false
+                }
+              }
+             
             }
           }
         }
@@ -54,47 +95,21 @@ class Character extends Mesh {
 
 
       this.mesh = new THREE.Group()
-      this.mesh.position.set(params.position.x, params.position.y, params.position.z)
       this.mesh.name = this.name;
       this.mesh.add(gltf.scene)
-      this.mesh.rotation.x = Math.PI/2
-      
-      var helper = new THREE.BoxHelper(this.mesh, 0xff0000);
-      let box = new THREE.Box3().setFromObject(this.mesh)
-      let boundingBuffer = [
-        box.min.x, box.min.y, 1,
-        box.max.x, box.min.y, 1,
-        box.max.x, box.max.y, 1,
 
-        box.min.x, box.min.y, 1,
-        box.max.x, box.max.y, 1,
-        box.min.x, box.max.y, 1,
-      ]
-      
-      let boundingGeo = new THREE.BufferGeometry()
-      boundingGeo.addAttribute('position', new THREE.BufferAttribute(new Float32Array(boundingBuffer),3))
-      helper.update();
-      let geo = helper.geometry
-      console.log(geo)
-      let bbMesh = new THREE.Mesh(boundingGeo, new THREE.MeshBasicMaterial({color: 'red', transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSie}))
-      bbMesh.name = "bb-"+this.name;
-      bbMesh.position.z = -1
-      bbMesh.rotation.x = -Math.PI/2
-      bbMesh.material.opacity = 0.000
-      this.mesh.add(bbMesh)
-      // If you want a visible bounding box
-      console.log(this)
 			if ( this.mesh === undefined ) {
 				alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
 				return;
-			}
+      }
+      
+      this.mixer = new THREE.AnimationMixer( gltf.scene );
+      for(let i=0; i< gltf.animations.length; i++) {
+        this.actions.push(this.mixer.clipAction(gltf.animations[i]))
+      }
 			
-			this.mixer = new THREE.AnimationMixer( this.mesh );
-			this.walkAction = this.mixer.clipAction(gltf.animations[0]);
-			this.walkAction.enabled = true
-			this.actions = [  this.walkAction ];
-			
-			this.loaded = true;
+      this.loaded = true;
+      this.dispatch("load")
 			this.display();
 
 			this.activateAllActions();
@@ -268,9 +283,9 @@ class Character extends Mesh {
 	 */
 	activateAllActions() {
 		console.log(this.walkAction)
-		this.setWeight( this.walkAction, this.config.weight.walk );
+		// this.setWeight( this.walkAction, this.config.weight.walk );
 		this.actions.forEach( function ( action ) {
-			action.play();
+			// action.play();
 		} );
 	}
 
@@ -303,7 +318,11 @@ class Character extends Mesh {
 
 	render(clock){
 		if( this.loaded ){
-			this.walkWeight = this.walkAction.getEffectiveWeight();
+      for (let i = 0; i < this.actions.length; i++) {
+        this.actions[i].getEffectiveWeight();
+        
+      }
+		
       
 		  this.mixerUpdateDelta = clock.delta / 1000
       this.renderAnims(clock.delta );

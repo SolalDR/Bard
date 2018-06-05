@@ -95,12 +95,25 @@ class Text extends Element {
 
 
 	registerCommands(){
-		var self = this;
+    var self = this;
+  
+    console.log(this.current.recorders.length)
+    for(var i=0; i<this.current.recorders.length; i++){
+      (function(rank){
+        self.current.recorders[rank].element.addEventListener("click", ()=>{
+         
+          self.speechRecognition.addCommand(self.current.recorders[rank].command, (e)=>{
+            self.fragment.executeAction(self.current.recorders[rank].action)
+          })
+        })
+      })(i)
+    }
+
 		for(var i=0; i<this.current.speechs.length; i++){
 			(function(rank){
+        
 				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
 					self.fragment.executeAction(self.current.speechs[rank].action)
-					
 				});
 			})(i)
 		}

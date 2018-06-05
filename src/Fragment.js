@@ -282,11 +282,11 @@ class Fragment extends Event {
 	 * Run action if specify, else run the default actions register in the pipeline
 	 * @param name string|null
 	 */
-	executeAction(name = null){
+	executeAction(name = null, args={}){
     if( !name ) name = this.pipeline.actions[this.pipeline.current];
 		if( this.actions[name] ) {
-			this.actions[name].execute();
-			this.dispatch("action:execute", { action: this.actions[name] })
+			this.actions[name].execute(args);
+			this.dispatch("action:execute", { action: this.actions[name], event: args })
 		} else {
 			console.warn(`Action with name "${name}" doesn't exist.`);
 		}

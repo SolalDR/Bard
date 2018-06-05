@@ -36,7 +36,7 @@ varying vec2 vUv;
      if(displacement) {
       noiseDispPos = vec2(
         vUv.x,
-        (sin(time*hAmplitude)*0.5+1.)*vUv.y
+        (sin(time*hAmplitude)*0.3+1.)*vUv.y
       );
      } else {
       noiseDispPos = vec2(

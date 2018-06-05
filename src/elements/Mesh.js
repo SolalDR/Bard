@@ -16,7 +16,11 @@ class Mesh extends Element {
 		this.fragment = null; // Lateinit
 		this.group = params.group ? params.group : "main";
     this.clickable = params.clickable ? params.clickable : false;
-		if( params.name ){
+    this.position = params.position ? params.position : new THREE.Vector3(0,0,0)
+    this.rotation = params.rotation ? params.rotation : new THREE.Vector3(0,0,0)
+    this.scale = params.scale ? params.scale : 1
+
+    if( params.name ){
 			this.name = params.name
 		} else {
 			this.name = Element.randomName();
@@ -24,10 +28,10 @@ class Mesh extends Element {
 		}
 
 		if( params.mesh ){
+      
 			this.mesh = params.mesh;
 			this.mesh.name = this.name;
       this.loaded = true; 
-      this.position = this.mesh.position
 		} else {
 			this.mesh = null;	
 		}
@@ -147,11 +151,72 @@ class Mesh extends Element {
 	 */ 
 	display(){
 		if( this.fragment && this.fragment.book && this.fragment.book.scene ) {
+
+     
+      if(this.clickable) {
+        this.rotateMesh(this.mesh)
+        this.createBBox(this.mesh)
+      }
+      
+      this.positionMesh(this.mesh)
+      this.scaleMesh(this.mesh)
+      this.mesh.visible = this.visible
 			this.fragment.book.scene.addElement(this); 
 			return;
 		}
 		console.warn("Book not started. Cannot add elements to fragment");
-	}
+  }
+  
+  positionMesh(mesh) {
+    mesh.position.x = this.position.x
+    mesh.position.y = this.position.y
+    mesh.position.z = this.position.z
+  }
+
+  rotateMesh(mesh) {
+    mesh.rotation.x = this.rotation.x
+    mesh.rotation.y = this.rotation.y
+    mesh.rotation.z = this.rotation.z
+  }
+
+  scaleMesh(mesh) {
+    mesh.scale.x = this.scale
+    mesh.scale.y = this.scale
+    if(this.morphTargets) {
+      mesh.scale.z = 1
+    } else {
+      mesh.scale.z = this.scale
+    }
+    
+  }
+
+
+  createBBox(mesh) {
+    let box = new THREE.Box3().setFromObject(mesh)
+    let boundingBuffer = [
+      box.min.x*1, box.min.y*1, 1,
+      box.max.x*1, box.min.y*1, 1,
+      box.max.x*1, box.max.y*1, 1,
+
+      box.min.x*1, box.min.y*1, 1,
+      box.max.x*1, box.max.y*1, 1,
+      box.min.x*1, box.max.y*1, 1,
+    ]
+
+    this.boundingGeo = new THREE.BufferGeometry()
+    this.boundingGeo.addAttribute('position', new THREE.BufferAttribute(new Float32Array(boundingBuffer),3))
+     
+    this.bbMesh = new THREE.Mesh(this.boundingGeo, new THREE.MeshBasicMaterial({color: 'red', transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSie}))
+    this.bbMesh.name = "bb-"+this.name;
+    this.bbMesh.position.z = -1
+    if(this.isChar) {
+      this.bbMesh.rotation.x = -this.rotation.x
+      this.bbMesh.rotation.y = this.rotation.y
+    }
+   
+    this.bbMesh.material.opacity = 0
+    mesh.add(this.bbMesh)
+  }
 
 	/** 
 	 * @TODO

@@ -11,6 +11,7 @@ class TextNode {
 		this.el;
 		this.text = args.text; 
     this.speechs = [];
+    this.recorders = [];
     this.parent = args.parent;
 	}
 
@@ -32,13 +33,22 @@ class TextNode {
 		this.el.classList.add("text-node--hide");	
 		this.el.innerHTML = this.text;
 		
-		var speechEls = this.el.querySelectorAll("*[data-speech]");
+		var speechEls = this.el.querySelectorAll("*[data-speech]:not(.recorder)");
 		speechEls.forEach(el => this.speechs.push({
 			command: TextNode.strip(el.innerHTML),
 			action: el.getAttribute("data-speech"),
 			count: 0
     }));
+
+    var recorderEls = this.el.querySelectorAll(".recorder");
     
+		recorderEls.forEach(el => this.recorders.push({
+      element: el,
+			command: el.id,
+			action: el.getAttribute("data-speech"),
+			count: 0
+    }));
+
     var dico = this.parent.fragment.book.dictionnary;
     this.manageDictionnary(dico);
     this.initListener(dico);
@@ -56,6 +66,8 @@ class TextNode {
   
   initListener(dico){
     var clickables = this.el.querySelectorAll(".clickable");
+  
+
     clickables.forEach(item => {
       var id = item.getAttribute("data-word");
       var word = null;

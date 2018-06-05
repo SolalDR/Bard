@@ -37,12 +37,13 @@ class Action {
 	/**
 	 * Run action
 	 */
-	execute(){
+	execute(args = {}){
 		if( this.once && this.count <= 0 || this.once == false) {
 			this.count++; 
 			this.procedure.call(this.context, {
 				action: this, 
-				context: this.context 
+        context: this.context ,
+        args: args
 			})
 		}
 	}
