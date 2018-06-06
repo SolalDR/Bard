@@ -6,21 +6,33 @@ import Mesh from "./../Mesh.js"
  */
 
 let vert = `
+attribute float rank;
 varying vec2 vUv;
+varying float vRank;
+
 uniform float size;
+uniform float time;
+
 void main() {
-	gl_PointSize = size;
+	gl_PointSize = size+(sin(time+rank*5.5)*10.);
     vUv = uv;
-    
+    vRank = rank;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
 }`
+
 let frag = `
+varying vec2 vUv;
+ varying float vRank;
+
+uniform float time;
 uniform sampler2D texture;
 
- varying vec2 vUv;
  
+
  void main() {
-     gl_FragColor = texture2D(texture, gl_PointCoord.xy);
+   vec4 color =  texture2D(texture, gl_PointCoord.xy);
+   float alpha = max(cos(time+(vRank)),0.3);
+     gl_FragColor =vec4(color.rgb, color.a*alpha);
  }`
  
 class Stars extends Mesh {
@@ -29,7 +41,8 @@ class Stars extends Mesh {
 		super(params);
 		this.eventsList.push("load:map");
 		this.fit = params.fit || true;
-		this.map = params.map;
+    this.map = params.map;
+    this.time = 0
 		this.depth = params.depth;
 		this.transparent = params.transparent;
 		this.opacity = this.opacity >= 0 ? this.opacity : 1;
@@ -87,6 +100,10 @@ class Stars extends Mesh {
         size: {
           type:'f',
           value: 30
+        },
+        time: {
+          type:'f',
+          value : 0,
         }
 			},
 			vertexShader: vert,
@@ -96,16 +113,20 @@ class Stars extends Mesh {
 			depthWrite: false,
 		})
 		this.material.sizeAttenuation = false
-		this.positions = new Float32Array(this.count*3)
-		let positionsIterator = 0
+    this.positions = new Float32Array(this.count*3)
+    this.rank = new Float32Array(this.count)
+    let positionsIterator = 0
+    let rankIterator = 0
 
 		for (let i = 0; i < this.count; i++) {
 			this.positions[positionsIterator++] = 0
 			this.positions[positionsIterator++] = 0
-			this.positions[positionsIterator++] = -20
+      this.positions[positionsIterator++] = -20
+      this.rank[rankIterator++] = i
 		}
 
-		this.geometry.addAttribute('position', new THREE.BufferAttribute(this.positions, 3))	
+    this.geometry.addAttribute('position', new THREE.BufferAttribute(this.positions, 3))	
+    this.geometry.addAttribute('rank', new THREE.BufferAttribute(this.rank, 1))	
 		
 		this.mesh = new THREE.Points(this.geometry, this.material) 
 	}
@@ -127,7 +148,8 @@ class Stars extends Mesh {
 	 * @param clock (Clock) : The general clock of fragment   
 	 */
 	render(clock){
-
+    this.renderAnims(17)
+    this.mesh.material.uniforms.time.value = clock.elapsed/1000
   }
   
   resize() {

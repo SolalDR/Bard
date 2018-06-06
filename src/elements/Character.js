@@ -42,10 +42,8 @@ class Character extends Mesh {
         if (child.isMesh) {
 
           if(this.morphTargets) {
-            let mat = new THREE.MeshBasicMaterial()
               let color = child.material.color
               let opacity = child.material.opacity
-              child.material = mat
               child.material.color = color
               if(this.hide) {
                 child.material.opacity = 0
@@ -79,11 +77,14 @@ class Character extends Mesh {
               
               child.material.realOpacity = opacity
               child.material.transparent = true
+              child.material.depthTest = false
+              child.material.depthWrite = false
+              
               child.name = child.parent.parent.name
               
               if(this.mainChar) {
                 var matches = child.name.match(/\d+/g);
-                if (matches[0] != 3) {
+                if (matches[0] != 2) {
                   child.visible = false
                 }
               }

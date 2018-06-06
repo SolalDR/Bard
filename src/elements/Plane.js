@@ -64,6 +64,7 @@ class Plane extends Mesh {
     this.fit = params.fit || true;
     this.map = params.map;
     this.depth = params.depth;
+    this.aspect = window.innerWidth/window.innerHeight
     this.transparent = params.transparent;
     this.opacity = this.opacity >= 0 ? this.opacity : 1;
     this.position = params.position ? params.position : {x: 0, y: 0, z: 0 + this.depth};
@@ -137,7 +138,7 @@ class Plane extends Mesh {
     var vFOV = camera.fov * Math.PI / 180;
     // Get the visible height 
     //let distanceOfPlaneFromCamera = new THREE.Vector3().copy(camera.position).sub(this.mesh.position)
-    this.height =  camera.top + Math.abs(camera.bottom)*2;
+    this.height =  window.innerHeight/this.aspect;
 
     // If we want a width that follows the aspect ratio of the camera, then get the aspect ratio and multiply by the height.
     var aspect = window.innerWidth / window.innerHeight;
@@ -150,9 +151,9 @@ class Plane extends Mesh {
     }
    
     this.mesh.scale.set(this.width, this.height, 1)
-    this.position.y = (this.height/2) - Math.abs(camera.bottom)*2-((camera.top)*0.05)-this.currentPos.y
+    this.position.y = this.height/2-(window.innerWidth*0.03/this.aspect)
     this.mesh.position.y = this.position.y
-    this.position.x = (this.width/2)-Math.abs(camera.left)-((camera.right*2)*0.025)-this.currentPos.x
+    this.position.x = this.width/2-(window.innerWidth*0.03/this.aspect)
     this.mesh.position.x = this.position.x
     console.log(this.currentPos.x)
   }

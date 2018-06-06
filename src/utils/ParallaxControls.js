@@ -13,7 +13,8 @@ class ParallaxControl {
 
     this.winWidth = window.innerWidth
     this.winHeight = window.innerHeight
-
+    this.scenePosition = params.scenePosition
+    console.log(params.scenePosition)
     this.initListeners()
   }
   initListeners() {
@@ -36,8 +37,10 @@ class ParallaxControl {
 
   rotateFromMouseMove(e) {
     this.rotateEnd.set( e.clientX, e.clientY );
+    this.rotateStart.x = this.rotateStart.x+this.scenePosition.x
+    this.rotateStart.y = this.rotateStart.y+this.scenePosition.y
     this.rotateDelta.subVectors( this.rotateEnd, this.rotateStart );
-    
+
     this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / this.winWidth * this.rotateSpeed );
     this.rotateUp( 2 * Math.PI * this.rotateDelta.y / this.winHeight * this.rotateSpeed );
 
@@ -45,15 +48,14 @@ class ParallaxControl {
     
   }
 
-  update() {
-
+  update(scenePosition) {
+    this.scenePosition = scenePosition
     this.offset = new THREE.Vector3()
     this.offset.copy(this.camera.position)
 
     this.spherical.setFromVector3( this.offset );
 
-    this.camera.lookAt(new THREE.Vector3(0,0,0))
-  
+    this.camera.lookAt(new THREE.Vector3(scenePosition.x,0,0))
     
     this.spherical.theta += this.sphericalDelta.theta;
     this.spherical.phi += this.sphericalDelta.phi;

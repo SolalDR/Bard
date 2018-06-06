@@ -152,9 +152,8 @@ class Mesh extends Element {
 	display(){
 		if( this.fragment && this.fragment.book && this.fragment.book.scene ) {
 
-     
-      if(this.clickable) {
-        this.rotateMesh(this.mesh)
+      this.rotateMesh(this.mesh)
+      if(this.clickable) {        
         this.createBBox(this.mesh)
       }
       

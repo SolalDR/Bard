@@ -25,9 +25,11 @@ class Scene extends Event {
       this.canvas.id = "canvas";
       document.body.appendChild(this.canvas);
     }
-		
-		this.threeScene = new THREE.Scene();
+    this.time = 0
     
+		this.threeScene = new THREE.Scene();
+    this.scenePosition = new THREE.Vector2(0,0)
+
     this.fov = 65;
 		this.camera = new THREE.OrthographicCamera(0, window.innerWidth, 0,window.innerHeight, -1000, 1000 );
     this.camera.position.set(0, 0, 120);
@@ -49,17 +51,21 @@ class Scene extends Event {
     this.renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  cameraIdle(time) {
+    this.camera.rotation.y = Math.sin(time/5)*0.04
+  }
+
   /**
    * Init orbit control OR paralax
    */
   initControls(){
 		if( this.book.debug ){
-			this.controls = new OrbitControls( this.camera );
-			this.controls.rotateSpeed = 1
-			this.controls.update();
+			// this.controls = new OrbitControls( this.camera );
+			// this.controls.rotateSpeed = 1
+			// this.controls.update();
     }
     
-    this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas})
+    this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas, scenePosition: this.scenePosition})
   }
 
   /**
@@ -87,7 +93,7 @@ class Scene extends Event {
    * Init ambient light
    */
   initLights(){
-		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 1. ) );
+		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 1.3 ) );
 	
     var light1 = new THREE.PointLight( 0xffffff, 2, 10000 );
     light1.position.z = 60
@@ -136,6 +142,7 @@ class Scene extends Event {
 	 * Call the renderer & manage raycaster
 	 */
 	render(){
+    this.time += 60/1000
     if( this.clicked ) {
       this.clicked = false;
       this.raycaster.setFromCamera( this.mouse, this.camera );
@@ -144,9 +151,10 @@ class Scene extends Event {
       console.log(intersects)
       this.dispatch("click", intersects );
     }
-    if(this.pControls) {
+    this.cameraIdle(this.time)
+    if(this.pControls && !this.cameraAnimate) {
       
-      this.pControls.update()
+      // this.pControls.update(this.scenePosition)
     }
     
 		this.renderer.render(this.threeScene, this.camera);
