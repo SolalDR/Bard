@@ -21,6 +21,10 @@ window.addEventListener("load", function(){
     canvas: document.querySelector("#canvas")
   });
 
+  book.on("customize:display", (element)=>{
+    console.log(element)
+  })
+
   book.dictionnary = [
     {
       "id": 1,

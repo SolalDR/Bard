@@ -334,6 +334,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
       character: this.char,
+      selector: "#customization-panel",
       onLoad: () => {
         console.log("Hello")
       }
@@ -661,14 +662,10 @@ export default class Fragment1 extends Bard.Fragment {
       
       for(var i=0; i<this.elements.length; i++){
         console.log("----- Fragment: Try to add element "+this.elements[i].name)
-        if( this.elements[i] === this.char) {
-          console.log("hello", this.char)
+        if( this.elements[i].autoDisplay ){
+          this.elements[i].display();
         }
-        this.elements[i].display();
       }
-
-      console.log(this.elements);
-      console.log("Fragment: Suis-je load ? "+ this.loaded)
     
       forest.on("load", ()=>{forest.start()})
       this.initListeners();

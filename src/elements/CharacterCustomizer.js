@@ -9,8 +9,13 @@ class CharacterCustomizer extends Element {
     this.type = "ui-utils";
     this.eventsList = ["load", "change", "save"];
     this.path = args.path ? args.path : null;
+    this.selector = args.selector ? args.selector : null;
     this.character = args.character ? args.character : null;
-    this.autoDisplay = true;
+    this.autoDisplay = false;
+    this.element = null;
+    if( this.selector ) {
+      this.element = document.querySelector(this.selector);
+    }
 
     if( !this.path && !this.character ) return; 
 
@@ -106,7 +111,11 @@ class CharacterCustomizer extends Element {
         if(child['material']) {
           // Manage name & classification
           child.name = child.parent.parent.name.replace('-', '').slice(0,5)
-          this.bodyParts[child.name.slice(0,4)].push(child)
+          
+          if( this.bodyParts[child.name.slice(0,4)] ){
+            this.bodyParts[child.name.slice(0,4)].push(child)
+          }
+          
           
           var matches = child.name.match(/\d+/);
           if (matches[0] != 2) {
@@ -131,66 +140,50 @@ class CharacterCustomizer extends Element {
   }
   
 
-  display() {
-    var template = `<div id="customizeCharacterFragment" class="customizeContainer">
-        <h1>Personnalise ton héro !</h1>
-        <div class="contentWrapper">
-          <div class="left">
-              <div class="categoriesContainer">
-                <div class="categories">
-                  <button class="categoryItem" id="csqe">Casque</button>
-                  <button class="categoryItem" id="tete">Tete</button>
-                  <button class="categoryItem" id="crps">Corps</button>
-                  <button class="categoryItem" id="bras">Bras</button>
-                  <button class="categoryItem" id="jmbe">Jambe</button>
-                </div>
-                <div id="armorChoice" class="armorChoice">
-                </div>
-              </div>
-          </div>
-          <div class="right">
-            <form action="">
-                <select name="slct" id="slct" class="title">
-                  <option>Titre de ton héro</option>
-                  <option value="1">Chevalier</option>
-                  <option value="2">Chevaleresse</option>
-                  <option value="3">Prince</option>
-                  <option value="4">Princesse</option>
-                </select>
-                <input type="text" id="name" placeholder="Nom de ton héro">
-            </form>
-          </div>
+  display(value) {
+      var template = `<div class="customization customization--hidden">
+        <div id="body-part-categories-container" class="customization__list  customization__list--depth-1">
+          <button id="csqe" class="customization__list-item"><%= image_tag "personnalisation/asset-head-shield" %></button>
+          <button id="tete" class="customization__list-item"><%= image_tag "personnalisation/asset-head" %></button>
+          <button id="crps" class="customization__list-item"><%= image_tag "personnalisation/asset-body" %></button>
+          <button id="bras" class="customization__list-item"><%= image_tag "personnalisation/asset-arm" %></button>
+          <button id="jmbe" class="customization__list-item"><%= image_tag "personnalisation/asset-leg" %></button>
         </div>
-        <form action="">
-          <button class="validate" id="validate">C'est parti</button>  
-        </form>
+        <div id="body-part-choices-container" class="customization__list customization__list--depth-2"></div>
       </div>`
 
-    var fakeElement = document.createElement("fake");
-    fakeElement.innerHTML = template;
-
-    this.element = fakeElement.firstChild;
-    document.body.appendChild(this.element);
-    this.categories = document.querySelectorAll('.categoryItem')
+    if( !this.element ){
+      var fakeElement = document.createElement("fake");
+      fakeElement.innerHTML = template;
+      this.element = fakeElement.firstChild;
+      document.body.appendChild(this.element);
+    }
+    
+    this.categories = document.querySelectorAll('#body-part-categories-container .customization__list-item')
     for (let i = 0; i < this.categories.length; i++) {
       const element = this.categories[i];
       element.addEventListener('click', this.displayItems.bind(this, element.id))
     }
+    this.fragment.book.dispatch("customize:display", { element: this })
+    this.element.classList.remove("customization--hidden");
   }
 
   hide() {
     this.element.parentNode.removeChild(this.element);
+    this.element.classList.add("customization--hidden");
+    this.fragment.book.dispatch("customize:hide", { element: this })
   }
 
   displayItems(currentType) {
-    this.armorChoiceContainer = document.querySelector('.armorChoice')
+    this.armorChoiceContainer = document.querySelector('#body-part-choices-container')
     this.armorChoiceContainer.innerHTML = ''
     
     for (let i = 0; i < 4; i++) {
       let btn = document.createElement("button");
       btn.id = currentType+(i+1)
       btn.innerHTML = btn.id
-      btn.classList.add('armorItem')
+      btn.setAttribute("data-partcode", btn.id);
+      btn.classList.add('customization__list-item')
       btn.addEventListener('click', this.changeElement.bind(this, btn.id))
       
       this.armorChoiceContainer.appendChild(btn)
@@ -206,6 +199,7 @@ class CharacterCustomizer extends Element {
         element.visible = true
        }
      }
+     this.dispatch("change", { element: selectedElement }); 
     }
   }
 }
