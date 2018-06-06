@@ -12,7 +12,7 @@ class Element extends Event {
 	/**
 	 * Define the possible type for object extending Element
 	 */
-	static get AVAILABLES_TYPES() { return ["text", "image", "sound", "obj3D", "obj2D", "svg"]; }
+	static get AVAILABLES_TYPES() { return ["text", "image", "sound", "obj3D", "obj2D", "svg", "ui-utils"]; }
 
   /**
    * Generate a random name
@@ -28,12 +28,13 @@ class Element extends Event {
 	 */
 	constructor(params){
 		super();
-		this.fragment; // Lateinit accessible after initialisation with Fragment.addElement()
-		this.actions = {};
+    this.afterElement = params.afterElement ? params.afterElement : null;
+    this.fragment; // Lateinit accessible after initialisation with Fragment.addElement()
+    this.actions = {};
+    this.autoDisplay = true;
 		this.loaded = false;
 		this.anims = [];
 		this._type = null;
-
 		if( params.name ){
 			this.name = params.name ? params.name : null;
 		}

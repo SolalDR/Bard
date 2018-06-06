@@ -61,7 +61,8 @@ class Fragment extends Event {
 
 		// States
 		this.loaded = false;
-		this.started = false;
+    this.started = false;
+    this.startCallback = this.start.bind(this)
   }
   
   set customPipeline(pipeline) {
@@ -82,6 +83,16 @@ class Fragment extends Event {
     if( !isNaN(arg) && arg >= 0 && arg < this.pipeline.actions.length ){
       this.pipeline.current = arg;
     }
+  }
+
+  get waitLoad() {
+    var array = [];
+    this.elements.forEach(element => {
+      if( !element.loaded ){
+        array.push(element);
+      }
+    })
+    return array;
   }
 
   /**
@@ -137,10 +148,16 @@ class Fragment extends Event {
    * @returns boolean
    */
 	isLoad() {
+    if( this.loaded ) return true; 
+    var load = true;
 		this.elements.forEach(e => { 
-			if(e.hasEvent("load") && !e.loaded) return false;
-		})
-		this.loaded = true;
+			if(!e.loaded) {
+        load = false;
+      }
+    });
+
+    if( !load ) return false;
+    this.loaded = true;
 		this.dispatch("load");
 		return true;
   }
@@ -186,13 +203,14 @@ class Fragment extends Event {
    * If fragment is loaded, start the fragment  
    */
 	start() {
+    console.log("----- Fragment: Try to start");
 		if( !this.isLoad() ){
-			this.on("load", this.start.bind(this))
-			console.warn("Fragment is not loaded yet");
+      console.log("----- Fragment: Not loaded yet, return");
 			return; 
     }
     this.onClickBind = this.onClick.bind(this);
     this.book.scene.on("click", this.onClickBind);
+    console.log("----- Fragment: Successully Start", this.name)
     this.dispatch("start")
     this.clock = new Clock(false);
     this.clock.start();
@@ -259,7 +277,7 @@ class Fragment extends Event {
 			this.dispatch("action:add", { action: action })
 			return;
 		}
-		console.warn(`Action cannot be add. You need to remove action with name \"${action.name}\" first.`);
+		console.warn(`Fragment: Action cannot be add. You need to remove action with name \"${action.name}\" first.`);
 		return this.actions[action.name]; 
 	}
 
@@ -288,7 +306,7 @@ class Fragment extends Event {
 			this.actions[name].execute(args);
 			this.dispatch("action:execute", { action: this.actions[name], event: args })
 		} else {
-			console.warn(`Action with name "${name}" doesn't exist.`);
+			console.warn(`Fragment: Action with name "${name}" doesn't exist.`);
 		}
 	}
 
@@ -301,12 +319,11 @@ class Fragment extends Event {
 		this.elements.push(element);
 		element.onAttachToFragment();
 		this.dispatch("element:add", { element: element })
-		if(element.hasEvent("load")) {
+    
+    if(element.hasEvent("load")) {
 			element.on("load", ()=> {
-				if( this.isLoad ) {
-					this.dispatch("load");
-				}
-			})
+        this.isLoad();
+      });
     }
     
     if(element.type === "obj3D" && element.clickable) {
@@ -320,7 +337,7 @@ class Fragment extends Event {
 	 * @param element Element
 	 */
 	removeElement(element){
-		console.log("Element remove", element.name)
+		console.log("----- Fragment: Element remove", element.name)
 		if( this.elements.indexOf(element) >= 0) {
 			if( element.hide ) element.hide();
 			this.dispatch("element:remove", { element: element });

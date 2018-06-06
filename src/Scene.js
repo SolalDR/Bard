@@ -60,9 +60,9 @@ class Scene extends Event {
    */
   initControls(){
 		if( this.book.debug ){
-			// this.controls = new OrbitControls( this.camera );
-			// this.controls.rotateSpeed = 1
-			// this.controls.update();
+			this.controls = new OrbitControls( this.camera );
+			this.controls.rotateSpeed = 1
+			this.controls.update();
     }
     
     this.pControls = new ParallaxControl({camera: this.camera, canvas: this.canvas, scenePosition: this.scenePosition})
@@ -209,7 +209,7 @@ class Scene extends Event {
 			})
 			return;
     }
-    
+    console.log("-- Scene: Add element to scène + "+ element.name, element.mesh)
 		switch( element.group ){
 			case "background" : this.bgGroup.add(element.mesh); break;
 			case "foreground" : this.fgGroup.add(element.mesh); break;
@@ -228,7 +228,8 @@ class Scene extends Event {
 			case "background" : this.bgGroup.remove(element.mesh); break;
 			case "foreground" : this.fgGroup.remove(element.mesh); break;
 			default: this.mainGroup.remove(element.mesh);
-		}
+    }
+    console.log("-- Scene: Remove element")
 	}
 
 }

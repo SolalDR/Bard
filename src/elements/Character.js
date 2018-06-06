@@ -32,7 +32,8 @@ class Character extends Mesh {
 				walk: .8,
 				run: 0.0
 			}
-		}
+    }
+    
     this.loader = new GLTFLoader()
     this.loader.setCrossOrigin = "anonymous"
 		this.loader.load( this.resourceUrl,  ( gltf ) => {
@@ -107,12 +108,11 @@ class Character extends Mesh {
       this.mixer = new THREE.AnimationMixer( gltf.scene );
       for(let i=0; i< gltf.animations.length; i++) {
         this.actions.push(this.mixer.clipAction(gltf.animations[i]))
-      }
-			
-      this.loaded = true;
-      this.dispatch("load")
-			this.display();
+      } 
 
+      this.loaded = true;
+      this.dispatch("load");
+      
 			this.activateAllActions();
 		});
 
@@ -283,7 +283,6 @@ class Character extends Mesh {
 	 * Activate all actions and set based status
 	 */
 	activateAllActions() {
-		console.log(this.walkAction)
 		// this.setWeight( this.walkAction, this.config.weight.walk );
 		this.actions.forEach( function ( action ) {
 			// action.play();
@@ -313,18 +312,13 @@ class Character extends Mesh {
 		}
 	}
 
-	hide(){
-
-	}
-
 	render(clock){
 		if( this.loaded ){
       for (let i = 0; i < this.actions.length; i++) {
         this.actions[i].getEffectiveWeight();
         
       }
-		
-      
+	
 		  this.mixerUpdateDelta = clock.delta / 1000
       this.renderAnims(clock.delta );
 

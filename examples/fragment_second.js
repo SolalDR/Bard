@@ -4,6 +4,7 @@ export default class Fragment2 extends Bard.Fragment {
   
   constructor(){
     super();
+    this.name = "Second fragment"
   }
 
   init() {    
@@ -75,7 +76,7 @@ export default class Fragment2 extends Bard.Fragment {
         map : '/examples/img/planets/planete'+(i+1)+'.png', 
         transparent: true,
         depth: -0.5*(i), 
-        opacity: 0.
+        opacity: 1.
       })));
     }
 
@@ -119,8 +120,7 @@ export default class Fragment2 extends Bard.Fragment {
         this.elements[i].display();
 
       this.initListeners();
-
-      this.executeAction("planet-appear");
+      // this.executeAction("planet-appear");
       // this.soundManager.stop("forest");
       // this.soundManager.play("rocket");
     })

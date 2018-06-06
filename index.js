@@ -36,4 +36,3 @@ window.addEventListener("load", function(){
 
   window.book = book
 })
-

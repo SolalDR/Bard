@@ -47,9 +47,7 @@ varying vec2 vUv;
     
 
      color = texture2D(texture, vec2(noiseDispPos.x, noiseDispPos.y));
-     
-
-     
+         
      gl_FragColor = vec4(color.rgb, color.a*opacity);
  }`
 
@@ -125,7 +123,6 @@ class Plane extends Mesh {
       this.currentPos = new THREE.Vector2(0,0)
       this.loaded = true;
       this.dispatch("load");
-
     })
   }
    
@@ -155,7 +152,6 @@ class Plane extends Mesh {
     this.mesh.position.y = this.position.y
     this.position.x = this.width/2-(window.innerWidth*0.03/this.aspect)
     this.mesh.position.x = this.position.x
-    console.log(this.currentPos.x)
   }
 
   meshScale() {

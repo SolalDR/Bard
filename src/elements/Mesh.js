@@ -20,18 +20,21 @@ class Mesh extends Element {
     this.rotation = params.rotation ? params.rotation : new THREE.Vector3(0,0,0)
     this.scale = params.scale ? params.scale : 1
 
+    this.on("load", ()=>{
+      console.log("--------- Element: Load " + this.name + " in " + this.fragment.name);
+    })
+
     if( params.name ){
 			this.name = params.name
 		} else {
 			this.name = Element.randomName();
 			console.warn("Name is randomly : "+this.name);
 		}
-
+    
 		if( params.mesh ){
-      
 			this.mesh = params.mesh;
 			this.mesh.name = this.name;
-      this.loaded = true; 
+      this.loaded = true;
 		} else {
 			this.mesh = null;	
 		}
@@ -150,19 +153,24 @@ class Mesh extends Element {
 	 * Minimum required to attach an element to the scene
 	 */ 
 	display(){
-		if( this.fragment && this.fragment.book && this.fragment.book.scene ) {
 
-      this.rotateMesh(this.mesh)
-      if(this.clickable) {        
-        this.createBBox(this.mesh)
+		if( this.fragment && this.fragment.book && this.fragment.book.scene ) {
+      console.log("--------- Element: Display " + this.name)
+
+      if( this.clickable ){
+        this.rotateMesh(this.mesh)
+        if(this.clickable) this.createBBox(this.mesh)      
+        this.positionMesh(this.mesh)
+        this.scaleMesh(this.mesh)
       }
-      
-      this.positionMesh(this.mesh)
-      this.scaleMesh(this.mesh)
-      this.mesh.visible = this.visible
+
+
+      this.mesh.visible = true
+      this.mesh.hide = false
 			this.fragment.book.scene.addElement(this); 
 			return;
-		}
+    }
+    
 		console.warn("Book not started. Cannot add elements to fragment");
   }
   

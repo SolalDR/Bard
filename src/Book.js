@@ -42,8 +42,17 @@ class Book extends Event {
 			if( this._currentFragment.stop )
 				this._currentFragment.stop();
 
-		this._currentFragment = fragment;
-		this._currentFragment.start();
+    this._currentFragment = fragment;
+    if( !this._currentFragment.loaded ) {
+      console.log("-- Book: Try to start fragment but not loaded yet, waiting for all loading to start")
+      this._currentFragment.on("load", ()=>{
+        this._currentFragment.start();
+      })
+    } else {
+      console.log("-- Book: Fragment is already load so : Start")
+      this._currentFragment.start();
+    }
+		
 		this.dispatch("fragment:start", fragment);
 	}
 

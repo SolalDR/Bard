@@ -32,6 +32,8 @@ import CharacterElement from "./elements/Character.js"
 import MeshElement from "./elements/Mesh.js"
 import TextElement from "./elements/Text.js"
 import SvgElement from "./elements/Svg.js"
+import CharacterCustomizerElement from "./elements/CharacterCustomizer.js"
+
 
 /* Utils */
 
@@ -43,8 +45,8 @@ import OrbitControl from "./utils/OrbitControl.js"
 import Levenshtein from "./utils/Levenshtein.js"
 import HTMLUtil from "./utils/HTMLUtil.js"
 
-
 export { 
+  CharacterCustomizerElement,
   Sound, 
   Recorder,
   HTMLUtil,
