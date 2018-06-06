@@ -26,10 +26,18 @@ class CharacterCustomizer extends Element {
       jmbe: [],
     }
 
-    
     if( this.character ){
-      this.loaded = true;
-      this.dispatch("load")
+      if( this.character.loaded ){
+        this.loaded = true;
+        this.dispatch("load")
+        this.init();
+      } else {
+        this.character.on("load", ()=>{
+          this.loaded = true;
+          this.dispatch("load")
+          this.init();
+        })
+      }
     }
 
     if( this.path ) this.import(this.path);
@@ -89,6 +97,24 @@ class CharacterCustomizer extends Element {
       this.loaded = true;
       this.dispatch("load")
     });
+  }
+
+  init(){
+    console.log(this.character)
+    this.character.mesh.traverse(child => {
+      if (child.isMesh) {
+        if(child['material']) {
+          // Manage name & classification
+          child.name = child.parent.parent.name.replace('-', '').slice(0,5)
+          this.bodyParts[child.name.slice(0,4)].push(child)
+          
+          var matches = child.name.match(/\d+/);
+          if (matches[0] != 2) {
+            child.visible = false
+          }
+        }
+      }
+    })
   }
 
   export() {
@@ -161,7 +187,7 @@ class CharacterCustomizer extends Element {
     this.armorChoiceContainer.innerHTML = ''
     
     for (let i = 0; i < 4; i++) {
-      let btn = document.createElement("BUTTON");
+      let btn = document.createElement("button");
       btn.id = currentType+(i+1)
       btn.innerHTML = btn.id
       btn.classList.add('armorItem')

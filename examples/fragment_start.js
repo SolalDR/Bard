@@ -115,17 +115,6 @@ export default class Fragment1 extends Bard.Fragment {
     this.rocket.on('load', (e)=> {})
 
 
-
-    // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
-    //   char: this.char,
-    //   onLoad: () => {
-    //     console.log("Hello")
-    //   }
-    // }));
-   
-
-
-
     this.caracal = this.addElement(new Bard.CharacterElement({
       name: "caracal",
       clickable: true,
@@ -341,6 +330,15 @@ export default class Fragment1 extends Bard.Fragment {
       scale: 0.65,
       model: 'examples/obj/rig-heros.glb'
     }))
+
+
+    this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
+      character: this.char,
+      onLoad: () => {
+        console.log("Hello")
+      }
+    }));
+
 
 
     this.char.on("click", ()=>{
