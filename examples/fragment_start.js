@@ -112,6 +112,7 @@ export default class Fragment1 extends Bard.Fragment {
       model: 'examples/obj/fusee/fusee.gltf'
     }))
     
+<<<<<<< HEAD
 
     // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
     //   char: this.char,
@@ -121,6 +122,9 @@ export default class Fragment1 extends Bard.Fragment {
     // }));
    
 
+=======
+    this.rocket.on('load', (e)=> {})
+>>>>>>> 1e208a2e6c21e760e9d498c175ac73ee7871283d
 
 
     this.caracal = this.addElement(new Bard.CharacterElement({
@@ -338,6 +342,16 @@ export default class Fragment1 extends Bard.Fragment {
       scale: 0.65,
       model: 'examples/obj/rig-heros.glb'
     }))
+
+
+    this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
+      character: this.char,
+      selector: "#customization-panel",
+      onLoad: () => {
+        console.log("Hello")
+      }
+    }));
+
 
 
     this.char.on("click", ()=>{
@@ -661,14 +675,10 @@ export default class Fragment1 extends Bard.Fragment {
       
       for(var i=0; i<this.elements.length; i++){
         console.log("----- Fragment: Try to add element "+this.elements[i].name)
-        if( this.elements[i] === this.char) {
-          console.log("hello", this.char)
+        if( this.elements[i].autoDisplay ){
+          this.elements[i].display();
         }
-        this.elements[i].display();
       }
-
-      console.log(this.elements);
-      console.log("Fragment: Suis-je load ? "+ this.loaded)
     
       forest.on("load", ()=>{forest.start()})
       this.initListeners();
