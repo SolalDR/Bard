@@ -18,11 +18,11 @@ export default class Fragment1 extends Bard.Fragment {
     /**
      * SOUNDS
      */
-    var forest = this.soundManager.load("forest", "./examples/sounds/forest_ambiance.mp3", {
+    var forest = this.soundManager.load("forest", "/examples/sounds/forest_ambiance.mp3", {
       loop: true,
       volume: 0
     });
-    var rocketLaunch = this.soundManager.load("rocket", "./examples/sounds/rocket_launch.mp3");
+    var rocketLaunch = this.soundManager.load("rocket", "/examples/sounds/rocket_launch.mp3");
 
     var recorder = new Bard.Recorder(this.soundManager);
     recorder.init();
@@ -109,23 +109,16 @@ export default class Fragment1 extends Bard.Fragment {
       },
       scale: 300,
       visible: false,
-      model: 'examples/obj/fusee/fusee.gltf'
+      model: '/examples/obj/fusee/fusee.gltf'
     }))
     
-<<<<<<< HEAD
-
     // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
     //   char: this.char,
     //   onLoad: () => {
     //     console.log("Hello")
     //   }
     // }));
-   
-
-=======
-    this.rocket.on('load', (e)=> {})
->>>>>>> 1e208a2e6c21e760e9d498c175ac73ee7871283d
-
+  
 
     this.caracal = this.addElement(new Bard.CharacterElement({
       name: "caracal",
@@ -144,7 +137,7 @@ export default class Fragment1 extends Bard.Fragment {
       },
       scale: 0.35,
       hide:true,
-      model: 'examples/obj/rig-chats1.glb'
+      model: '/examples/obj/rig-chats1.glb'
     }))
 
     this.ocelot = this.addElement(new Bard.CharacterElement({
@@ -164,7 +157,7 @@ export default class Fragment1 extends Bard.Fragment {
       },
       scale: 0.35,
       hide:true,
-      model: 'examples/obj/rig-chats1.glb'
+      model: '/examples/obj/rig-chats1.glb'
     }))
 
    
@@ -186,7 +179,7 @@ export default class Fragment1 extends Bard.Fragment {
           z:0,
         },
         scale: 1000,
-        model: 'examples/obj/herbe-alone/herbe-alone.gltf'
+        model: '/examples/obj/herbe-alone/herbe-alone.gltf'
       }))
       this.herbes.push(herbe)
 
@@ -209,7 +202,7 @@ export default class Fragment1 extends Bard.Fragment {
           z:0,
         },
         scale: 1000,
-        model: 'examples/obj/plante/plante.gltf'
+        model: '/examples/obj/plante/plante.gltf'
       }))
       this.plantes.push(plante)
 
@@ -340,7 +333,7 @@ export default class Fragment1 extends Bard.Fragment {
         z:0,
       },
       scale: 0.65,
-      model: 'examples/obj/rig-heros.glb'
+      model: '/examples/obj/rig-heros.glb'
     }))
 
 
@@ -717,4 +710,4 @@ export default class Fragment1 extends Bard.Fragment {
   initListeners() {
 
   }
-};
+}
