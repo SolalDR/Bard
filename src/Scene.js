@@ -3,6 +3,7 @@ import OrbitControls from './utils/OrbitControl.js'
 import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6'
 import Event from "./utils/Event.js"
 import ParallaxControl from './utils/ParallaxControls'
+import { EMLINK } from "constants";
 var fxaa = require('three-shader-fxaa')
 
 /** 
@@ -116,22 +117,53 @@ class Scene extends Event {
     this.camera.top = winHeight/this.camera.aspect;
   }
 
+  get middle(){
+    return new THREE.Vector2(
+      this.boundaries.left + (this.boundaries.right - this.boundaries.left)/2,
+      this.boundaries.bottom + (this.boundaries.top - this.boundaries.bottom)/2
+    )
+  }
+
+  zoomTo(position, scale){
+    var width = (this.boundaries.right - this.boundaries.left);
+    var height = (this.boundaries.top - this.boundaries.bottom);
+
+    var newWidth = width/scale;
+    var newHeight = height/scale;
+
+    var left = (position.x - newWidth/2);
+    var right = left + newWidth;
+    var bottom = (position.y - newHeight/2);
+    var top = bottom + newHeight; 
+
+    this.camera.left = left; 
+    this.camera.right = right; 
+    this.camera.top = top; 
+    this.camera.bottom = bottom; 
+    this.camera.updateProjectionMatrix();	
+  }
+
+  refreshBoundaries(){
+    for(var i in this.boundaries)
+      this.camera[i] = this.boundaries[i];
+
+		this.camera.updateProjectionMatrix();	
+  }
+
 	onResize() {
 		var winWidth = window.innerWidth
 		var winHeight = window.innerHeight
 
     this.camera.aspect = window.innerWidth/window.innerHeight
-  
-        this.camera.left =0;
-        this.camera.right = winWidth/this.camera.aspect ;
-        
-        this.camera.bottom = 0;
-        this.camera.top = winHeight/this.camera.aspect;
-  
-    
-	
 
-		this.camera.updateProjectionMatrix();	
+    this.boundaries = {
+      left: 0,
+      right: winWidth/this.camera.aspect,
+      top: winHeight/this.camera.aspect,
+      bottom: 0
+    }
+
+    this.refreshBoundaries();
     this.renderer.setSize(winWidth, winHeight)
     
     if(this.book._currentFragment) {

@@ -37,8 +37,8 @@ uniform sampler2D texture;
  }`
  
 class Stars extends Mesh {
+
 	constructor(params){
-		super(params);
 		super(params);
 		this.eventsList.push("load:map");
 		this.fit = params.fit || true;
