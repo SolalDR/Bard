@@ -53,11 +53,11 @@ var PATH_PROPERTIES = {
 //------------------------------------------------------------------------------
 // GLTF Exporter
 //------------------------------------------------------------------------------
-THREE.GLTFExporter = function () {};
+var GLTFExporter = function () {};
 
-THREE.GLTFExporter.prototype = {
+GLTFExporter.prototype = {
 
-  constructor: THREE.GLTFExporter,
+  constructor: GLTFExporter,
 
   /**
    * Parse scenes and generate GLTF output
@@ -1827,4 +1827,4 @@ THREE.GLTFExporter.prototype = {
   }
 
 };
-export default THREE.GLTFExporter;
+export default GLTFExporter;
