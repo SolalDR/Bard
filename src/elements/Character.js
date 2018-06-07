@@ -38,32 +38,26 @@ class Character extends Mesh {
     this.loader.setCrossOrigin = "anonymous"
 		this.loader.load( this.resourceUrl,  ( gltf ) => {
 			gltf.scene.traverse((child)=> {
-        if(child.scale.x == 100) {
-        }
         if (child.isMesh) {
-
           if(this.morphTargets) {
+            // let mat = new THREE.MeshBasicMaterial()
               let color = child.material.color
+              
               let opacity = child.material.opacity
+              // child.material = mat
               child.material.color = color
               if(this.hide) {
                 child.material.opacity = 0
               } else {
                 child.material.opacity = opacity
               }
-
+              
               child.material.realOpacity = opacity
               child.material.transparent = true
               child.material.depthTest = false
               child.material.depthWrite = false
               child.material.morphTargets = true
-          } else {
-            if(child.name == "Curve003") {
-              child['visible'] == null
-              child.children[0].children[0].visible = false
-              
-            }
-      
+          } else {      
             if(child['material']) {
               let mat = new THREE.MeshBasicMaterial()
               let color = child.material.color
@@ -80,7 +74,7 @@ class Character extends Mesh {
               child.material.transparent = true
               child.material.depthTest = false
               child.material.depthWrite = false
-              
+              child.material.side = THREE.DoubleSide
               child.name = child.parent.parent.name
               
               if(this.mainChar) {
@@ -89,7 +83,6 @@ class Character extends Mesh {
                   child.visible = false
                 }
               }
-             
             }
           }
         }
@@ -115,34 +108,6 @@ class Character extends Mesh {
       
 			this.activateAllActions();
 		});
-
-		window.addEventListener("keydown", (e) => {
-			if( [38, 40, 37, 39].indexOf(e.keyCode) < 0){ return; }
-			this.hasKeyPress = true; 
-			
-			var targetRotation = this.mesh.rotation.y;
-			switch(e.keyCode){
-				case 38 : targetRotation = 0; break;// TOP
-				case 40 : targetRotation = Math.PI; break; // Bottom
-				case 37 : targetRotation = Math.PI/2; break; // Left
-				case 39 : targetRotation = -Math.PI/2; break; // Right
-			}
-
-			if( this.action !== "walk" ){
-				this.rotateYTo(targetRotation);
-				this.walk();
-			}
-			
-		})
-
-		window.addEventListener("keyup", (e) => {
-			if( [38, 40, 37, 39].indexOf(e.keyCode) < 0){ return; }
-			
-			this.hasKeyPress = false; 
-			if( this.action !== "idle" && !this.hasKeyPress){
-				this.idle();
-			}
-		})
 	}
 
 

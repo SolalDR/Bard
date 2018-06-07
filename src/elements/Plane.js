@@ -68,7 +68,7 @@ class Plane extends Mesh {
     this.position = params.position ? params.position : {x: 0, y: 0, z: 0 + this.depth};
     this.displacement = params.displacement || false
     this.videoUrls = params.videoUrls // @TODO
-
+    this.inverse = params.inverse ? true: false
     this.init();
 
     if(this.map) this.loadMap();
@@ -150,7 +150,12 @@ class Plane extends Mesh {
     this.mesh.scale.set(this.width, this.height, 1)
     this.position.y = this.height/2-(window.innerWidth*0.03/this.aspect)
     this.mesh.position.y = this.position.y
-    this.position.x = this.width/2-(window.innerWidth*0.03/this.aspect)
+    if(this.inverse) {
+      this.position.x = (-this.width/2+(window.innerWidth*0.15/this.aspect))+window.innerWidth/this.aspect
+    } else {
+      this.position.x = this.width/2-(window.innerWidth*0.03/this.aspect)
+    }
+    
     this.mesh.position.x = this.position.x
   }
 

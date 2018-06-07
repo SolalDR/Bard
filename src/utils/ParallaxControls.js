@@ -37,12 +37,12 @@ class ParallaxControl {
 
   rotateFromMouseMove(e) {
     this.rotateEnd.set( e.clientX, e.clientY );
-    this.rotateStart.x = this.rotateStart.x+this.scenePosition.x
-    this.rotateStart.y = this.rotateStart.y+this.scenePosition.y
+    // this.rotateStart.x = this.rotateStart.x+this.scenePosition.x
+    // this.rotateStart.y = this.rotateStart.y+this.scenePosition.y
     this.rotateDelta.subVectors( this.rotateEnd, this.rotateStart );
 
-    this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / this.winWidth * this.rotateSpeed );
-    this.rotateUp( 2 * Math.PI * this.rotateDelta.y / this.winHeight * this.rotateSpeed );
+    this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / (this.winWidth+this.scenePosition.x) * this.rotateSpeed );
+    this.rotateUp( 2 * Math.PI * this.rotateDelta.y / (this.winHeight+this.scenePosition.y) * this.rotateSpeed );
 
     this.rotateStart.copy( this.rotateEnd );
     

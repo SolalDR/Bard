@@ -14,7 +14,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.winWidth = window.innerWidth
     this.winHeight = window.innerHeight
     this.aspect = window.innerWidth/window.innerHeight
-    this.fondPerdu = (this.winWidth/20)
+    this.fondPerdu = (this.winWidth/17)/this.aspect
     /**
      * SOUNDS
      */
@@ -67,8 +67,8 @@ export default class Fragment1 extends Bard.Fragment {
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
-          "Un soir, alors qu’il observe le ciel étoilé d’une  <button data-speech='bonsoir' id='bonjour' class='recorder'>b</button> belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
-          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais pour s’aventurer dehors, il doit être <span data-speech='scene-2'>bien équipé</span>.",
+          "Un soir, alors qu’il observe le ciel étoilé d’une belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
+          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='scene-2'>être équipé</span>.",
           "Le voilà fin prêts ! Guidé par la lumière  de la comète qui s’est écrasée, tu décides d'aller vers la forêt… Soudain, à l’orée d’une clairière, des voix lui parviennent. Qui peut bien se cacher <span data-speech='charInteraction'>dans les arbres</span> ?",
           "Touche ton héros pour qu’il fasse peur aux créatures et qu’elles sortent de leur cachette !",
           "Bien joué, deux créatures viennent d’apparaître dans les feuillages, Trouve-les et Touche-les pour les faire parler. ",
@@ -77,10 +77,10 @@ export default class Fragment1 extends Bard.Fragment {
           "Nous sommes les frères Ocelot et Caracal de la lointaine planète Mars. Là-bas, un cataclysme menace nos jours. Par pitié, <span data-speech='next'>aidez-nous</span> !",
           "Les frères Ocelot et Caracal ont besoin d’aide, un terrible monstre sème la terreur sur <span data-speech='next'>leur planète</span>.",
           " Ceux-ci, ayant entendu parler desderniers exploits de tes exploits ont décidé de traverser l’univers pour te proposer une <span data-speech='scene-3'>nouvelle aventure</span>.",
-          "Ayant accepté d’apporter ton aide aux deux créatures, celles-ci te guident jusqu’à <span data-speech='next'>leur fusée</span>.",
+          "Ayant accepté d’apporter ton aide aux deux créatures, celles-ci te guident jusqu’à leur <span data-speech='next'>fusée</span>.",
           "“Voici le vaisseau qui nous emmènera sur notre planète !” lui dit l’un des frères. “Seul Ocelot peut <span data-speech='next'>le conduire</span>.”",
           "Malheureusement, l'atterrissage a été un peu rude, et nous avons partiellement perdu la mémoire. Nous ne savons plus quel sont nos <span data-speech='next'>noms respectifs</span>… ”",
-          "Pour savoir lequel des deux sait conduire la fusée, interroge-la en prononçant la formule magique : “Bel engin de métal, lequel des <span data-speech='next'>deux est</span> Ocelot ?”",
+          "Pour savoir lequel des deux sait conduire la fusée, interroge-la en prononçant la formule magique <button data-speech='next' id='deux est' class='recorder'></button> : “Bel engin de métal, lequel des deux est Ocelot ?”",
           "La fusée est joueuse et ne donne pas d’informations si facilement mais elle accepte tout de même de te révéler comment <span data-speech='next'>le trouver</span>. ",
           "Ocelot à une jambe de moins que son frère, t’indique-t-elle. Pourras-tu <span data-speech='mayClickOcelot'>le trouver</span> ?",
           "Bien joué ! La fusée a de nouveau un conducteur! Mais êtes-vous fin prêts à <span data-speech='next'>partir</span> ?",
@@ -107,14 +107,11 @@ export default class Fragment1 extends Bard.Fragment {
         y: Math.PI,
         z:0,
       },
-      scale: 2000,
+      scale: 300,
       visible: false,
-      model: 'examples/obj/rocket/fusee3.glb'
+      model: 'examples/obj/fusee/fusee.gltf'
     }))
     
-    this.rocket.on('load', (e)=> {})
-
-
 
     // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
     //   char: this.char,
@@ -417,22 +414,23 @@ export default class Fragment1 extends Bard.Fragment {
               child.material.opacity = easeTime*child.material.realOpacity
             }
           })
-      }}))
-      this.caracal.interactive = true
-      this.caracal.anims.push(new Bard.Animation({
-        duration: 1000,
-        onProgress: (advancement, time) => {
-          var easeTime = Bard.Easing.easeInOutQuint(advancement)
-          // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-       
-          this.caracal.mesh.children[0].traverse((child)=> {
-            if(child['material']) {
-              child.material.opacity = easeTime*child.material.realOpacity
-            }
-            
-          })
-          
-      }}))
+      }
+    }))
+
+    this.caracal.interactive = true
+    this.caracal.anims.push(new Bard.Animation({
+      duration: 1000,
+      onProgress: (advancement, time) => {
+        var easeTime = Bard.Easing.easeInOutQuint(advancement)
+        // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+      
+        this.caracal.mesh.children[0].traverse((child)=> {
+          if(child['material']) {
+            child.material.opacity = easeTime*child.material.realOpacity
+          }        
+        })
+      }
+    }))
     })
 
     this.addAction('fallOcelot', (e)=> {
@@ -685,7 +683,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.winHeight = window.innerHeight
     this.aspect = this.winWidth/this.winHeight
   
-    this.fondPerdu = this.winWidth/15
+    this.fondPerdu = (this.winWidth/17)/this.aspect
   }
   render() {
     this.beforeRender();

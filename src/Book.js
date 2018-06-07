@@ -101,7 +101,7 @@ class Book extends Event {
    * @param {Fragment} fragment 
    */
 	start(fragment = null){		
-		this.currentFragment = this.fragments[0];
+		this.currentFragment = this.fragments[1];
 		this.dispatch("start", this.currentFragment);
 	}
 

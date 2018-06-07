@@ -52,7 +52,7 @@ class Scene extends Event {
   }
 
   cameraIdle(time) {
-    this.camera.rotation.y = Math.sin(time/5)*0.04
+    this.camera.rotation.y = Math.sin(time/5)*0.02
   }
 
   /**
@@ -93,7 +93,7 @@ class Scene extends Event {
    * Init ambient light
    */
   initLights(){
-		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 1.3 ) );
+		this.threeScene.add( new THREE.AmbientLight( 0xfffffff, 1. ) );
 	
     var light1 = new THREE.PointLight( 0xffffff, 2, 10000 );
     light1.position.z = 60
@@ -108,16 +108,28 @@ class Scene extends Event {
     window.addEventListener('click', this.onClick.bind(this))
   }
 
+  inverse() {
+    this.camera.left = winWidth/this.camera.aspect;
+    this.camera.right = 0;
+    
+    this.camera.bottom = 0;
+    this.camera.top = winHeight/this.camera.aspect;
+  }
+
 	onResize() {
 		var winWidth = window.innerWidth
 		var winHeight = window.innerHeight
 
     this.camera.aspect = window.innerWidth/window.innerHeight
-		this.camera.left =0;
-    this.camera.right = winWidth/this.camera.aspect ;
+  
+        this.camera.left =0;
+        this.camera.right = winWidth/this.camera.aspect ;
+        
+        this.camera.bottom = 0;
+        this.camera.top = winHeight/this.camera.aspect;
+  
     
-		this.camera.bottom = 0;
-		this.camera.top = winHeight/this.camera.aspect;
+	
 
 		this.camera.updateProjectionMatrix();	
     this.renderer.setSize(winWidth, winHeight)

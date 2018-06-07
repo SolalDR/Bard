@@ -17,6 +17,7 @@ void main() {
 	gl_PointSize = size+(sin(time+rank*5.5)*10.);
     vUv = uv;
     vRank = rank;
+    // vec3 newPos = 2.0 * cross( vec3(0.,.2,0.), cross( vec3(0.,.2,0.), position ) + .3 * position )*100.;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
 }`
 
@@ -31,7 +32,7 @@ uniform sampler2D texture;
 
  void main() {
    vec4 color =  texture2D(texture, gl_PointCoord.xy);
-   float alpha = max(cos(time+(vRank)),0.3);
+   float alpha = max(cos(time*2.5+(vRank)),0.4);
      gl_FragColor =vec4(color.rgb, color.a*alpha);
  }`
  

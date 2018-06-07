@@ -8,6 +8,30 @@
     <link rel="stylesheet" type="text/css" href="src/stylesheets/bard.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+
+    <style>
+      .recorder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border:0;
+        position: relative;
+        z-index: 0;
+      }
+
+
+      button::after {
+          width: 40px;
+          height: 40px;
+          background: #556bdb;
+          position: absolute;
+          left: 0;
+          top:0;
+
+          z-index: 1;
+          transform: translateX(50%), translateY(50%);
+        }
+    </style>
 </head>
 <body>
 
