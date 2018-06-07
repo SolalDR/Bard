@@ -68,8 +68,10 @@ export default class Fragment1 extends Bard.Fragment {
       new Bard.TextElement({
         nodes: [
           "Un soir, alors qu’il observe le ciel étoilé d’une belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
-          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='scene-2'>être équipé</span>.",
-          "Le voilà fin prêts ! Guidé par la lumière  de la comète qui s’est écrasée, tu décides d'aller vers la forêt… Soudain, à l’orée d’une clairière, des voix lui parviennent. Qui peut bien se cacher <span data-speech='charInteraction'>dans les arbres</span> ?",
+          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='customPersonalization'>être équipé</span>.",
+          ".",
+          "Le voilà fin prêts ! Guidé par la lumière  de la comète qui s’est écrasée, tu décides d'aller <span data-speech='scene-2'>vers la forêt</span>…", 
+          "Soudain, à l’orée d’une clairière, des voix lui parviennent. Qui peut bien se cacher <span data-speech='charInteraction'>dans les arbres</span> ?",
           "Touche ton héros pour qu’il fasse peur aux créatures et qu’elles sortent de leur cachette !",
           "Bien joué, deux créatures viennent d’apparaître dans les feuillages, Trouve-les et Touche-les pour les faire parler. ",
           "Dans un langage codé, l’une des créatures prend la parole. <br> Hélas son message est incompréhensible… La pierre de traduction s’est égarés dans la forêt. Retrouve la pour l’aider à se faire comprendre",
@@ -111,55 +113,6 @@ export default class Fragment1 extends Bard.Fragment {
       visible: false,
       model: '/examples/obj/fusee/fusee.gltf'
     }))
-    
-    // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
-    //   char: this.char,
-    //   onLoad: () => {
-    //     console.log("Hello")
-    //   }
-    // }));
-  
-
-    this.caracal = this.addElement(new Bard.CharacterElement({
-      name: "caracal",
-      clickable: true,
-      morphTargets: false,
-      visible: true,
-      position: {
-        x:(this.winWidth*0.15/this.aspect)+this.scenesAttributes.two.position.x,
-        y: this.winWidth*0.30/this.aspect,
-        z: -29
-      },
-      rotation: {
-        x:Math.PI/2,
-        y:0,
-        z:0,
-      },
-      scale: 0.35,
-      hide:true,
-      model: '/examples/obj/rig-chats1.glb'
-    }))
-
-    this.ocelot = this.addElement(new Bard.CharacterElement({
-      name: "ocelot",
-      clickable: true,
-      morphTargets: false,
-      visible: true,
-      position: {
-        x:(this.winWidth*0.25/this.aspect)+this.scenesAttributes.two.position.x,
-        y: this.winWidth*0.33/this.aspect,
-        z: -29
-      },
-      rotation: {
-        x:Math.PI/2,
-        y:0,
-        z:0,
-      },
-      scale: 0.35,
-      hide:true,
-      model: '/examples/obj/rig-chats1.glb'
-    }))
-
    
     this.herbes = []
     this.plantes = []
@@ -323,7 +276,7 @@ export default class Fragment1 extends Bard.Fragment {
       visible: true,
       mainChar: true,
       position: {
-        x:(this.winWidth*0.35/this.aspect)+this.scenesAttributes.one.position.x,
+        x:(this.winWidth*0.38/this.aspect)+this.scenesAttributes.one.position.x,
         y: this.winWidth*0.1/this.aspect,
         z: -29
       },
@@ -336,6 +289,45 @@ export default class Fragment1 extends Bard.Fragment {
       model: '/examples/obj/rig-heros.glb'
     }))
 
+    this.caracal = this.addElement(new Bard.CharacterElement({
+      name: "caracal",
+      clickable: true,
+      morphTargets: false,
+      visible: true,
+      position: {
+        x:(this.winWidth*0.15/this.aspect)+this.scenesAttributes.two.position.x,
+        y: this.winWidth*0.30/this.aspect,
+        z: -29
+      },
+      rotation: {
+        x:Math.PI/2,
+        y:0,
+        z:0,
+      },
+      scale: 0.35,
+      hide:true,
+      model: '/examples/obj/rig-chats1.glb'
+    }))
+
+    this.ocelot = this.addElement(new Bard.CharacterElement({
+      name: "ocelot",
+      clickable: true,
+      morphTargets: false,
+      visible: true,
+      position: {
+        x:(this.winWidth*0.25/this.aspect)+this.scenesAttributes.two.position.x,
+        y: this.winWidth*0.33/this.aspect,
+        z: -29
+      },
+      rotation: {
+        x:Math.PI/2,
+        y:0,
+        z:0,
+      },
+      scale: 0.35,
+      hide:true,
+      model: '/examples/obj/rig-chats1.glb'
+    }))
 
     this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
       character: this.char,
@@ -345,8 +337,7 @@ export default class Fragment1 extends Bard.Fragment {
       }
     }));
 
-
-
+    
     this.char.on("click", ()=>{
       console.log(this.char.actions)
       if(!this.roar && this.scene2 && this.char.interactive) {
@@ -406,9 +397,59 @@ export default class Fragment1 extends Bard.Fragment {
     this.rocket.on('click', ()=>{
       this.rocket.actions[3].play()
     })
+
     /**
      * ACTIONS
      */
+    
+    
+    this.addAction("customPersonalization", ()=>{
+      this.char.anims.push(new Bard.Animation({
+        duration: 2500,
+        from: 1,
+        to: 3,
+        timingFunction: "easeInOutQuad",
+        onProgress: (advancement, time, anim) => {
+          var middle = this.book.scene.middle;
+          var center = new THREE.Vector2(
+            (this.char.mesh.position.x - middle.x)*advancement + middle.x,
+            (this.char.mesh.position.y + 50 - middle.y)*advancement + middle.y
+          );
+          this.book.scene.zoomTo(center, time);
+        },
+        onFinish: () => {
+          this.characterCustomizer.display();
+          this.executeAction("next");
+        }
+      }));
+    }, {
+      once: true
+    });
+
+    this.addAction("customize-hide", ()=>{
+      this.characterCustomizer.hide();
+      this.char.anims.push(new Bard.Animation({
+        duration: 2500,
+        from: 3,
+        to: 1,
+        timingFunction: "easeInOutQuad",
+        onProgress: (advancement, time, anim) => {
+          var middle = this.book.scene.middle;
+          var center = new THREE.Vector2(
+            (middle.x - this.char.mesh.position.x)*advancement + this.char.mesh.position.x,
+            (middle.y - (this.char.mesh.position.y + 50) )*advancement + this.char.mesh.position.y + 50
+          );
+          this.book.scene.zoomTo(center, time);
+        },
+        onFinish: () => {
+          this.executeAction("next");
+        }
+      }));
+    }, {
+      once: true
+    });
+    
+    
 
     this.addAction('displayCatHolo', (e)=> {
       this.ocelot.interactive = true
@@ -421,24 +462,22 @@ export default class Fragment1 extends Bard.Fragment {
               child.material.opacity = easeTime*child.material.realOpacity
             }
           })
-      }
-    }))
+      	}
+      }))
 
-    this.caracal.interactive = true
-    this.caracal.anims.push(new Bard.Animation({
-      duration: 1000,
-      onProgress: (advancement, time) => {
-        var easeTime = Bard.Easing.easeInOutQuint(advancement)
-        // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-      
-        this.caracal.mesh.children[0].traverse((child)=> {
-          if(child['material']) {
-            child.material.opacity = easeTime*child.material.realOpacity
-          }        
-        })
-      }
-    }))
-    })
+      this.caracal.interactive = true
+      this.caracal.anims.push(new Bard.Animation({
+        duration: 1000,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          this.caracal.mesh.children[0].traverse((child)=> {
+            if(child['material']) {
+              child.material.opacity = easeTime*child.material.realOpacity
+            }        
+          })
+        }
+      }))
+    }, { once: true })
 
     this.addAction('fallOcelot', (e)=> {
       this.ocelot.anims.push(new Bard.Animation({
@@ -452,7 +491,7 @@ export default class Fragment1 extends Bard.Fragment {
           this.ocelot.mesh.position.y = time 
         },
       })) 
-    })
+    }, { once: true })
 
     this.addAction('fallCaracal', (e)=> {
       this.ocelot.anims.push(new Bard.Animation({
@@ -467,7 +506,7 @@ export default class Fragment1 extends Bard.Fragment {
           this.caracal.mesh.position.y = time 
         },
       })) 
-    })
+    }, { once: true })
 
     this.addAction('charWalk', (e)=> {
       this.char.anims.push(new Bard.Animation({
@@ -512,6 +551,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.addAction('charInteraction', (e)=>{
       this.char.interactive = true
+      console.log("Hello charInteraction");
       this.executeAction('next')
     })
 
@@ -538,71 +578,56 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.addAction("scene-2", (e)=>{
-        this.char.anims.push(new Bard.Animation({
+      this.scene2 = true
+      this.currentScene = this.scenesAttributes.two
+
+      // Character enter in view box
+      this.char.anims.push(new Bard.Animation({
         duration: 3500,
-        from: 1,
-        to: 3,
+        from: this.book.scene.camera.position.x,
+        to:  this.currentScene.position.x,
         timingFunction: "easeInOutQuint",
         onProgress: (advancement, time, anim) => {
-          var middle = this.book.scene.middle;
-          var center = new THREE.Vector2(
-            (this.char.mesh.position.x - middle.x)*advancement + middle.x,
-            (this.char.mesh.position.y + 50 - middle.y)*advancement + middle.y
-          );
-          this.book.scene.zoomTo(center, time);
+          this.book.scene.cameraAnimate =true
+          this.book.scene.camera.position.x = time
+        },
+        onFinish: () => {
+          this.book.scene.cameraAnimate =false
+          this.book.scene.scenePosition.x = this.currentScene.position.x
+
+          this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
+          this.executeAction('next')
+          this.pierre.anims.push(
+            new Bard.Animation({
+              duration: 3500,
+              from: 0,
+              to:  1,
+              onProgress: (advancement, time, anim) => {
+                this.pierre.mesh.material.opacity = time
+              }
+            })
+          )
         }
-      }));
-      // this.scene2 = true
-      // this.currentScene = this.scenesAttributes.two
-
-      // this.char.anims.push(new Bard.Animation({
-      //   duration: 3500,
-      //   from: this.book.scene.camera.position.x,
-      //   to:  this.currentScene.position.x,
-      //   timingFunction: "easeInOutQuint",
-      //   onProgress: (advancement, time, anim) => {
-      //     // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-      //     // this.char.mesh.position.x = time
-      //     this.book.scene.cameraAnimate =true
-      //     this.book.scene.camera.position.x = time
-      //     // this.book.scene.camera.lookAt(time)
-      //   },
-      //   onFinish: () => {
-      //     this.book.scene.cameraAnimate =false
-      //     this.book.scene.scenePosition.x = this.currentScene.position.x
-
-      //     this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
-      //     this.executeAction('next')
-      //     this.pierre.anims.push(
-      //       new Bard.Animation({
-      //         duration: 3500,
-      //         from: 0,
-      //         to:  1,
-      //         onProgress: (advancement, time, anim) => {
-      //           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-      //           this.pierre.mesh.material.opacity = time
-      //         }
-      //       })
-      //     )
-      //   }
-      // })) 
+      })) 
       
-      // for (let i = 0; i < this.animatedPlanes.length; i++) {
-      //   this.animatedPlanes[i].anims.push(new Bard.Animation({
-      //     duration: 3500,
-      //     onProgress: (advancement, time) => {
-      //       var easeTime = Bard.Easing.easeInOutQuint(advancement)
-      //       // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+      for (let i = 0; i < this.animatedPlanes.length; i++) {
+        this.animatedPlanes[i].anims.push(new Bard.Animation({
+          duration: 3500,
+          onProgress: (advancement, time) => {
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)
+            // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
         
-      //       let offset = ((this.fondPerdu*(i)))/this.aspect
-      //       this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
+            let offset = ((this.fondPerdu*(i)))/this.aspect
+            this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
            
-      //     },
-      //     onFinish:() => {
-      //       this.animatedPlanes[i].position.x = this.animatedPlanes[i].mesh.position.x
-      //     }
-      //   }))
-      // }
+          },
+          onFinish:() => {
+            this.animatedPlanes[i].position.x = this.animatedPlanes[i].mesh.position.x
+          }
+        }))
+      }
+    }, {
+      once: true
     })
 
     this.addAction("scene-3", (e)=>{
@@ -652,7 +677,7 @@ export default class Fragment1 extends Bard.Fragment {
        }
 
       
-    })
+    }, { once: true })
 
     this.addAction("transitionOut", (e) => {
      for (let i = 0; i < this.planes.length; i++) {
@@ -674,9 +699,12 @@ export default class Fragment1 extends Bard.Fragment {
         }
       }))
       }
-    })
+    }, { once: true })
 
-    this.addAction("next",  e => text.next())
+    this.addAction("next",  e => {
+      console.log("Next");
+      text.next()
+    })
 
     this.on("start", ()=>{
       
@@ -690,9 +718,9 @@ export default class Fragment1 extends Bard.Fragment {
       forest.on("load", ()=>{forest.start()})
       this.initListeners();
 
-      this.waitAndAlert("chrome_exception", "next")
-      this.book.on("alert", (e)=>{
-      })
+      //this.waitAndAlert("chrome_exception", "next")
+      //this.book.on("alert", (e)=>{
+      //})
     })
   }
   resize() {
