@@ -34,11 +34,13 @@ class TextNode {
 		this.el.innerHTML = this.text;
 		
 		var speechEls = this.el.querySelectorAll("*[data-speech]:not(.recorder)");
-		speechEls.forEach(el => this.speechs.push({
-			command: TextNode.strip(el.innerHTML),
-			action: el.getAttribute("data-speech"),
-			count: 0
-    }));
+		speechEls.forEach(el => {
+      this.speechs.push({
+        command: TextNode.strip(el.innerHTML),
+        action: el.getAttribute("data-speech"),
+        count: 0
+      })
+    });
 
     var recorderEls = this.el.querySelectorAll(".recorder");
     

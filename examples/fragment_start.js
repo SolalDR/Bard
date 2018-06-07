@@ -112,7 +112,6 @@ export default class Fragment1 extends Bard.Fragment {
       model: 'examples/obj/fusee/fusee.gltf'
     }))
     
-<<<<<<< HEAD
 
     // this.characterCustomizer = this.addElement(new Bard.CharacterCustomizerElement({
     //   char: this.char,
@@ -122,9 +121,6 @@ export default class Fragment1 extends Bard.Fragment {
     // }));
    
 
-=======
-    this.rocket.on('load', (e)=> {})
->>>>>>> 1e208a2e6c21e760e9d498c175ac73ee7871283d
 
 
     this.caracal = this.addElement(new Bard.CharacterElement({

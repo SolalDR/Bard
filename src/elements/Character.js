@@ -38,6 +38,7 @@ class Character extends Mesh {
     this.loader.setCrossOrigin = "anonymous"
 		this.loader.load( this.resourceUrl,  ( gltf ) => {
 			gltf.scene.traverse((child)=> {
+        
         if (child.isMesh) {
           if(this.morphTargets) {
             // let mat = new THREE.MeshBasicMaterial()
@@ -70,6 +71,8 @@ class Character extends Mesh {
                 child.material.opacity = opacity
               }
               
+             
+
               child.material.realOpacity = opacity
               child.material.transparent = true
               child.material.depthTest = false

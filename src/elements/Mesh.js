@@ -19,7 +19,7 @@ class Mesh extends Element {
     this.position = params.position ? params.position : new THREE.Vector3(0,0,0)
     this.rotation = params.rotation ? params.rotation : new THREE.Vector3(0,0,0)
     this.scale = params.scale ? params.scale : 1
-
+    this.originCenter = params.originCenter ? true: false
     this.on("load", ()=>{
       console.log("--------- Element: Load " + this.name + " in " + this.fragment.name);
     })
@@ -180,6 +180,8 @@ class Mesh extends Element {
     mesh.position.z = this.position.z
   }
 
+  
+
   rotateMesh(mesh) {
     mesh.rotation.x = this.rotation.x
     mesh.rotation.y = this.rotation.y
@@ -220,8 +222,17 @@ class Mesh extends Element {
       this.bbMesh.rotation.x = -this.rotation.x
       this.bbMesh.rotation.y = this.rotation.y
     }
+
+    if(this.originCenter) {
+      console.log('---------------------')
+      for (let i = 0; i < mesh.children.length; i++) {
+        const element = mesh.children[i];
+        element.position.x = - box.max.x/2
+        
+      }
+    }
    
-    this.bbMesh.material.opacity = 0
+    this.bbMesh.material.opacity = 0.
     mesh.add(this.bbMesh)
   }
 

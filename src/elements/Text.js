@@ -108,10 +108,10 @@ class Text extends Element {
         })
       })(i)
     }
-
 		for(var i=0; i<this.current.speechs.length; i++){
 			(function(rank){
-        
+        console.log("-------------------------------------------")
+        console.log(self.current.speechs[rank].command, self.current.speechs[rank].action)
 				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
 					self.fragment.executeAction(self.current.speechs[rank].action)
 				});
