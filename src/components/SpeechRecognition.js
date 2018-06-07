@@ -21,8 +21,8 @@ class SpeechRecognition {
       this.api.addCallback('result', (phrases) => {
         for(var i=0; i<phrases.length; i++){
           for(var j=0; j<this.commands.length; j++){
-            if( phrases[i].match(this.commands[j].command) && this.commands[i].callback && !this.commands[i].exact) {
-              this.commands[i].callback.call(this)
+            if( phrases[i].match(this.commands[j].command) && this.commands[j].callback && !this.commands[j].exact) {
+              this.commands[j].callback.call(this)
             }
           }
         }

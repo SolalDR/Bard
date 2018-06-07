@@ -323,7 +323,7 @@ export default class Fragment1 extends Bard.Fragment {
       visible: true,
       mainChar: true,
       position: {
-        x:(this.winWidth*0.3/this.aspect)+this.scenesAttributes.one.position.x,
+        x:(this.winWidth*0.35/this.aspect)+this.scenesAttributes.one.position.x,
         y: this.winWidth*0.1/this.aspect,
         z: -29
       },
@@ -538,57 +538,71 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.addAction("scene-2", (e)=>{
-      this.scene2 = true
-      this.currentScene = this.scenesAttributes.two
-
-      this.char.anims.push(new Bard.Animation({
+        this.char.anims.push(new Bard.Animation({
         duration: 3500,
-        from: this.book.scene.camera.position.x,
-        to:  this.currentScene.position.x,
+        from: 1,
+        to: 3,
         timingFunction: "easeInOutQuint",
         onProgress: (advancement, time, anim) => {
-          // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-          // this.char.mesh.position.x = time
-          this.book.scene.cameraAnimate =true
-          this.book.scene.camera.position.x = time
-          // this.book.scene.camera.lookAt(time)
-        },
-        onFinish: () => {
-          this.book.scene.cameraAnimate =false
-          this.book.scene.scenePosition.x = this.currentScene.position.x
-
-          this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
-          this.executeAction('next')
-          this.pierre.anims.push(
-            new Bard.Animation({
-              duration: 3500,
-              from: 0,
-              to:  1,
-              onProgress: (advancement, time, anim) => {
-                // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-                this.pierre.mesh.material.opacity = time
-              }
-            })
-          )
+          var middle = this.book.scene.middle;
+          var center = new THREE.Vector2(
+            (this.char.mesh.position.x - middle.x)*advancement + middle.x,
+            (this.char.mesh.position.y + 50 - middle.y)*advancement + middle.y
+          );
+          this.book.scene.zoomTo(center, time);
         }
-      })) 
+      }));
+      // this.scene2 = true
+      // this.currentScene = this.scenesAttributes.two
+
+      // this.char.anims.push(new Bard.Animation({
+      //   duration: 3500,
+      //   from: this.book.scene.camera.position.x,
+      //   to:  this.currentScene.position.x,
+      //   timingFunction: "easeInOutQuint",
+      //   onProgress: (advancement, time, anim) => {
+      //     // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+      //     // this.char.mesh.position.x = time
+      //     this.book.scene.cameraAnimate =true
+      //     this.book.scene.camera.position.x = time
+      //     // this.book.scene.camera.lookAt(time)
+      //   },
+      //   onFinish: () => {
+      //     this.book.scene.cameraAnimate =false
+      //     this.book.scene.scenePosition.x = this.currentScene.position.x
+
+      //     this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
+      //     this.executeAction('next')
+      //     this.pierre.anims.push(
+      //       new Bard.Animation({
+      //         duration: 3500,
+      //         from: 0,
+      //         to:  1,
+      //         onProgress: (advancement, time, anim) => {
+      //           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+      //           this.pierre.mesh.material.opacity = time
+      //         }
+      //       })
+      //     )
+      //   }
+      // })) 
       
-      for (let i = 0; i < this.animatedPlanes.length; i++) {
-        this.animatedPlanes[i].anims.push(new Bard.Animation({
-          duration: 3500,
-          onProgress: (advancement, time) => {
-            var easeTime = Bard.Easing.easeInOutQuint(advancement)
-            // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
+      // for (let i = 0; i < this.animatedPlanes.length; i++) {
+      //   this.animatedPlanes[i].anims.push(new Bard.Animation({
+      //     duration: 3500,
+      //     onProgress: (advancement, time) => {
+      //       var easeTime = Bard.Easing.easeInOutQuint(advancement)
+      //       // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
         
-            let offset = ((this.fondPerdu*(i)))/this.aspect
-            this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
+      //       let offset = ((this.fondPerdu*(i)))/this.aspect
+      //       this.animatedPlanes[i].mesh.position.x = this.animatedPlanes[i].position.x - (offset*easeTime)
            
-          },
-          onFinish:() => {
-            this.animatedPlanes[i].position.x = this.animatedPlanes[i].mesh.position.x
-          }
-        }))
-      }
+      //     },
+      //     onFinish:() => {
+      //       this.animatedPlanes[i].position.x = this.animatedPlanes[i].mesh.position.x
+      //     }
+      //   }))
+      // }
     })
 
     this.addAction("scene-3", (e)=>{

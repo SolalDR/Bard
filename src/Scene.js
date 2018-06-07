@@ -117,17 +117,23 @@ class Scene extends Event {
     this.camera.top = winHeight/this.camera.aspect;
   }
 
-  zoomTo(position, offsetX, offsetY){
+  get middle(){
+    return new THREE.Vector2(
+      this.boundaries.left + (this.boundaries.right - this.boundaries.left)/2,
+      this.boundaries.bottom + (this.boundaries.top - this.boundaries.bottom)/2
+    )
+  }
+
+  zoomTo(position, scale){
     var width = (this.boundaries.right - this.boundaries.left);
     var height = (this.boundaries.top - this.boundaries.bottom);
-  
-    var rat = (offsetX*2)/width;
-    var newWidth = width*rat;
-    var newHeight = height*rat;
 
-    var left = (position.x - this.boundaries.left) - offsetX;
+    var newWidth = width/scale;
+    var newHeight = height/scale;
+
+    var left = (position.x - newWidth/2);
     var right = left + newWidth;
-    var bottom = (position.y - this.boundaries.bottom) - offsetY;
+    var bottom = (position.y - newHeight/2);
     var top = bottom + newHeight; 
 
     this.camera.left = left; 
