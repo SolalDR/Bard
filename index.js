@@ -29,14 +29,19 @@ window.addEventListener("load", function(){
     {
       "id": 1,
       "name": "Cockpit",
-      "match": "(cockpit)",
+      "match": "(notre)",
       "url": "/examples/img/clouds/nuage1.png"
     }
   ]
 
+  book.on("word:click", (e)=>{
+    console.log(e)
+  })
+
 	book.addFragment(fragment2);
   book.addFragment(fragment1);
-	
+  
+
   book.start();
 
   window.book = book

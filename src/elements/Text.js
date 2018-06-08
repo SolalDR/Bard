@@ -23,7 +23,8 @@ class Text extends Element {
 	constructor(params){
 
 		super(params);
-		this.eventsList = ["update", "end", "word:click"]
+    this.eventsList = ["update", "end", "word:click"]
+    this.on("word:click", (e)=>{ if(this.fragment) this.fragment.book.dispatch("word:click", e) });
 		this.loaded = true;
 		this.currentNode = null;
 		this.speechRecognition = params.speechRecognition ? params.speechRecognition : null
