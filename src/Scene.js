@@ -47,13 +47,21 @@ class Scene extends Event {
 		this.initListeners()
     this.initGroups();
     this.initRaycaster();
+
+    this.woobleIntensity = 0;
     
     this.renderer.sortObjects = false
     this.renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
-  cameraIdle(time) {
-    this.camera.rotation.y = Math.sin(time/5)*0.02
+  cameraWooble(time) {
+    if( this.woobleIntensity > 0 ){
+      this.camera.rotation.y = Math.sin(time*15)*0.05*this.woobleIntensity
+      this.camera.rotation.z = Math.sin(time*14)*0.005*this.woobleIntensity
+      this.camera.rotation.x = Math.cos(time*13)*0.005*this.woobleIntensity
+    } else {
+      this.camera.rotation.y = Math.sin(time/5)*0.02
+    }
   }
 
   /**
@@ -195,9 +203,8 @@ class Scene extends Event {
       console.log(intersects)
       this.dispatch("click", intersects );
     }
-    this.cameraIdle(this.time)
+    this.cameraWooble(this.time);
     if(this.pControls && !this.cameraAnimate) {
-      
       // this.pControls.update(this.scenePosition)
     }
     

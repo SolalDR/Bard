@@ -314,8 +314,8 @@ export default class Fragment2 extends Bard.Fragment {
         morphTargets: false,
         visible: true,
         position: {
-          x:(this.winWidth*1.5/this.aspect),
-          y: this.winWidth*0.27/this.aspect,
+          x:(this.winWidth*1.1/this.aspect),
+          y: this.winWidth*0.27/this.aspect + window.innerHeight,
           z: -29
         },
         rotation: {
@@ -355,9 +355,9 @@ export default class Fragment2 extends Bard.Fragment {
         from: e.args.element.mesh.position.x,
         to: e.args.to+e.args.element.mesh.position.x,
         duration: e.args.duration,
-        onProgress:  (advancement, time) => {
+        onProgress:  (advancement, value) => {
           var easeTime = Bard.Easing.easeInOutQuint(advancement)
-          e.args.element.mesh.position.x = time
+          e.args.element.mesh.position.x = value
         },
         onFinish: ()=>{
           this.ocelot.actions[5].stop()
@@ -393,7 +393,36 @@ export default class Fragment2 extends Bard.Fragment {
     })
 
     this.addAction('dragon-appear', (e)=>{
-      this.executeAction('move-element', {element: this.dragon, to: -this.winWidth*0.72/this.aspect, duration: 1000})
+      //this.executeAction('move-element', {element: this.dragon, to: -this.winWidth*0.72/this.aspect, duration: 1000})
+
+      var from = new THREE.Vector3().copy(this.dragon.mesh.position);
+      var to = new THREE.Vector3().copy(from);
+      to.x -= this.winWidth*0.3/this.aspect
+      to.y -= window.innerHeight
+
+      this.dragon.anims.push(new Bard.Animation({
+        from: 0,
+        to: 1,
+        duration: 1500,
+        onProgress:  (advancement, value) => {
+          var easeTime = Bard.Easing.easeInQuad(advancement)
+          this.dragon.mesh.position.x = from.x + (to.x - from.x)*easeTime
+          this.dragon.mesh.position.y = from.y + (to.y - from.y)*easeTime
+        },
+        onFinish: ()=>{
+          this.ocelot.actions[5].stop()
+          this.caracal.actions[5].stop()
+          this.dragon.anims.push(new Bard.Animation({
+            from: 1,
+            to: 0,
+            duration: 400,
+            onProgress: ((advancement, value)=>{
+              this.book.scene.woobleIntensity = value;
+            })
+          }))
+        }
+      }))
+
       this.dragon.actions[2].setLoop(THREE.LoopOnce)
       this.dragon.actions[2].setDuration(1.2)
       
@@ -401,6 +430,8 @@ export default class Fragment2 extends Bard.Fragment {
       this.dragon.actions[0].fadeIn(1.5)
       this.dragon.actions[0].play()
       this.executeAction('next')
+    }, {
+      once: true
     })
 
     this.addAction('break-sword', (e)=>{
@@ -599,19 +630,9 @@ export default class Fragment2 extends Bard.Fragment {
         to: this.rocket.mesh.position.y,
         timingFunction:'easeOutQuad',
         onProgress:(advancement, time)=> {
-          
           this.rocket.mesh.position.y = time
-          
-          // this.rocket.actions[4].play()
+          this.book.scene.woobleIntensity = advancement/8
 
-          // if(advancement > 0.85) {
-          //   this.rocket.actions[1].setLoop(THREE.LoopOnce)
-          //   this.rocket.actions[1].crossFadeFrom()
-          //   // this.rocket.actions[1].setEffectiveWeight((advancement-0.85)*8.)
-          //   // this.rocket.actions[2].play((advancement-0.85)*8.)
-          // }
-          
-          
         },
         onFinish:()=> {
           // this.rocket.actions[0].play()
@@ -625,6 +646,8 @@ export default class Fragment2 extends Bard.Fragment {
                   child.material.opacity = easeTime*child.material.realOpacity
                 }
               })
+
+              this.book.scene.woobleIntensity = (1 - time)*(1/8)
             }
           }))
 
