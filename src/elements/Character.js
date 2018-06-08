@@ -20,6 +20,7 @@ class Character extends Mesh {
 		this.resourceUrl = params.model ? params.model : "/examples/obj/rig2.glb";
     this.action = "walk";
     this.actions = []
+    this.actionNames = [];
     this.anims = [];
 		this.mode = 
 		this.config = {
@@ -103,7 +104,17 @@ class Character extends Mesh {
       
       this.mixer = new THREE.AnimationMixer( gltf.scene );
       for(let i=0; i< gltf.animations.length; i++) {
+        // console.log(this.mixer.clipAction(gltf.animations[i])._clip.name)
+        if (this.mixer.clipAction(gltf.animations[i])._clip.name.indexOf('Armature|') > -1)
+        {
+          this.mixer.clipAction(gltf.animations[i])._clip.animName = this.mixer.clipAction(gltf.animations[i])._clip.name.replace('Armature|', "")
+
+        } else if(this.mixer.clipAction(gltf.animations[i])._clip.name.indexOf('Armature.001|') > -1) {
+          this.mixer.clipAction(gltf.animations[i])._clip.animName = this.mixer.clipAction(gltf.animations[i])._clip.name.replace('Armature.001|', "")
+        }
+
         this.actions.push(this.mixer.clipAction(gltf.animations[i]))
+        this.actionNames.push(this.actions[i]._clip.name)
       } 
 
       this.loaded = true;
@@ -113,7 +124,19 @@ class Character extends Mesh {
 		});
 	}
 
-
+  /**
+   * Return an action 
+   * @param {String} name 
+   */
+  getAnimationByName(name){
+    for(var i=0; i<this.actions.length; i++){
+      if(this.actions[i]._clip.animName === name){
+        console.log(this.actions[i]._clip.name)
+        return this.actions[i];
+      }
+    }
+    console.warn("----------- Character: Animation with name "+name+" doesn't exist.")
+  }
 
 	walk(){
 		if( this.mode == Character.MODE_DEBUG ){

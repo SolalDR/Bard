@@ -20,6 +20,7 @@ class Mesh extends Element {
     this.rotation = params.rotation ? params.rotation : new THREE.Vector3(0,0,0)
     this.scale = params.scale ? params.scale : 1
     this.originCenter = params.originCenter ? true: false
+    this.originRat = params.originRat ? params.originRat : 2
     this.on("load", ()=>{
       console.log("--------- Element: Load " + this.name + " in " + this.fragment.name);
     })
@@ -227,7 +228,7 @@ class Mesh extends Element {
       console.log('---------------------')
       for (let i = 0; i < mesh.children.length; i++) {
         const element = mesh.children[i];
-        element.position.x = - box.max.x/2
+        element.position.x = - box.max.x/this.originRat
         
       }
     }
