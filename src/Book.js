@@ -19,7 +19,7 @@ class Book extends Event {
 	constructor(params){
 		super();
     this.id = params.id ? params.id : null; 
-		this.eventsList = ["fragment:add", "fragment:start", "start", "alert", "customize:hide", "customize:display"];
+		this.eventsList = ["fragment:add", "fragment:start", "start", "alert", "customize:hide", "customize:display", "word:click"];
 		this.fragments = [];
 		this.author = null;
 		this.title = null;
