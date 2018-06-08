@@ -41,8 +41,8 @@ export default class Fragment2 extends Bard.Fragment {
            "<span data-speech='dragon-ready'>En appui</span> sur ses pattes arrière, le monstre s’apprête à bondir. “Quelle pitoyable tentative ! lance le monstre. Vous ne pourrez pas m’empêcher de terroriser la planète mars ! Et je vais vous faire si peur que <span data-speech='ocelot-respond'>vous en</span> mourrez !”",
            "Moi je n’ai pas peur, lui répond Ocelot, et je connais même quelqu’un que tu ne pourras jamais effrayer, il est d’ailleurs <span data-speech='enableClick-robot'>avec nous</span> !",
            "Impossible ! Répond le monstre. Dis-moi qui est cette personne, que je te montre que tu as tort” Touche ton compagnon qui ne pourra jamais être effrayé pour vaincre le monstre ",
-           "“Le robot Tanique ne te craint pas !” dit *Nom du héro* À ces mots, le monstre se met à <span data-speech='dragon-wigle'>trembler</span> et à enfler de colère, prêt à faire le cri le plus terrorisant de tous <span data-speech='dragon-roar'>les temps</span> : “Braougraaaaaagggggaaaaaar !!!!",
-           "Voyant qu’il a échoué à effrayer le robot, le monstre pâlit et un grondement sourd sort de sa gueule. Le <span data-speech='dragon-vainquished'>voilà vaincu</span>! Il s’écroule tout à coup et son corps s’évanouit pour ne laisser qu’une petite forme <span data-speech='dragon-fade'>sur le sol</span>."
+           "“Le robot Tanique ne te craint pas !” dit *Nom du héro* À ces mots, le monstre se met à <span data-speech='dragon-wigle'>trembler</span> et à enfler de colère, prêt à faire <span data-speech='dragon-roar'>le cri</span> le plus terrorisant de tous les temps : “Braougraaaaaagggggaaaaaar !!!!",
+           "Voyant qu’il a échoué à effrayer le robot, le <span data-speech='dragon-death'>monstre pâlit</span> et un grondement sourd sort de sa gueule. Le <span data-speech='dragon-vainquished'>voilà vaincu</span>! Il s’écroule tout à coup et son corps s’évanouit pour ne laisser qu’une petite forme <span data-speech='dragon-fade'>sur le sol</span>."
           
         ],
         align: "bottom-left",
@@ -361,7 +361,7 @@ export default class Fragment2 extends Bard.Fragment {
         },
         onFinish: ()=>{
           this.ocelot.actions[5].stop()
-          this.dragon.actions[2].stop()
+          // this.dragon.actions[2].stop()
           this.caracal.actions[5].stop()
         }
       }))
@@ -393,14 +393,28 @@ export default class Fragment2 extends Bard.Fragment {
     })
 
     this.addAction('dragon-appear', (e)=>{
-      this.executeAction('move-element', {element: this.dragon, to: -this.winWidth*0.75/this.aspect, duration: 2000})
+      this.executeAction('move-element', {element: this.dragon, to: -this.winWidth*0.72/this.aspect, duration: 1000})
+      this.dragon.actions[2].setLoop(THREE.LoopOnce)
+      this.dragon.actions[2].setDuration(1.2)
+      
       this.dragon.actions[2].play()
+      this.dragon.actions[0].fadeIn(1.5)
       this.dragon.actions[0].play()
       this.executeAction('next')
     })
 
     this.addAction('break-sword', (e)=>{
-      this.executeAction('move-element', {element: this.char, to: -this.winWidth*0.15/this.aspect, duration: 1000})
+      this.dragon.actions[0].fadeOut(0.2)
+      this.dragon.actions[9].setLoop(THREE.LoopOnce)
+      this.dragon.actions[9].play()
+      setTimeout(()=>{
+        this.dragon.actions[0].fadeIn(0.5)
+        this.dragon.actions[0].enabled = true
+
+        this.dragon.actions[0].play()
+        this.executeAction('move-element', {element: this.char, to: -this.winWidth*0.15/this.aspect, duration: 1000})
+      }, 500)
+      
       this.executeAction('next')
     })
 
@@ -502,6 +516,8 @@ export default class Fragment2 extends Bard.Fragment {
     this.robot.on('click', ()=>{
       if(this.robotClickable) {
         this.robotClickable = false
+        this.robot.actions[1].setLoop(THREE.LoopOnce)
+        this.robot.actions[1].play()
         this.executeAction('next')
       }
     })
@@ -511,7 +527,7 @@ export default class Fragment2 extends Bard.Fragment {
     })
 
     this.addAction('dragon-roar', (e)=>{
-      this.king.mesh.position.x = this.dragon.mesh.position.x - (this.winWidth*0.4/this.aspect)
+      // this.king.mesh.position.x = this.dragon.mesh.position.x + (this.winWidth*0.4/this.aspect)
      
       this.ocelot.actions[9].setLoop(THREE.LoopOnce)
      
@@ -525,7 +541,17 @@ export default class Fragment2 extends Bard.Fragment {
       this.char.actions[10].setLoop(THREE.LoopOnce)
       // this.char.actions[9].crossFadeFrom(this.char.actions[0], 0.2)
       this.char.actions[10].play()
+      this.dragon.actions[0].stop()
+
+      this.dragon.actions[4].setLoop(THREE.LoopOnce)
+      this.dragon.actions[4].play()
       this.executeAction('next')
+    })
+
+    this.addAction('dragon-death', (e)=>{
+      this.dragon.actions[6].setLoop(THREE.LoopOnce)
+
+      this.dragon.actions[6].play()
     })
 
     this.addAction('dragon-fade', (e)=>{

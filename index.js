@@ -17,7 +17,7 @@ fragment2.childrenLinks = [3, 4];
 window.addEventListener("load", function(){
 
   var book = new Bard.Book({
-    debug: false,
+    debug: true,
     canvas: document.querySelector("#canvas")
   });
 
@@ -34,8 +34,8 @@ window.addEventListener("load", function(){
     }
   ]
 
-  book.addFragment(fragment1);
 	book.addFragment(fragment2);
+  book.addFragment(fragment1);
 	
   book.start();
 

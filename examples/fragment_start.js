@@ -86,7 +86,10 @@ export default class Fragment1 extends Bard.Fragment {
           "La fusée est joueuse et ne donne pas d’informations si facilement mais elle accepte tout de même de te révéler comment <span data-speech='next'>le trouver</span>. ",
           "Ocelot à une jambe de moins que son frère, t’indique-t-elle. Pourras-tu <span data-speech='mayClickOcelot'>le trouver</span> ?",
           "Bien joué ! La fusée a de nouveau un conducteur! Mais êtes-vous fin prêts à <span data-speech='next'>partir</span> ?",
-          "Touche la fusée pour partir directement ou touche Ocelot si tu veux t’assurer que la fusée est bien en état de décoller"
+          "Touche la fusée pour partir directement ou touche Ocelot si tu veux t’assurer que la fusée est bien en état de décoller",
+          "Tout le monde a mis sa ceinture de sécurité et est bien installé dans le cockpit. Il ne reste plus qu’à <span data-speech='next'>démarrer la fusée</span>.",
+          "Soudain, Caracal pousse un cri de surprise : la jauge du carburant est étonnamment basse et il n’y a plus de bidons dans l’habitacle. Ils ont dû tomber à l’<span data-speech='bidon-isClickable'>atterrissage</span>.",
+          "Examine les alentours pour retrouver le bidon et  remplir la jauge."
         ],
         align: "bottom-left",
         position: { x: "40px", y: "-20px" },
@@ -164,8 +167,58 @@ export default class Fragment1 extends Bard.Fragment {
       })
 
     }
-  
-   
+    
+
+    this.comete = this.addElement(new Bard.CharacterElement({
+      clickable: true,
+      morphTargets: true,
+      visible: true,
+      hide: true,
+      group: 'background',
+      position: {
+        x:0,
+        y: this.winWidth*0.6/this.aspect,
+        z: -29
+      },
+      rotation: {
+        x:0,
+        y:0,
+        z:0,
+      },
+      scale: 100,
+      model: '/examples/obj/comete.glb'
+    }))
+
+    this.comete.on('load', ()=> {
+      this.comete.actions[0].play()
+    })
+
+    this.addAction('comete-fall', (e)=>{
+      this.comete.anims.push(new Bard.Animation({
+        duration: 200,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          this.comete.mesh.children[0].traverse((child)=> {
+            if(child['material']) {
+              child.material.opacity = Math.min(Math.max((easeTime)*child.material.realOpacity,0),1)
+            }
+          })
+        }
+      }))
+
+      this.comete.anims.push(new Bard.Animation({
+        duration: 6000,
+        from: this.comete.mesh.position.y, 
+        to: this.winWidth*0.1/this.aspect,
+        timingFunction: 'easeInOutQuad',
+        onProgress:(advancement, time)=>{
+          var easeTime = Bard.Easing.easeInOutQuad(advancement)
+          this.comete.mesh.position.y = time
+          this.comete.mesh.position.x = this.winWidth/this.aspect*easeTime
+          this.comete.mesh.scale.set(60*(1-easeTime),60*(1-easeTime),60*(1-easeTime))
+        }
+      }))
+    })
     this.planes = [];
     this.clouds = [];
 
@@ -265,8 +318,31 @@ export default class Fragment1 extends Bard.Fragment {
       },
       mesh: new THREE.Mesh(
         new THREE.BoxGeometry( 50/this.aspect, 50/this.aspect, 1 ), 
-        new THREE.MeshBasicMaterial({color: 0xF26000,opacity:0, transparent: true, depthTest: false, depthWrite: false}))
+        new THREE.MeshBasicMaterial({color: 0xF26000,opacity:1, transparent: true, depthTest: false, depthWrite: false}))
     }))
+
+    // this.pierre = this.addElement(new Bard.PlaneElement({
+    //   name: "piere",
+    //   clickable: true,
+    //   group: "foreground",
+    //   map: '/examples/img/pierre-de-traduction.png', 
+    //   transparent: true, 
+    //   fit: 'yes',
+    //   depth: 0,
+    //   rotation: {
+    //     x: 0,
+    //     y: 0,
+    //     z: 0,
+    //   }
+    // }
+    // ))
+
+    // this.pierre.on('load', (e)=>{
+    //   this.pierre.mesh.position.x = this.winWidth*0.83/this.aspect+this.scenesAttributes.two.position.x,
+    //     this.pierre.mesh.position.y = this.winWidth*0.28/this.aspect,
+    //   this.pierre.mesh.scale.set(500,500,500)
+    //   console.log(this.pierre)
+    // })
 
 
     this.char = this.addElement(new Bard.CharacterElement({
@@ -395,7 +471,8 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.rocket.on('click', ()=>{
-      this.rocket.actions[3].play()
+      // this.rocket.actions[3].play()
+      this.executeAction('next')
     })
 
     /**
@@ -597,16 +674,7 @@ export default class Fragment1 extends Bard.Fragment {
 
           this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
           this.executeAction('next')
-          this.pierre.anims.push(
-            new Bard.Animation({
-              duration: 3500,
-              from: 0,
-              to:  1,
-              onProgress: (advancement, time, anim) => {
-                this.pierre.mesh.material.opacity = time
-              }
-            })
-          )
+         
         }
       })) 
       

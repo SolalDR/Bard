@@ -59,7 +59,7 @@ class Plane extends Mesh {
   constructor(params){
     super(params);
     this.eventsList.push("load:map");
-    this.fit = params.fit || true;
+    this.fit = params.fit ? false : true;
     this.map = params.map;
     this.depth = params.depth;
     this.aspect = window.innerWidth/window.innerHeight
@@ -78,10 +78,11 @@ class Plane extends Mesh {
    * Resize when the element is had to a fragment 
    */
   onAttachToFragment() {
+    console.log(this)
     if(this.fit && this.loaded ) {
       this.fitToScreen()
     } 
-    if(!this.loaded) {
+    if(!this.loaded && this.fit) {
       this.on("load", ()=>{
         this.fitToScreen()
       })
@@ -190,6 +191,7 @@ class Plane extends Mesh {
       transparent: this.transparent,
       depthTest: false,
       depthWrite: false,
+      side: THREE.DoubleSide
       // alphaTest: 0.5
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
