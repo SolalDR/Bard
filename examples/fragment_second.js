@@ -33,13 +33,13 @@ export default class Fragment2 extends Bard.Fragment {
           "Tout à coup, un <span data-speech='terryfying-roar'>bruit terrifiant</span> retentit dans les environs. Pris de panique les martiens courent se mettre à l’abri ! Le monstre est <span data-speech='unlock-sword'>tout proche</span> !" ,
         
           "Notre héros brandit son arme, prêt à combattre. Tout à coup, la créature s’élance d’<span data-speech='dragon-appear'>une falaise</span> et atterrit devant eux.",
-           "“Graougrrrr !! je vais vous manger tout crus !!” dit-elle en <span data-speech='next'>grognant</span>.",
-           "Avant même que *Nom du héro* ait eu le temps d’esquisser un geste, elle lui fonce dessus et le projette sur le sol, son arme se brisant avec la <span data-speech='break-sword'>force du choc</span>.<br> “Hahahaha, trop facile !”",
+           "“Graougrrrr !! je vais vous manger tout crus !!” dit-elle en <span data-speech='dragonStopTalking'>grognant</span>.",
+           "Avant même que *Nom du héro* ait eu le temps d’esquisser un geste, elle lui <span data-speech='break-sword'>fonce dessus</span> et le projette sur le sol, son arme se brisant avec la force du choc.<br> “Hahahaha, <span data-speech='charUp'>trop facile</span> !”",
            "Ton héros est désarmé ! Vite, nous <span data-speech='run'>devons fuir</span> !",
            "*Nom du héro* et ses compagnons déguerpissent sans attendre. Le monstre les prend en chasse! Ils sont rapides, mais le monstre <span data-speech='next'>plus encore</span>…  ",
            "Il gagne de la distance sur eux ! <span data-speech='ocelot-talk'>Tout</span> à coup, Ocelot s’écrie : “Nous voilà bloqués !” Un grand rocher se cachait au détour d’un virage : pas moyen de <span data-speech='next'>continuer à fuir</span> !",
            "En appui sur ses pattes arrière, <span data-speech='dragon-talk'>le monstre</span> s’apprête à bondir. “Quelle pitoyable tentative ! lance le méchant. Vous ne pourrez pas m’empêcher de terroriser la planète mars ! Et je vais vous faire si peur que <span data-speech='ocelot-respond'>vous en</span> mourrez !”",
-           "Moi je n’ai pas peur, lui répond Ocelot, et je connais même quelqu’un que tu ne pourras jamais effrayer, il est d’ailleurs <span data-speech='enableClick-robot'>avec nous</span> !",
+           "Moi je n’ai pas peur, lui répond Ocelot, et je connais même quelqu’un que tu ne pourras jamais effrayer, il est d’ailleurs <span data-speech='dragon-respond'>avec nous</span> !",
            "Impossible ! Répond le monstre. Dis-moi qui est cette personne, que je te montre que tu as tort” Touche ton compagnon qui ne pourra jamais être effrayé pour vaincre le monstre ",
            "“Le robot Tanique ne te craint pas !” dit *Nom du héro* À ces mots, le monstre se met à <span data-speech='dragon-wigle'>trembler</span> et à enfler de colère, prêt à faire <span data-speech='dragon-roar'>le cri</span> le plus terrorisant de tous les temps : “Braougraaaaaagggggaaaaaar !!!!",
            "Voyant qu’il a échoué à effrayer le robot, le <span data-speech='dragon-death'>monstre pâlit</span> et un grondement sourd sort de sa gueule. Le <span data-speech='dragon-vainquished'>voilà vaincu</span>! Il s’écroule tout à coup et son corps s’évanouit pour ne laisser qu’une petite forme <span data-speech='dragon-fade'>sur le sol</span>.",
@@ -66,32 +66,12 @@ export default class Fragment2 extends Bard.Fragment {
       inverse: true,
       map: '/examples/scene-mars/bg.png'
     }))
-
-    for (let i = 0; i < 6; i++) {
-      let group = "background"
-      let id = this.planesLength - i
-      if (id==1) {
-        group= "foreground"
-      }
-      this.planes.push(
-        this.addElement(new Bard.PlaneElement({
-            name: 'plan'+(id),
-            group: group,
-            depth: -30*id+(60),
-            inverse: true,
-            transparent: true,
-            map: '/examples/scene-mars/scenes-mars-plan'+id+'.png'
-          })
-        )
-      )
-      
-    }
-
     this.liane = this.addElement(
       new Bard.CharacterElement({
         name: "liane1",
         clickable: true,
         morphTargets: true,
+        group:'background',
         visible: true,
         position: {
           x:(this.winWidth*0.7/this.aspect),
@@ -114,6 +94,7 @@ export default class Fragment2 extends Bard.Fragment {
         name: "liane2",
         clickable: true,
         morphTargets: true,
+        group:'background',
         visible: true,
         position: {
           x:(this.winWidth*0.4/this.aspect),
@@ -135,6 +116,7 @@ export default class Fragment2 extends Bard.Fragment {
       new Bard.CharacterElement({
         name: "liane3",
         clickable: true,
+        group:'background',
         morphTargets: true,
         visible: true,
         position: {
@@ -153,6 +135,27 @@ export default class Fragment2 extends Bard.Fragment {
       })
     )
 
+    for (let i = 0; i < 6; i++) {
+      let group = "background"
+      let id = this.planesLength - i
+      if (id==1) {
+        group= "foreground"
+      }
+      this.planes.push(
+        this.addElement(new Bard.PlaneElement({
+            name: 'plan'+(id),
+            group: group,
+            depth: -30*id+(60),
+            inverse: true,
+            transparent: true,
+            map: '/examples/scene-mars/scenes-mars-plan'+id+'.png'
+          })
+        )
+      )
+      
+    }
+
+   
 
     this.liane.on('load', ()=>{
       this.liane.actions[1].play()
@@ -423,17 +426,22 @@ export default class Fragment2 extends Bard.Fragment {
 
     this.addAction('terryfying-roar', (e)=>{
       this.ocelotScared = this.ocelot.getAnimationByName('apeure')
-      this.ocelotScared.setLoop(THREE.LoopOnce)
+      this.ocelotScared.setLoop(1,2)
      
       // this.ocelot.actions[9].crossFadeFrom(this.ocelot.actions[0], 0.2)
       this.ocelotScared.play()
 
       this.caracalScared = this.caracal.getAnimationByName('apeure')
-      this.caracalScared.setLoop(THREE.LoopOnce)
+      this.caracalScared.setLoop(1,2)
      
       // this.caracal.actions[9].crossFadeFrom(this.caracal.actions[0], 0.2)
       this.caracalScared.play()
 
+      this.charScared = this.char.getAnimationByName('apeure')
+      this.charScared.setLoop(THREE.LoopOnce)
+     
+      // this.caracal.actions[9].crossFadeFrom(this.caracal.actions[0], 0.2)
+      this.charScared.play()
 
       this.robot.actions[3].setLoop(THREE.LoopOnce)
       // this.robot.actions[9].crossFadeFrom(this.robot.actions[0], 0.2)
@@ -444,6 +452,15 @@ export default class Fragment2 extends Bard.Fragment {
       this.executeAction('next')
       this.ocelot.actions[8].play();
       this.caracal.actions[8].play();
+
+      this.charBrandit = this.char.getAnimationByName('brandit arme')
+      this.charIdle = this.char.getAnimationByName('faux-fixe')
+      this.charIdle.fadeOut(0.2)
+      this.charBrandit.setLoop(THREE.LoopOnce)
+      this.charBrandit.setDuration(1.2)
+      this.charBrandit.clampWhenFinished = true
+      this.charBrandit.play()
+
       this.executeAction('move-element', {element: this.ocelot, to: -this.winWidth*0.15/this.aspect, duration: 2000})
       this.executeAction('move-element', {element: this.caracal, to: -this.winWidth*0.15/this.aspect, duration: 2000})
       this.executeAction('move-element', {element: this.robot, to: -this.winWidth*0.15/this.aspect, duration: 2000})
@@ -464,8 +481,8 @@ export default class Fragment2 extends Bard.Fragment {
         duration: 1500,
         onProgress:  (advancement, value) => {
           var easeTime = Bard.Easing.easeInQuad(advancement)
-          this.dragon.mesh.position.x = from.x + (to.x - from.x)*easeTime
-          this.dragon.mesh.position.y = from.y + (to.y - from.y)*easeTime
+          this.dragon.mesh.position.x = from.x + (to.x/0.95 - from.x)*easeTime
+          this.dragon.mesh.position.y = from.y + (this.char.mesh.position.y - from.y)*easeTime
         },
         onFinish: ()=>{
           this.ocelot.actions[5].stop()
@@ -481,13 +498,7 @@ export default class Fragment2 extends Bard.Fragment {
         }
       }))
       console.log(this.char)
-      this.charBrandit = this.char.getAnimationByName('brandit arme')
-      this.charIdle = this.char.getAnimationByName('faux-fixe')
-      this.charIdle.fadeOut(0.2)
-      this.charBrandit.setLoop(THREE.LoopOnce)
-      this.charBrandit.setDuration(1.2)
-      this.charBrandit.clampWhenFinished = true
-      this.charBrandit.play()
+    
 
       this.dragon.actions[2].setLoop(THREE.LoopOnce)
       this.dragon.actions[2].setDuration(1.2)
@@ -495,11 +506,17 @@ export default class Fragment2 extends Bard.Fragment {
       
 
       this.dragon.actions[2].play()
+      this.dragon.actions[3].fadeIn(1.5)
+      this.dragon.actions[3].play()
       this.dragon.actions[0].fadeIn(1.5)
       this.dragon.actions[0].play()
       this.executeAction('next')
     }, {
       once: true
+    })
+    this.addAction('dragonStopTalking', (e)=>{
+      this.dragon.actions[3].fadeOut(0.4)
+      this.executeAction('next')
     })
 
     this.addAction('break-sword', (e)=>{
@@ -520,17 +537,19 @@ export default class Fragment2 extends Bard.Fragment {
         this.executeAction('move-element', {element: this.char, to: -this.winWidth*0.15/this.aspect, duration: 1000})
       }, 500)
       
-      setTimeout(()=>{
-        this.char.actions[16].stop()
+    })
+
+    this.addAction('charUp', (e)=>{
+      this.char.actions[16].stop()
       
-        this.char.actions[14].enabled =true
-        this.char.actions[14].fadeIn(0.8)
-        this.char.actions[14].play()
-        this.char.actions[4].clampWhenFinished = true
-        this.char.actions[4].setLoop(THREE.LoopOnce)
-        this.char.actions[4].play()
-      }, 1600)
-      this.executeAction('next')
+      this.char.actions[14].enabled =true
+      this.char.actions[14].fadeIn(0.8)
+      this.char.actions[14].play()
+      this.char.actions[4].clampWhenFinished = true
+      this.char.actions[4].setLoop(THREE.LoopOnce)
+      this.char.actions[4].play()
+
+        this.executeAction('next')
     })
 
     this.addAction('run', (e)=>{
@@ -540,6 +559,8 @@ export default class Fragment2 extends Bard.Fragment {
       this.executeAction('move-element', {element: this.robot, to: -this.winWidth*1.4/this.aspect, duration: 11000})
 
       setTimeout(this.executeAction.bind(this, 'move-element', {element: this.dragon, to: -this.winWidth*1.5/this.aspect, duration: 8000}), 3000)
+      this.dragon.actions[5].setLoop(THREE.LoopOnce)
+      this.dragon.actions[5].play()
 
       this.ocelot.actions[4].play()
       this.caracal.actions[4].play()
@@ -613,11 +634,12 @@ export default class Fragment2 extends Bard.Fragment {
     })
 
     this.addAction('ocelot-talk', (e)=>{
-      // this.ocelot.actions[4].setLoop(THREE.LoopOnce)
-      // this.ocelot.actions[4].play()
+      this.ocelot.actions[6].setLoop(THREE.LoopOnce)
+      this.ocelot.actions[6].play()
     })
     
     this.addAction('dragon-talk',()=>{
+      this.dragon.actions[3].enabled = true
       this.dragon.actions[3].crossFadeFrom(this.dragon.actions[0], 1)
       this.dragon.actions[3].play()
     })
@@ -626,17 +648,24 @@ export default class Fragment2 extends Bard.Fragment {
       this.dragon.actions[3].crossFadeTo(this.dragon.actions[0], 0.5)
       this.dragon.actions[0].enabled =true
       this.dragon.actions[0].play()
+      this.ocelot.actions[5].setLoop(1,2)
+      this.ocelot.actions[5].play()
       this.executeAction('next')
     })
 
     
-    this.addAction('enableClick-robot', (e)=>{
+    this.addAction('dragon-respond', (e)=>{
       this.robotClickable = true
+
       this.executeAction('next')
+      this.dragon.actions[3].enabled = true
+      this.dragon.actions[3].crossFadeFrom(this.dragon.actions[0], 1)
+      this.dragon.actions[3].play()
     })
 
     this.robot.on('click', ()=>{
       if(this.robotClickable) {
+        this.dragon.actions[3].fadeOut(0.4)
         this.robotClickable = false
         this.robot.actions[1].setLoop(THREE.LoopOnce)
         this.robot.actions[1].play()
@@ -762,9 +791,37 @@ export default class Fragment2 extends Bard.Fragment {
       this.rocket.actions[4].fadeOut( 5)
       this.rocket.actions[2].play()
       this.rocket.actions[2].fadeIn(5)
+      
+      this.liane.anims.push(new Bard.Animation({
+        duration: 5000,
+        from: this.liane.mesh.position.y-(this.winWidth*0.2/this.aspect),
+        to: this.liane.mesh.position.y,
+        onProgress: (advancement, time)=>{
+          this.liane.mesh.position.y = time
+        }
+        
+      }))
+      this.liane2.anims.push(new Bard.Animation({
+        duration: 4000,
+        from: this.liane2.mesh.position.y-(this.winWidth*0.2/this.aspect),
+        to: this.liane2.mesh.position.y,
+        onProgress: (advancement, time)=>{
+          this.liane2.mesh.position.y = time
+        }
+        
+      }))
+      this.liane3.anims.push(new Bard.Animation({
+        duration: 4000,
+        from: this.liane3.mesh.position.y-(this.winWidth*0.2/this.aspect),
+        to: this.liane3.mesh.position.y,
+        onProgress: (advancement, time)=>{
+          this.liane3.mesh.position.y = time
+        }
+        
+      }))
 
       this.rocket.anims.push(new Bard.Animation({
-        duration: 5000,
+        duration: 4000,
         from: this.winWidth*0.5/this.aspect,
         to: this.rocket.mesh.position.y,
         timingFunction:'easeOutQuad',
@@ -831,6 +888,16 @@ export default class Fragment2 extends Bard.Fragment {
           }))
         }
       }))
+      for (let i = 0; i < this.planes.length; i++) {
+        this.planes[i].anims.push(new Bard.Animation({
+          duration: 2700,
+          from: this.planes[i].mesh.position.y-(this.winWidth*0.03*i/this.aspect),
+          to: this.planes[i].mesh.position.y,
+          onProgress: (advancement, time)=>{
+            this.planes[i].mesh.position.y = time
+          }
+        }))        
+      }
     }, {
       once: true
     })
@@ -847,6 +914,8 @@ export default class Fragment2 extends Bard.Fragment {
 
       this.initListeners();
       this.executeAction("transitionIn");
+
+     
       // this.soundManager.stop("forest");
       // this.soundManager.play("rocket");
     })
