@@ -203,14 +203,14 @@ class Fragment extends Event {
    * If fragment is loaded, start the fragment  
    */
 	start() {
-    console.log("----- Fragment: Try to start");
+    if(this.debug) console.log("----- Fragment: Try to start");
 		if( !this.isLoad() ){
-      console.log("----- Fragment: Not loaded yet, return");
+      if(this.debug) console.log("----- Fragment: Not loaded yet, return");
 			return; 
     }
     this.onClickBind = this.onClick.bind(this);
     this.book.scene.on("click", this.onClickBind);
-    console.log("----- Fragment: Successully Start", this.name)
+    if(this.debug) console.log("----- Fragment: Successully Start", this.name)
     this.dispatch("start")
     this.clock = new Clock(false);
     this.clock.start();
@@ -277,7 +277,7 @@ class Fragment extends Event {
 			this.dispatch("action:add", { action: action })
 			return;
 		}
-		console.warn(`Fragment: Action cannot be add. You need to remove action with name \"${action.name}\" first.`);
+		if(this.debug) console.warn(`Fragment: Action cannot be add. You need to remove action with name \"${action.name}\" first.`);
 		return this.actions[action.name]; 
 	}
 
@@ -306,7 +306,7 @@ class Fragment extends Event {
 			this.actions[name].execute(args);
 			this.dispatch("action:execute", { action: this.actions[name], event: args })
 		} else {
-			console.warn(`Fragment: Action with name "${name}" doesn't exist.`);
+			if(this.debug) console.warn(`Fragment: Action with name "${name}" doesn't exist.`);
 		}
 	}
 
@@ -315,7 +315,8 @@ class Fragment extends Event {
 	 * @param element Element
 	 */
 	addElement(element){
-		element.fragment = this;
+    element.fragment = this;
+    element.debug = this.debug;
 		this.elements.push(element);
 		element.onAttachToFragment();
 		this.dispatch("element:add", { element: element })
@@ -337,7 +338,7 @@ class Fragment extends Event {
 	 * @param element Element
 	 */
 	removeElement(element){
-		console.log("----- Fragment: Element remove", element.name)
+		if(this.debug) console.log("----- Fragment: Element remove", element.name)
 		if( this.elements.indexOf(element) >= 0) {
 			if( element.hide ) element.hide();
 			this.dispatch("element:remove", { element: element });

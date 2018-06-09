@@ -34,15 +34,15 @@ window.addEventListener("load", function(){
     }
   ]
 
-  book.on("word:click", (e)=>{
-    console.log(e)
-  })
+
 
   book.addFragment(fragment1);
 	book.addFragment(fragment2);
   
 
   book.start();
-
+  book.on("fragment:start", (e)=>{
+    console.log(e)
+  })
   window.book = book
 })

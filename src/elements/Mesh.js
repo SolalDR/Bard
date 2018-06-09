@@ -157,7 +157,7 @@ class Mesh extends Element {
 	display(){
 
 		if( this.fragment && this.fragment.book && this.fragment.book.scene ) {
-      console.log("--------- Element: Display " + this.name)
+      if(this.debug) console.log("--------- Element: Display " + this.name)
 
       if( this.clickable ){
         this.rotateMesh(this.mesh)
@@ -174,7 +174,7 @@ class Mesh extends Element {
 			return;
     }
     
-		console.warn("Book not started. Cannot add elements to fragment");
+		if(this.debug) console.warn("Book not started. Cannot add elements to fragment");
   }
   
   positionMesh(mesh) {
@@ -227,11 +227,9 @@ class Mesh extends Element {
     }
 
     if(this.originCenter) {
-      console.log('---------------------')
       for (let i = 0; i < mesh.children.length; i++) {
         const element = mesh.children[i];
         element.position.x = - box.max.x/this.originRat
-        
       }
     }
    
@@ -248,7 +246,7 @@ class Mesh extends Element {
 			this.fragment.book.scene.removeElement(this); 
 			return;
 		}
-		console.warn("Book not started. Cannot remove elements to fragment");
+		if(this.debug) console.warn("Book not started. Cannot remove elements to fragment");
 	}
 
 

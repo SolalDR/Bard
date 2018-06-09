@@ -43,17 +43,18 @@ class Book extends Event {
 				this._currentFragment.stop();
 
     this._currentFragment = fragment;
+    this._currentFragment.on("start", ()=>{
+      this.dispatch("fragment:start", fragment);
+    })
     if( !this._currentFragment.loaded ) {
-      console.log("-- Book: Try to start fragment but not loaded yet, waiting for all loading to start")
+      if(this.debug) console.log("-- Book: Try to start fragment but not loaded yet, waiting for all loading to start")
       this._currentFragment.on("load", ()=>{
         this._currentFragment.start();
       })
     } else {
-      console.log("-- Book: Fragment is already load so : Start")
+      if(this.debug) console.log("-- Book: Fragment is already load so : Start")
       this._currentFragment.start();
     }
-		
-		this.dispatch("fragment:start", fragment);
 	}
 
   /**
@@ -69,7 +70,8 @@ class Book extends Event {
    * @param {Fragment} fragment 
    */
 	addFragment(fragment){
-		fragment.book = this;
+    fragment.book = this;
+    fragment.debug = this.debug
 		this.dispatch("fragment:add", { fragment: fragment });
 		this.fragments.push(fragment);
 		this.mapChildren(fragment);
