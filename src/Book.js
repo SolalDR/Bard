@@ -25,6 +25,7 @@ class Book extends Event {
 		this.title = null;
     this.debug = params && params.debug === true ? true : false; 
     this.navigator = new Navigator(this);
+    this.soundManager = null;
     
     var canvas = params.canvas ? params.canvas : null;
 		this.scene = new Scene(this, canvas);
