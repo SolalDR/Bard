@@ -38,8 +38,8 @@ window.addEventListener("load", function(){
     console.log(e)
   })
 
-	book.addFragment(fragment2);
   book.addFragment(fragment1);
+	book.addFragment(fragment2);
   
 
   book.start();

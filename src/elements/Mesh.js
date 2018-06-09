@@ -19,6 +19,7 @@ class Mesh extends Element {
     this.position = params.position ? params.position : new THREE.Vector3(0,0,0)
     this.rotation = params.rotation ? params.rotation : new THREE.Vector3(0,0,0)
     this.scale = params.scale ? params.scale : 1
+    this.isPlane = params.isPlane ? true : false
     this.originCenter = params.originCenter ? true: false
     this.originRat = params.originRat ? params.originRat : 2
     this.on("load", ()=>{
@@ -160,9 +161,10 @@ class Mesh extends Element {
 
       if( this.clickable ){
         this.rotateMesh(this.mesh)
-        if(this.clickable) this.createBBox(this.mesh)      
+        if(this.clickable ) this.createBBox(this.mesh)      
         this.positionMesh(this.mesh)
         this.scaleMesh(this.mesh)
+        
       }
 
 
@@ -233,7 +235,7 @@ class Mesh extends Element {
       }
     }
    
-    this.bbMesh.material.opacity = 0.
+    this.bbMesh.material.opacity = .0
     mesh.add(this.bbMesh)
   }
 

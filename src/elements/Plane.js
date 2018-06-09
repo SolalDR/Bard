@@ -97,7 +97,7 @@ class Plane extends Mesh {
       this.video = document.createElement('video');
       this.video.src = this.videoUrls[i];
       this.texture = new THREE.VideoTexture(this.video);
-      this.mesh.material.uniforms.texture.value = this.texture;
+      this.mesh.children[0].material.uniforms.texture.value = this.texture;
     }
   }
 
@@ -113,9 +113,9 @@ class Plane extends Mesh {
       this.texture.anisotropy = 0;
       this.texture.magFilter = THREE.NearestFilter;
       this.texture.minFilter = THREE.NearestFilter;
-      this.mesh.material.uniforms.texture.value = this.texture
+      this.mesh.children[0].material.uniforms.texture.value = this.texture
 
-      this.mesh.material.uniforms.textureRes.value = {
+      this.mesh.children[0].material.uniforms.textureRes.value = {
         x: this.texture.image.width,
         y: this.texture.image.height
       }
@@ -194,13 +194,15 @@ class Plane extends Mesh {
       side: THREE.DoubleSide
       // alphaTest: 0.5
     })
-    this.mesh = new THREE.Mesh(this.geometry, this.material)
+    this.mesh = new THREE.Group()
+    let mesh = new THREE.Mesh(this.geometry, this.material)
+    this.mesh.add(mesh)
     this.mesh.position.z = this.depth;
     this.mesh.name = this.name;
   }
   render(clock) {
     this.renderAnims(17)
-    this.mesh.material.uniforms.time.value += clock.delta
+    this.mesh.children[0].material.uniforms.time.value += clock.delta
   }
   resize(width, height) {
     // this.fitToScreen()
