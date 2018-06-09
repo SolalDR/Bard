@@ -128,7 +128,12 @@ class Sound extends Event {
    */
   stop() {
     this.dispatch("stop");
-    this.source.disconnect(this.gain);
+    if( this.effectNode ){
+      this.source.disconnect(this.effectNode);
+    } else {
+      this.source.disconnect(this.gain);
+    }
+    
     this.source = null;
   }
 }

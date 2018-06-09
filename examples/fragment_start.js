@@ -417,7 +417,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.char.on("click", ()=>{
       console.log(this.char.actions)
       if(!this.roar && this.scene2 && this.char.interactive) {
-        rocketLaunch.start()
+        this.soundManager.play("heros-call")
         this.roar = true
 
         this.char.actions[11].setLoop(THREE.LoopOnce)
