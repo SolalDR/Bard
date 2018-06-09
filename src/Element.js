@@ -48,7 +48,7 @@ class Element extends Event {
 		if( Element.AVAILABLES_TYPES.indexOf(type) >= 0 ){
 			this._type = type;
 		} else {
-			console.warn(`This type "${type}" is not available for Element`);
+			console.warn(`Element: This type "${type}" is not available for Element`);
 		}
 	}
 
@@ -67,7 +67,7 @@ class Element extends Event {
 	 */
 	registerAction(name, action, force = false){
 		if( this.actions[name] && !force ){
-			console.warn("Cannot override this action, use force=true to override");
+			console.warn("Element: Cannot override this action, use force=true to override");
 			return; 
 		}
 		this.actions[name] = action.bind(this)

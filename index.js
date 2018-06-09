@@ -34,9 +34,7 @@ window.addEventListener("load", function(){
     }
   ]
 
-  book.on("word:click", (e)=>{
-    console.log(e)
-  })
+
 
 
 	book.addFragment(fragment2);
@@ -44,6 +42,8 @@ window.addEventListener("load", function(){
   
 
   book.start();
-
+  book.on("fragment:start", (e)=>{
+    console.log(e)
+  })
   window.book = book
 })
