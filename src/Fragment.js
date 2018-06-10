@@ -123,7 +123,10 @@ class Fragment extends Event {
    * @return {Boolean} | Return false if cannot increment current actions 
    */
   next(executeBefore = false) {
-    if( executeBefore ){ this.executeAction(null, {}, true) }
+    if( executeBefore ){
+      console.log("--------------- Next Action: " + this.pipeline.actions[this.pipeline.current]);
+      this.executeAction(null, {}, true) 
+    }
     if(this.pipeline.actions[this.pipeline.current + 1]){
       this.pipeline.current++;
       return true;
@@ -308,7 +311,9 @@ class Fragment extends Event {
       if(!isAutomatic){
         for(var i=this.pipeline.current; i<this.pipeline.actions.length; i++){
           if(name === this.pipeline.actions[i] && this.pipeline.actions[i+1]){
+            console.log("--------- Pipeline auto pass to :" + this.pipeline.actions[i+1])
             this.pipeline.current = i+1;
+            break;
           }
         }
       }

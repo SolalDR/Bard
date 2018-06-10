@@ -97,8 +97,6 @@ class Text extends Element {
 
 	registerCommands(){
     var self = this;
-  
-    console.log(this.current.recorders.length)
     for(var i=0; i<this.current.recorders.length; i++){
       (function(rank){
         self.current.recorders[rank].element.addEventListener("click", ()=>{
@@ -111,8 +109,6 @@ class Text extends Element {
     }
 		for(var i=0; i<this.current.speechs.length; i++){
 			(function(rank){
-        console.log("-------------------------------------------")
-        console.log(self.current.speechs[rank].command, self.current.speechs[rank].action)
 				self.speechRecognition.addCommand(self.current.speechs[rank].command, (e) => {
 					self.fragment.executeAction(self.current.speechs[rank].action)
 				});

@@ -62,7 +62,9 @@ class SoundManager extends Event {
      */
     play(name, offset) {
         if(!offset) var offset = 0;
-        this.sounds[name].start(offset);
+        if( this.sounds[name] ){
+          this.sounds[name].start(offset);
+        }
     }
 
     /**
