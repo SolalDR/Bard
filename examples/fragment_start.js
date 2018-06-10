@@ -148,8 +148,8 @@ export default class Fragment1 extends Bard.Fragment {
       new Bard.TextElement({
         nodes: [
           "Un soir, alors qu’il observe <span data-speech='comete-fall'>le ciel</span> étoilé d’une belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
-          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='next'>être équipé</span>.",
-          // ".",
+          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='customPersonalization'>être équipé</span>.",
+          ".",
           "Le voilà fin prêt ! Guidé par la lumière de la comète qui s’est écrasée, Chevalier Justine décide d'aller <span data-speech='scene-2'>vers la forêt</span>…", 
           "Soudain, à l’orée d’une clairière, des voix lui parviennent. Qui peut bien se <span data-speech='charInteraction'>cacher ici</span> ?",
           "Touche ton héros pour qu’il fasse peur aux créatures et qu’elles sortent de leur cachette !",
@@ -622,6 +622,43 @@ export default class Fragment1 extends Bard.Fragment {
       if(this.scene3 && this.rocketIsClickable) {
         text.next();
         this.rocketIsClickable = false
+
+        this.ocelot.anims.push(new Bard.Animation({
+          duration: 1000,
+          onProgress: (advancement, time) => {
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)
+            this.ocelot.mesh.children[0].traverse((child)=> {
+              if(child['material'] && child['name'] !== "projection") {
+                child.material.opacity = (1-easeTime)*child.material.realOpacity
+              }
+            })
+          }
+        }))
+
+        this.char.anims.push(new Bard.Animation({
+          duration: 1000,
+          onProgress: (advancement, time) => {
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)
+            this.char.mesh.children[0].traverse((child)=> {
+              if(child['material']) {
+                child.material.opacity = (1-easeTime)*child.material.realOpacity
+              }
+            })
+          }
+        }))
+  
+        this.caracal.interactive = true
+        this.caracal.anims.push(new Bard.Animation({
+          duration: 1000,
+          onProgress: (advancement, time) => {
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)
+            this.caracal.mesh.children[0].traverse((child)=> {
+              if(child['material'] && child['name'] !== "projection") {
+                child.material.opacity = (1-easeTime)*child.material.realOpacity
+              }        
+            })
+          }
+        }))
       }
       
     })
@@ -957,7 +994,7 @@ export default class Fragment1 extends Bard.Fragment {
       this.rocket.anims.push(new Bard.Animation({
         duration: 6000,
         from: this.rocket.mesh.position.y,
-        to: this.rocket.mesh.position.y+this.winWidth*0.5/this.aspect,
+        to: this.rocket.mesh.position.y+this.winWidth*0.8/this.aspect,
         timingFunction: 'easeInQuad',
         onProgress: (advancement, time)=>{
           this.rocket.mesh.position.y = time
