@@ -64,6 +64,30 @@ export default class Fragment1 extends Bard.Fragment {
     // this.char = this.addElement(new Bard.CharacterElement({}))
     this.screenSize = this.book.scene.camera.right*2
 
+    this.customPipeline = [
+      "comete-fall",            // Speak: Etrange comète
+      "next",                   // Speak: Non loin de là
+      "customPersonalization",  // Speak: Open custom personnalisation
+      "customize-hide",         // Click: 
+      "scene-2",                // Speak: Dans la forêt
+      "charInteraction",    
+      "displayCatHolo",
+      "caracalTalk",
+      "",                       // Refacto: Ocelot click
+      "next",
+      "removeHelp",
+      "next",                   // Speak: Leur planète
+      "scene-3",
+      "ocelotTalk",
+      "next",                   // Speak : Le conduire
+      "ocelotStopTalking",
+      "next",                   // Speak : deux est
+      "next",                   // Speak : Le trouver
+      "mayClickOcelot",
+      "next",
+      "next"                    // Speak : Démarer la fusée
+    ]
+
     var text = this.addElement(
       new Bard.TextElement({
         nodes: [
@@ -430,13 +454,6 @@ export default class Fragment1 extends Bard.Fragment {
     this.char.on("click", ()=>{
       console.log(this.char.actions)
       if(!this.roar && this.scene2 && this.char.interactive) {
-        // this.soundManager.play("heros-call")
-        this.roar = true
-
-        this.char.actions[0].setLoop(THREE.LoopOnce)
-        this.char.actions[0].play()
-
-        this.executeAction('next')
         this.executeAction('displayCatHolo')
       }
     })
@@ -608,6 +625,12 @@ export default class Fragment1 extends Bard.Fragment {
     
 
     this.addAction('displayCatHolo', (e)=> {
+      this.soundManager.play("heros-call")
+      this.roar = true
+      this.char.actions[0].setLoop(THREE.LoopOnce)
+      this.char.actions[0].play()
+
+      this.executeAction('next')
       this.ocelot.interactive = true
       this.ocelot.anims.push(new Bard.Animation({
         duration: 1000,
@@ -715,7 +738,6 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.addAction('charInteraction', (e)=>{
       this.char.interactive = true
-      console.log("Hello charInteraction");
       this.executeAction('next')
     })
 

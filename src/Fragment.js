@@ -123,7 +123,7 @@ class Fragment extends Event {
    * @return {Boolean} | Return false if cannot increment current actions 
    */
   next(executeBefore = false) {
-    if( executeBefore ){ this.executeAction() }
+    if( executeBefore ){ this.executeAction(null, {}, true) }
     if(this.pipeline.actions[this.pipeline.current + 1]){
       this.pipeline.current++;
       return true;
@@ -300,9 +300,19 @@ class Fragment extends Event {
 	 * Run action if specify, else run the default actions register in the pipeline
 	 * @param name string|null
 	 */
-	executeAction(name = null, args={}){
+	executeAction(name = null, args={}, isAutomatic = false){
     if( !name ) name = this.pipeline.actions[this.pipeline.current];
 		if( this.actions[name] ) {
+      
+      // If action is performed anormally, don't manage pipeline => Already increment in Fragment:next()
+      if(!isAutomatic){
+        for(var i=this.pipeline.current; i<this.pipeline.actions.length; i++){
+          if(name === this.pipeline.actions[i] && this.pipeline.actions[i+1]){
+            this.pipeline.current = i+1;
+          }
+        }
+      }
+      
 			this.actions[name].execute(args);
 			this.dispatch("action:execute", { action: this.actions[name], event: args })
 		} else {
