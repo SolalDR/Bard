@@ -72,20 +72,21 @@ export default class Fragment1 extends Bard.Fragment {
       "scene-2",                // Speak: Dans la forêt
       "charInteraction",    
       "displayCatHolo",
-      "caracalTalk",
-      "",                       // Refacto: Ocelot click
-      "next",
+      "ocelot-click",           // Refacto: Ocelot click
+      "caracal-click",   
+      "caracalTalk",    
+      "click-pierre",   
       "removeHelp",
-      "next",                   // Speak: Leur planète
       "scene-3",
       "ocelotTalk",
       "next",                   // Speak : Le conduire
       "ocelotStopTalking",
       "next",                   // Speak : deux est
-      "next",                   // Speak : Le trouver
       "mayClickOcelot",
+      "ocelot-click", // Click ocelot
       "next",
-      "next"                    // Speak : Démarer la fusée
+      "next", // Touch rocket
+      "rocket-launch"                    // Speak : Démarer la fusée
     ]
 
     var text = this.addElement(
@@ -458,47 +459,21 @@ export default class Fragment1 extends Bard.Fragment {
       }
     })
 
-   
     this.ocelot.on("click",()=>{
-      this.ocelotFound = true
-      this.executeAction('fallOcelot')
-      if(this.caracalFound  && this.ocelot.interactive) {
-       
-        this.executeAction('next')
-        this.ocelot.interactive = false
-      }
-
-      this.ocelot.actions[6].setLoop(THREE.LoopOnce)
-      this.ocelot.actions[6].setDuration(0.6)
-      this.ocelot.actions[6].play()
-      setTimeout(()=>{
-        this.ocelot.actions[0].play()
-      },600)
-      if(this.scene3 && !this.findOcelot && this.ocelot.interactive) {
-        this.findOcelot = true
-        this.executeAction('next')
-      }
+      this.executeAction("ocelot-click"); 
     })
 
     this.caracal.on("click",()=>{
-      this.caracalFound = true
-      this.executeAction('fallCaracal')
-      this.caracal.actions[6].setLoop(THREE.LoopOnce)
-      this.caracal.actions[6].setDuration(0.6)
-      this.caracal.actions[6].play()
-      setTimeout(()=>{
-        this.caracal.actions[0].play()
-      },600)
-      if(this.ocelotFound && this.caracal.interactive) {
-        this.executeAction('next')
-        this.caracal.interactive = false
-      } 
-      
+      this.executeAction("caracal-click");
+    })
+
+    this.pierre.on("click",()=>{
+      this.executeAction("click-pierre");      
     })
 
 
 
-    this.pierre.on("click",()=>{
+    this.addAction("click-pierre", ()=>{
       this.caracal.actions[9].crossFadeFrom(this.caracal.actions[5], 0.5)
       this.caracal.actions[9].play()
 
@@ -519,18 +494,51 @@ export default class Fragment1 extends Bard.Fragment {
         this.pierre.anims.push(new Bard.Animation({
           duration: 300,
           onProgress: (advancement, time) => {
-            var easeTime = Bard.Easing.easeInOutQuint(advancement)
-            // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
-           
+            var easeTime = Bard.Easing.easeInOutQuint(advancement)      
             this.pierre.mesh.children[0].material.uniforms.opacity.value = Math.max(1.-easeTime,0)
-            
         }}))
-        this.executeAction('next')
+        text.next();
       }
     })
 
+
+    this.addAction("ocelot-click", ()=>{
+      this.ocelotFound = true
+      this.executeAction('fallOcelot')
+      if(this.caracalFound  && this.ocelot.interactive) {
+        text.next();
+        this.ocelot.interactive = false
+      }
+      this.ocelot.actions[6].setLoop(THREE.LoopOnce)
+      this.ocelot.actions[6].setDuration(0.6)
+      this.ocelot.actions[6].play()
+      setTimeout(()=>{
+        this.ocelot.actions[0].play()
+      },600)
+      if(this.scene3 && !this.findOcelot && this.ocelot.interactive) {
+        this.findOcelot = true
+        text.next();
+      }
+    })
+
+    this.addAction("caracal-click", ()=>{
+      this.caracalFound = true
+      this.executeAction('fallCaracal')
+      this.caracal.actions[6].setLoop(THREE.LoopOnce)
+      this.caracal.actions[6].setDuration(0.6)
+      this.caracal.actions[6].play()
+      setTimeout(()=>{
+        this.caracal.actions[0].play()
+      },600)
+      if(this.ocelotFound && this.caracal.interactive) {
+        text.next();
+        this.caracal.interactive = false
+      } 
+    })
+   
+
     this.addAction('removeHelp', ()=>{
-      this.executeAction('next')
+      text.next();
       this.caracal.actions[9].crossFadeTo(this.caracal.actions[0], 0.3)
       this.caracal.actions[0].play()
       this.caracal.actions[0].enabled = true
@@ -550,7 +558,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.rocket.on('click', ()=>{
       // this.rocket.actions[3].play()
-      this.executeAction('next')
+      text.next();
     })
 
     /**
@@ -563,14 +571,14 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.addAction('ocelotTalk', ()=>{
-      this.executeAction('next')
+      text.next();
       this.ocelot.actions[5].crossFadeFrom(this.ocelot.actions[0], 0.3)
       this.ocelot.actions[5].play()
     })
 
     
     this.addAction('ocelotStopTalking', ()=>{
-      this.executeAction('next')
+      text.next();
       this.ocelot.actions[0].crossFadeFrom(this.ocelot.actions[5], 0.3)
       this.ocelot.actions[0].enabled = true
       this.ocelot.actions[0].play()
@@ -592,7 +600,7 @@ export default class Fragment1 extends Bard.Fragment {
         },
         onFinish: () => {
           this.characterCustomizer.display();
-          this.executeAction("next");
+          text.next();
         }
       }));
     }, {
@@ -615,7 +623,7 @@ export default class Fragment1 extends Bard.Fragment {
           this.book.scene.zoomTo(center, time);
         },
         onFinish: () => {
-          this.executeAction("next");
+          text.next();
         }
       }));
     }, {
@@ -630,7 +638,7 @@ export default class Fragment1 extends Bard.Fragment {
       this.char.actions[0].setLoop(THREE.LoopOnce)
       this.char.actions[0].play()
 
-      this.executeAction('next')
+      text.next();
       this.ocelot.interactive = true
       this.ocelot.anims.push(new Bard.Animation({
         duration: 1000,
@@ -738,7 +746,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.addAction('charInteraction', (e)=>{
       this.char.interactive = true
-      this.executeAction('next')
+      text.next();
     })
 
     this.addAction('moveMeshOnTrav', (e)=>{
@@ -782,7 +790,7 @@ export default class Fragment1 extends Bard.Fragment {
           this.book.scene.scenePosition.x = this.currentScene.position.x
 
           this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
-          this.executeAction('next')
+          text.next();
          
         }
       })) 
@@ -830,8 +838,7 @@ export default class Fragment1 extends Bard.Fragment {
           this.executeAction('catsWalk', {element: this.caracal, to: this.winWidth*0.03/this.aspect})
            this.executeAction('catsWalk', {element: this.ocelot, to: this.winWidth*0.12/this.aspect})
 
-          this.executeAction('next')
-         
+          text.next();         
         }
       })) 
       
@@ -932,14 +939,9 @@ export default class Fragment1 extends Bard.Fragment {
         }
       })
       
-
       this.rocket.actions[2].play()
       forest.on("load", ()=>{forest.start()})
       this.initListeners();
-
-      //this.waitAndAlert("chrome_exception", "next")
-      //this.book.on("alert", (e)=>{
-      //})
     })
   }
   resize() {
