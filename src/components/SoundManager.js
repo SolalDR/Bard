@@ -68,8 +68,8 @@ class SoundManager extends Event {
     /**
      * Stop a sound object from his name
      */
-    stop(){
-
+    stop(name, offset){
+      this.sounds[name].stop(offset);
     }
 
     /**

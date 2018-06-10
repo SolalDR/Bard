@@ -20,9 +20,63 @@ export default class Fragment1 extends Bard.Fragment {
      */
     var forest = this.soundManager.load("forest", "/examples/sounds/forest_ambiance.mp3", {
       loop: true,
+   
       volume: 0
     });
+
     var rocketLaunch = this.soundManager.load("rocket", "/examples/sounds/rocket_launch.mp3");
+
+    this.soundManager.load("terreAmbiance", "/examples/sounds/scene-1/terre-ambiance.mp3", {
+      loop: true,
+    })
+
+    this.soundManager.load("comete", "/examples/sounds/scene-1/cometeSound.mp3", {
+      
+    })
+
+    this.soundManager.load("foret", "/examples/sounds/scene-1/foret.mp3", {
+      loop: true
+    })
+
+    this.soundManager.load("marche", "/examples/sounds/scene-1/marche.mp3", {
+      
+    })
+
+    this.soundManager.load("voix", "/examples/sounds/scene-1/des-voix-lui-parviennent.mp3", {
+      
+    })
+
+    this.soundManager.load("chatTombe", "/examples/sounds/scene-1/chat-qui-tombent.mp3", {
+      
+    })
+
+    this.soundManager.load("feuillage", "/examples/sounds/scene-1/feuillage.mp3", {
+      
+    })
+
+    this.soundManager.load("langageCode", "/examples/sounds/scene-1/langage-codes.mp3", {
+      
+    })
+
+    this.soundManager.load("success", "/examples/sounds/scene-1/validation.mp3", {
+      
+    })
+
+    this.soundManager.load("projection", "/examples/sounds/scene-1/projection-message.mp3", {
+      
+    })
+
+    this.soundManager.load("clickRocket", "/examples/sounds/scene-1/interroge-fusee.mp3", {
+      
+    })  
+    
+    this.soundManager.load("clickRocket", "/examples/sounds/scene-1/interroge-fusee.mp3", {
+      
+    }) 
+    
+    this.soundManager.load("rocketLaunch", "/examples/sounds/scene-1/decollage-fusee.mp3", {
+      
+    })
 
     var recorder = new Bard.Recorder(this.soundManager);
     recorder.init();
@@ -47,6 +101,7 @@ export default class Fragment1 extends Bard.Fragment {
       two: {
         position: {
           x: this.winWidth/this.aspect,
+          y: this.winWidth*0.13/this.aspect
         }
       },
       three: {
@@ -92,8 +147,8 @@ export default class Fragment1 extends Bard.Fragment {
       new Bard.TextElement({
         nodes: [
           "Un soir, alors qu’il observe <span data-speech='comete-fall'>le ciel</span> étoilé d’une belle nuit d’été… Une étrange comète traverse l’atmosphère, pour disparaître dans un bois <span data-speech='next'>non loin de</span> là.",
-          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='customPersonalization'>être équipé</span>.",
-          ".",
+          " Il faut que j’aille voir cela de plus près ! “ s’exclame notre héros. Mais avant de s’aventurer dehors, il doit d’abord <span data-speech='next'>être équipé</span>.",
+          // ".",
           "Le voilà fin prêt ! Guidé par la lumière de la comète qui s’est écrasée, Chevalier Justine décide d'aller <span data-speech='scene-2'>vers la forêt</span>…", 
           "Soudain, à l’orée d’une clairière, des voix lui parviennent. Qui peut bien se <span data-speech='charInteraction'>cacher ici</span> ?",
           "Touche ton héros pour qu’il fasse peur aux créatures et qu’elles sortent de leur cachette !",
@@ -230,6 +285,8 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.addAction('comete-fall', (e)=>{
+      this.soundManager.play('comete')
+      
       this.comete.anims.push(new Bard.Animation({
         duration: 200,
         onProgress: (advancement, time) => {
@@ -501,8 +558,11 @@ export default class Fragment1 extends Bard.Fragment {
     this.pierre.on("click",()=>{
       this.caracal.actions[9].crossFadeFrom(this.caracal.actions[5], 0.5)
       this.caracal.actions[9].play()
-
+      
       if(this.caracalFound && this.ocelotFound ) {
+        this.soundManager.play('success')
+        this.soundManager.play('projection')
+        
         this.caracal.anims.push(new Bard.Animation({
           duration: 500,
           onProgress: (advancement, time)=>{
@@ -550,6 +610,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.rocket.on('click', ()=>{
       // this.rocket.actions[3].play()
+      this.soundManager.play('clickRocket')
       this.executeAction('next')
     })
 
@@ -560,6 +621,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.addAction('caracalTalk', ()=>{
       this.caracal.actions[5].crossFadeFrom(this.caracal.actions[0], 0.3)
       this.caracal.actions[5].play()
+      this.soundManager.play('langageCode')
     })
 
     this.addAction('ocelotTalk', ()=>{
@@ -625,7 +687,9 @@ export default class Fragment1 extends Bard.Fragment {
     
 
     this.addAction('displayCatHolo', (e)=> {
-      this.soundManager.play("heros-call")
+      // this.soundManager.play("heros-call")
+      this.soundManager.play('feuillage')
+
       this.roar = true
       this.char.actions[0].setLoop(THREE.LoopOnce)
       this.char.actions[0].play()
@@ -662,13 +726,16 @@ export default class Fragment1 extends Bard.Fragment {
       this.ocelot.anims.push(new Bard.Animation({
         duration: 800,
         from: this.ocelot.mesh.position.y,
-        to: this.winWidth*0.06,
+        to: this.scenesAttributes.two.position.y,
         timingFunction: 'easeInOutQuint',
         onProgress: (advancement, time) => {
           var easeTime = Bard.Easing.easeInOutQuint(time)
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
           this.ocelot.mesh.position.y = time 
         },
+        onFinish: ()=>{
+          this.soundManager.play('chatTombe')
+        }
       })) 
     }, { once: true })
 
@@ -676,7 +743,7 @@ export default class Fragment1 extends Bard.Fragment {
       this.ocelot.anims.push(new Bard.Animation({
         duration: 800,
         from: this.caracal.mesh.position.y,
-        to: this.winWidth*0.06,
+        to: this.scenesAttributes.two.position.y,
         timingFunction: 'easeInOutQuint',
         onProgress: (advancement, time) => {
           
@@ -684,6 +751,9 @@ export default class Fragment1 extends Bard.Fragment {
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
           this.caracal.mesh.position.y = time 
         },
+        onFinish: ()=>{
+          this.soundManager.play('chatTombe')
+        }
       })) 
     }, { once: true })
 
@@ -691,7 +761,7 @@ export default class Fragment1 extends Bard.Fragment {
       this.charIdle.stop()
       this.charWalk.play()
 
-      this.char.mesh.position.y = this.winWidth*0.06
+      this.char.mesh.position.y = this.scenesAttributes.two.position.y
       
       setTimeout(()=>{
         this.charIdle.enabled = true
@@ -729,7 +799,7 @@ export default class Fragment1 extends Bard.Fragment {
           // this.planes[i].mesh.position.x = ((advancement*(i+1))*80)+(this.book.scene.camera.top/2.)
       
           e.args.element.mesh.position.x = time
-          e.args.element.mesh.position.y = this.winWidth*0.06
+          e.args.element.mesh.position.y = this.scenesAttributes.two.position.y
         },
         onFinish: ()=>{
         }
@@ -783,7 +853,11 @@ export default class Fragment1 extends Bard.Fragment {
 
           this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
           this.executeAction('next')
-         
+          this.soundManager.play('foret')
+          this.soundManager.play('marche')
+          setTimeout(()=>{
+            this.soundManager.play('voix')
+          }, 1000)
         }
       })) 
       
@@ -828,7 +902,7 @@ export default class Fragment1 extends Bard.Fragment {
 
           this.executeAction('charWalk', this.winWidth*0.32/this.aspect)
           this.executeAction('catsWalk', {element: this.caracal, to: this.winWidth*0.03/this.aspect})
-           this.executeAction('catsWalk', {element: this.ocelot, to: this.winWidth*0.12/this.aspect})
+          this.executeAction('catsWalk', {element: this.ocelot, to: this.winWidth*0.12/this.aspect})
 
           this.executeAction('next')
          
@@ -857,7 +931,7 @@ export default class Fragment1 extends Bard.Fragment {
     }, { once: true })
 
     this.addAction('rocket-launch', (e)=>{
-      
+      this.soundManager.play('rocketLaunch')
 
       this.rocket.actions[2].fadeOut(1)
       this.rocket.actions[2].play()
@@ -934,7 +1008,10 @@ export default class Fragment1 extends Bard.Fragment {
       
 
       this.rocket.actions[2].play()
-      forest.on("load", ()=>{forest.start()})
+
+      this.soundManager.play('terreAmbiance')
+      
+
       this.initListeners();
 
       //this.waitAndAlert("chrome_exception", "next")
