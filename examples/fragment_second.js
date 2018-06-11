@@ -20,7 +20,7 @@ export default class Fragment2 extends Bard.Fragment {
      */
     var rocketLaunch = this.soundManager.load("forest", "/examples/sounds/rocket_launch.mp3");
 
-    this.soundManager.load('background-mars', "/examples/sounds/scene-2/mars-ambiance.mp3", {
+    var ambiance = this.soundManager.load('background-mars', "/examples/sounds/scene-2/mars-ambiance.mp3", {
       loop: true
     })
 
@@ -1005,7 +1005,15 @@ export default class Fragment2 extends Bard.Fragment {
 
 
     this.on("start", ()=>{
-      this.soundManager.play('background-mars')
+
+      if(ambiance){
+        this.soundManager.play('background-mars')
+      } else {
+        ambiance.on("load", ()=>{
+          this.soundManager.play('background-mars')
+        })
+      }
+      
       for(var i=0; i<this.elements.length; i++)
         this.elements[i].display();
 
