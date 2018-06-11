@@ -100,7 +100,7 @@ class Text extends Element {
     for(var i=0; i<this.current.recorders.length; i++){
       (function(rank){
         self.current.recorders[rank].element.addEventListener("click", ()=>{
-         
+          self.current.recorders[rank].element.classList.add("clicked");
           self.speechRecognition.addCommand(self.current.recorders[rank].command, (e)=>{
             self.fragment.executeAction(self.current.recorders[rank].action)
           })
