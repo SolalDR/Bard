@@ -39,7 +39,9 @@ uniform sampler2D texture;
 class Stars extends Mesh {
 
 	constructor(params){
-		super(params);
+    super(params);
+    this.aspect = window.innerWidth/window.innerHeight
+    this.winWidth = window.innerWidth
 		this.eventsList.push("load:map");
 		this.fit = params.fit || true;
     this.map = params.map;
@@ -76,12 +78,12 @@ class Stars extends Mesh {
 		this.mesh.geometry.attributes.position.needsUpdate  = true
 		let camera = this.fragment.book.scene.camera
 		let cameraLength = camera.right*2
-		let starOffset = cameraLength / this.count
+		let starOffset = (this.winWidth/this.aspect / this.count)/2
 		let positionIterator = 0
 
 		for (let i = 0; i < this.mesh.geometry.attributes.position.array.length; i++) {
-			this.mesh.geometry.attributes.position.array[positionIterator++] = (i*starOffset + Math.random()*2-1)+camera.left
-			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*camera.top/2+camera.top/2
+			this.mesh.geometry.attributes.position.array[positionIterator++] = (i*starOffset)*2
+			this.mesh.geometry.attributes.position.array[positionIterator++] = this.winWidth*0.45/this.aspect+(Math.random()*this.winWidth*0.2/this.aspect-this.winWidth*0.1/this.aspect)
 			this.mesh.geometry.attributes.position.array[positionIterator++] = Math.random()*(-100)-20			
 		}
 	}
@@ -147,6 +149,10 @@ class Stars extends Mesh {
 	render(clock){
     this.renderAnims(17)
     this.mesh.material.uniforms.time.value = clock.elapsed/1000
+    if(this.fragment.book.scene.camera) {
+      this.mesh.position.x = this.fragment.book.scene.camera.position.x
+    }
+    
   }
   
   resize() {

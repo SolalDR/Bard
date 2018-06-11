@@ -34,12 +34,22 @@ window.addEventListener("load", function(){
     }
   ]
   
-  book.addFragment(fragment2);
   book.addFragment(fragment1);
+  book.addFragment(fragment2);
 
   book.start();
   book.on("fragment:start", (e)=>{
     console.log(e)
   })
+
+  document.querySelector(".pass").addEventListener("click", ()=>{
+    book.currentFragment.next(true)
+  })
+
+  document.body.addEventListener("keydown", (e)=>{
+    console.log(e)
+    if(e.keyCode == 39) book.currentFragment.next(true)
+  })
+
   window.book = book
 })

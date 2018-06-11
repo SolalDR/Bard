@@ -19,6 +19,15 @@
         z-index: 0;
       }
 
+      .pass {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        width: 30px;
+        height: 30px;
+        background: pink;
+        z-index: 999;
+      }
 
       button::after {
           width: 40px;
@@ -35,6 +44,7 @@
 </head>
 <body>
 
+  <button class="pass"></button>
     <!-- Fragment -->
 	<div class="fragment">
 		<div class="fragment__background"></div>

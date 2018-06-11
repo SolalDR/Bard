@@ -70,8 +70,10 @@ class SoundManager extends Event {
     /**
      * Stop a sound object from his name
      */
-    stop(name, offset){
-      this.sounds[name].stop(offset);
+    stop(name){
+      if(this.sounds[name]) {
+        this.sounds[name].stop();
+      }      
     }
 
     /**
