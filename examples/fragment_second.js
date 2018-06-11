@@ -10,6 +10,15 @@ export default class Fragment2 extends Bard.Fragment {
   init() {    
     var self = this;
 
+    this.bodyParts = {
+      csqe:4,
+      tete:4,
+      crps:4,
+      bras:4,
+      jmbe: 4,
+      arme:3,
+    }
+
     this.addSpeechRecognition();
     this.addSoundManager();
     this.aspect = window.innerWidth/window.innerHeight
@@ -114,7 +123,7 @@ export default class Fragment2 extends Bard.Fragment {
       })
     );
 
-    this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-bleu.png', count: 20, group: "background"}))
+    this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-bleu.png', count: 15, group: "background"}))
 
 
     var planets = []
@@ -147,7 +156,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 160,
+        scale:  ((this.winWidth/this.aspect)*0.230),
         opacity: 0.5,
         model: '/examples/obj/liane2/liane2.gltf'
       })
@@ -170,7 +179,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 160,
+        scale:  ((this.winWidth/this.aspect)*0.230),
         opacity: 0.5,
         model: '/examples/obj/liane3/liane3.gltf'
       })
@@ -193,7 +202,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 160,
+        scale: ((this.winWidth/this.aspect)*0.230),
         opacity: 0.5,
         model: '/examples/obj/liane4/liane4.gltf'
       })
@@ -252,7 +261,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 300,
+        scale:  ((this.winWidth/this.aspect)*0.470),
         model: '/examples/obj/fusee/fusee.gltf'
       })
     )
@@ -274,7 +283,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:0,
           z:0,
         },
-        scale: 0.6,
+        scale: ((this.winWidth/this.aspect)*0.001),
         hide:true,
         originCenter: true,
         model: '/examples/obj/rig-heros (2).glb'
@@ -297,7 +306,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:0,
           z:0,
         },
-        scale: 0.8,
+        scale: ((this.winWidth/this.aspect)*0.0013),
         hide:true,
         originCenter: true,
         model: '/examples/obj/rig-robot-tanique.glb'
@@ -321,7 +330,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:0,
           z:0,
         },
-        scale: 0.5,
+        scale: ((this.winWidth/this.aspect)*0.0008),
         originCenter: true,
         model: '/examples/obj/rig-chats3.glb',
         originRat: 3,
@@ -354,7 +363,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:0,
           z:0,
         },
-        scale: 0.4,
+        scale: ((this.winWidth/this.aspect)*0.0006),
         originCenter : true,
         originRat: 3,
         model: '/examples/obj/rig-chats3.glb'
@@ -388,7 +397,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:0,
           z:0,
         },
-        scale: 0.35,
+        scale: ((this.winWidth/this.aspect)*0.0005),
         originCenter : true,
         originRat: 3,
         model: '/examples/obj/rig-chats3.glb'
@@ -421,7 +430,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 2.,
+        scale: ((this.winWidth/this.aspect)*0.0028),
         model: '/examples/obj/rig-boss.glb'
       })
     )
@@ -442,7 +451,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 1.,
+        scale: ((this.winWidth/this.aspect)*0.0019),
         hide:true,
         model: '/examples/obj/rig-roi-martien.glb'
       })
@@ -464,7 +473,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 1.3,
+        scale: ((this.winWidth/this.aspect)*0.0023),
         hide:true,
         model: '/examples/obj/rig-soldat-mars.glb'
       })
@@ -569,7 +578,6 @@ export default class Fragment2 extends Bard.Fragment {
           }))
         }
       }))
-      console.log(this.char)
     
 
       this.dragon.actions[2].setLoop(THREE.LoopOnce)
@@ -596,15 +604,24 @@ export default class Fragment2 extends Bard.Fragment {
 
     this.addAction('break-sword', (e)=>{
       this.dragon.actions[0].fadeOut(0.2)
+      this.dragon.actions[9].clampWhenFinished = true
       this.dragon.actions[9].setLoop(THREE.LoopOnce)
       this.dragon.actions[9].play()
 
       setTimeout(()=>{
         this.soundManager.play('char-fall')
+        this.char.mesh.children[0].traverse((child)=> {
+          if(child['material']) {
+            if(child['name'].slice(0,4) == "arme") {
+              child.visible = false
+            }
+          }
+        })
       },1300)
 
       setTimeout(()=>{
         this.dragon.actions[0].fadeIn(0.5)
+        this.dragon.actions[9].fadeOut(0.5)
         this.dragon.actions[0].enabled = true
 
         this.dragon.actions[0].play()
@@ -616,6 +633,8 @@ export default class Fragment2 extends Bard.Fragment {
         this.executeAction('move-element', {element: this.char, to: -this.winWidth*0.15/this.aspect, duration: 1000})
       }, 500)
       
+    }, {
+      once: true
     })
 
     this.addAction('charUp', (e)=>{
@@ -624,15 +643,20 @@ export default class Fragment2 extends Bard.Fragment {
       this.char.actions[14].enabled =true
       this.char.actions[14].fadeIn(0.8)
       this.char.actions[14].play()
+      this.char.actions[16].stop()
+
       this.char.actions[4].clampWhenFinished = true
       this.char.actions[4].setLoop(THREE.LoopOnce)
       this.char.actions[4].play()
 
         text.next();
+    }, {
+      once: true
     })
 
     this.addAction('run', (e)=>{
       text.next();
+    
       this.executeAction('move-element', {element: this.ocelot, to: -this.winWidth*1.4/this.aspect, duration: 11000})
       this.executeAction('move-element', {element: this.caracal, to: -this.winWidth*1.4/this.aspect, duration: 11000})
       this.executeAction('move-element', {element: this.robot, to: -this.winWidth*1.4/this.aspect, duration: 11000})
@@ -650,6 +674,7 @@ export default class Fragment2 extends Bard.Fragment {
       this.caracal.actions[0].fadeOut(0.5)
       this.ocelot.actions[0].fadeOut(0.5)
       this.char.actions[14].fadeOut(0.5)
+      
       setTimeout( ()=>{
         this.dragon.actions[1].fadeIn(0.5),
         this.dragon.actions[1].play(),
@@ -675,8 +700,6 @@ export default class Fragment2 extends Bard.Fragment {
 
       for (let i = 0; i < this.planes.length; i++) {
         this.executeAction('move-element', {element: this.planes[i], to: -(this.fondPerdu*(4-i)), duration: 11000})
-        console.log((this.fondPerdu*(4-i)))
-        console.log(this.planes[i])
       }
 
       this.char.anims.push(new Bard.Animation({
@@ -685,7 +708,24 @@ export default class Fragment2 extends Bard.Fragment {
         duration: 11000,
         onProgress:  (advancement, time) => {
           var easeTime = Bard.Easing.easeInOutQuint(advancement)
+
+          function f (x){
+            return (Math.cos(time)+1)/2
+          }
+      
+          var intensity;
+          if( -Math.sin(Math.cos(time/5.)) > 0 ) {
+            intensity = 0;
+          } else {
+            intensity = f(time/5);
+          }
+
           this.char.mesh.position.x = time
+
+          if(advancement > 0.32) {
+            this.book.scene.woobleIntensity = (intensity)/1.5
+          }
+          
           this.book.scene.camera.position.x = advancement*(-this.winWidth*1.5/this.aspect)
         },
         onFinish: ()=>{
@@ -697,6 +737,7 @@ export default class Fragment2 extends Bard.Fragment {
           this.caracal.mesh.rotation.y = 0
           this.char.mesh.rotation.y =0 
           this.ocelot.mesh.rotation.y = 0
+          this.book.scene.woobleIntensity = 0
 
           this.caracal.actions[0].enabled =true
           this.caracal.actions[0].fadeIn(0.5)
@@ -790,7 +831,8 @@ export default class Fragment2 extends Bard.Fragment {
 
       // this.char.actions[11].setLx  oop(THREE.LoopOnce)
       // this.char.actions[9].crossFadeFrom(this.char.actions[0], 0.2)
-      this.char.actions[11].play()
+      this.char.actions[14].stop()
+      this.char.actions[12].play()
       this.dragon.actions[0].stop()
 
       this.dragon.actions[0].crossFadeTo(this.dragon.actions[4], 0.5)
@@ -817,6 +859,10 @@ export default class Fragment2 extends Bard.Fragment {
       this.caracal.actions[0].enabled = true
       this.caracal.actions[0].play()
       this.caracal.actions[7].stop()
+
+      this.char.actions[14].play
+      this.char.actions[12].stop()
+
     })
 
     this.addAction('dragon-fade', (e)=>{
@@ -926,65 +972,8 @@ export default class Fragment2 extends Bard.Fragment {
         onProgress:(advancement, time)=> {
           this.rocket.mesh.position.y = time
           this.book.scene.woobleIntensity = advancement/8
-
         },
         onFinish:()=> {
-          // this.rocket.actions[0].play()
-          console.log(this.ocelot.actions)
-          this.ocelot.getAnimationByName('faux fixe').play()
-          this.ocelot.anims.push(new Bard.Animation({
-            duration: 1500,
-            onProgress: (advancement, time) => {
-              var easeTime = Bard.Easing.easeInOutQuint(advancement)
-              this.ocelot.mesh.children[0].traverse((child)=> {
-                if(child['material']) {
-                  child.material.opacity = easeTime*child.material.realOpacity
-                }
-              })
-
-              this.book.scene.woobleIntensity = (1 - time)*(1/8)
-            }
-          }))
-
-          this.robot.getAnimationByName('faux fixe').play()
-          this.robot.anims.push(new Bard.Animation({
-            duration: 1500,
-            onProgress: (advancement, time) => {
-              var easeTime = Bard.Easing.easeInOutQuint(advancement)
-              this.robot.mesh.children[0].traverse((child)=> {
-                if(child['material']) {
-                  child.material.opacity = easeTime*child.material.realOpacity
-                }
-              })
-            }
-          }))
-
-          console.log(this.char.actions)
-          this.caracal.getAnimationByName('faux fixe').play()
-          this.caracal.anims.push(new Bard.Animation({
-            duration: 1500,
-            onProgress: (advancement, time) => {
-              var easeTime = Bard.Easing.easeInOutQuint(advancement)
-              this.caracal.mesh.children[0].traverse((child)=> {
-                if(child['material']) {
-                  child.material.opacity = easeTime*child.material.realOpacity
-                }
-              })
-            }
-          }))
-
-          this.char.getAnimationByName('faux-fixe').play()
-          this.char.anims.push(new Bard.Animation({
-            duration: 1500,
-            onProgress: (advancement, time) => {
-              var easeTime = Bard.Easing.easeInOutQuint(advancement)
-              this.char.mesh.children[0].traverse((child)=> {
-                if(child['material']) {
-                  child.material.opacity = easeTime*child.material.realOpacity
-                }
-              })
-            }
-          }))
         }
       }))
       for (let i = 0; i < this.planes.length; i++) {
@@ -994,6 +983,64 @@ export default class Fragment2 extends Bard.Fragment {
           to: this.planes[i].mesh.position.y,
           onProgress: (advancement, time)=>{
             this.planes[i].mesh.position.y = time
+          },
+          onFinish: ()=>{
+            if(i==2) {
+              this.ocelot.getAnimationByName('faux fixe').play()
+              this.ocelot.anims.push(new Bard.Animation({
+                duration: 1500,
+                onProgress: (advancement, time) => {
+                  var easeTime = Bard.Easing.easeInOutQuint(advancement)
+                  this.ocelot.mesh.children[0].traverse((child)=> {
+                    if(child['material']) {
+                      child.material.opacity = easeTime*child.material.realOpacity
+                    }
+                  })
+    
+                  this.book.scene.woobleIntensity = (1 - time)*(1/8)
+                }
+              }))
+    
+
+              this.robot.getAnimationByName('faux fixe').play()
+              this.robot.anims.push(new Bard.Animation({
+                duration: 1500,
+                onProgress: (advancement, time) => {
+                  var easeTime = Bard.Easing.easeInOutQuint(advancement)
+                  this.robot.mesh.children[0].traverse((child)=> {
+                    if(child['material']) {
+                      child.material.opacity = easeTime*child.material.realOpacity
+                    }
+                  })
+                }
+              }))
+
+              this.caracal.getAnimationByName('faux fixe').play()
+              this.caracal.anims.push(new Bard.Animation({
+                duration: 1500,
+                onProgress: (advancement, time) => {
+                  var easeTime = Bard.Easing.easeInOutQuint(advancement)
+                  this.caracal.mesh.children[0].traverse((child)=> {
+                    if(child['material']) {
+                      child.material.opacity = easeTime*child.material.realOpacity
+                    }
+                  })
+                }
+              }))
+
+              this.char.getAnimationByName('faux-fixe').play()
+              this.char.anims.push(new Bard.Animation({
+                duration: 1500,
+                onProgress: (advancement, time) => {
+                  var easeTime = Bard.Easing.easeInOutQuint(advancement)
+                  this.char.mesh.children[0].traverse((child)=> {
+                    if(child['material']) {
+                      child.material.opacity = easeTime*child.material.realOpacity
+                    }
+                  })
+                }
+              }))
+            }
           }
         }))        
       }
@@ -1011,6 +1058,27 @@ export default class Fragment2 extends Bard.Fragment {
 
       this.book.scene.camera.position.y = 50
       // this.book.scene.camera.position.x = this.winWidth*2.75
+
+      // this.char.mesh.children[0].traverse((child)=> {
+      //   if(child['material']) {
+      //     child.material.opacity = easeTime*child.material.realOpacity
+      //   }
+      // })
+
+      for (var key in this.bodyParts) {
+        this.char.mesh.children[0].traverse((child)=> {
+          if(child['material']) {
+            if(child['name'].slice(0,4) == key) {
+              if(child['name'].slice(0,5) == key + this.bodyParts[key] ) {
+                child.visible = true
+              } else{
+                child.visible = false
+              }
+              
+            }
+          }
+        })
+      }
 
       this.initListeners();
       this.executeAction("transitionIn");

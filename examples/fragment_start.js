@@ -314,7 +314,7 @@ export default class Fragment1 extends Bard.Fragment {
     this.planes = [];
     this.clouds = [];
 
-    this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-128.png', count: 20, group: "background"}))
+    this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-128.png', count: 15, group: "background"}))
     
     this.addAction('bonsoir', ()=>{
       console.log('hello')
@@ -385,29 +385,35 @@ export default class Fragment1 extends Bard.Fragment {
       depth: 31,
     }
     )))
-
-    for (let i = 1; i < 4; i++) {
-      let cloud = this.addElement(new Bard.PlaneElement({
-        name: "nuage"+i, 
-        clickable: true,
-        isPlane: true,
-        map: '/examples/img/clouds/nuage'+i+'-version1.png', 
-        transparent: true, 
-        fit: 'no',
-        depth: -100,
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: 128,
-        position : {
-          x:0.3*i,
-          y:(this.winWidth*(0.40+Math.random()*0.2-0.1))/this.aspect,
-          z: 30
-        }
-      }));
-      this.clouds.push(cloud);
+    
+    this.cloudsCount = 0
+    for (let i = 0; i < 2; i++) {
+      for (let j = 1; j < 4; j++) {
+        this.cloudsCount++
+        let cloud = this.addElement(new Bard.PlaneElement({
+          name: "nuage"+j, 
+          clickable: true,
+          isPlane: true,
+          map: '/examples/img/clouds/nuage'+j+'-version1.png', 
+          transparent: true, 
+          fit: 'no',
+          depth: -100,
+          rotation: {
+            x: 0,
+            y: 0,
+            z: 0,
+          },
+          scale: 128,
+          position : {
+            x:0.15*this.cloudsCount,
+            y:(this.winWidth*(0.40+Math.random()*0.2-0.1))/this.aspect,
+            z: 30
+          }
+        }));
+        this.clouds.push(cloud);
+        
+      }
+      
     }
 
     
@@ -631,7 +637,10 @@ export default class Fragment1 extends Bard.Fragment {
     this.rocket.on('click', ()=>{
 
       this.soundManager.play('clickRocket')
-      this.executeAction('rocket-click')
+      if(this.scene3 && this.rocketIsClickable) {
+        this.executeAction('rocket-click')
+      }
+      
     })
 
     /**
@@ -639,47 +648,46 @@ export default class Fragment1 extends Bard.Fragment {
      */
 
      this.addAction('rocket-click', (e)=>{
-      if(this.scene3 && this.rocketIsClickable) {
-        text.next();
-        this.rocketIsClickable = false
+      text.next();
+      this.rocketIsClickable = false
 
-        this.ocelot.anims.push(new Bard.Animation({
-          duration: 1000,
-          onProgress: (advancement, time) => {
-            var easeTime = Bard.Easing.easeInOutQuint(advancement)
-            this.ocelot.mesh.children[0].traverse((child)=> {
-              if(child['material'] && child['name'] !== "projection") {
-                child.material.opacity = (1-easeTime)*child.material.realOpacity
-              }
-            })
-          }
-        }))
+      this.ocelot.anims.push(new Bard.Animation({
+        duration: 1000,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          this.ocelot.mesh.children[0].traverse((child)=> {
+            if(child['material'] && child['name'] !== "projection") {
+              child.material.opacity = (1-easeTime)*child.material.realOpacity
+            }
+          })
+        }
+      }))
 
-        this.char.anims.push(new Bard.Animation({
-          duration: 1000,
-          onProgress: (advancement, time) => {
-            var easeTime = Bard.Easing.easeInOutQuint(advancement)
-            this.char.mesh.children[0].traverse((child)=> {
-              if(child['material']) {
-                child.material.opacity = (1-easeTime)*child.material.realOpacity
-              }
-            })
-          }
-        }))
-  
-        this.caracal.interactive = true
-        this.caracal.anims.push(new Bard.Animation({
-          duration: 1000,
-          onProgress: (advancement, time) => {
-            var easeTime = Bard.Easing.easeInOutQuint(advancement)
-            this.caracal.mesh.children[0].traverse((child)=> {
-              if(child['material'] && child['name'] !== "projection") {
-                child.material.opacity = (1-easeTime)*child.material.realOpacity
-              }        
-            })
-          }
-        }))
-      }
+      this.char.anims.push(new Bard.Animation({
+        duration: 1000,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          this.char.mesh.children[0].traverse((child)=> {
+            if(child['material']) {
+              child.material.opacity = (1-easeTime)*child.material.realOpacity
+            }
+          })
+        }
+      }))
+
+      this.caracal.interactive = true
+      this.caracal.anims.push(new Bard.Animation({
+        duration: 1000,
+        onProgress: (advancement, time) => {
+          var easeTime = Bard.Easing.easeInOutQuint(advancement)
+          this.caracal.mesh.children[0].traverse((child)=> {
+            if(child['material'] && child['name'] !== "projection") {
+              child.material.opacity = (1-easeTime)*child.material.realOpacity
+            }        
+          })
+        }
+      }))
+    
       
      })
     
@@ -1079,7 +1087,6 @@ export default class Fragment1 extends Bard.Fragment {
 
       this.soundManager.play('terreAmbiance')
       
-
       this.initListeners();
     })
   }
@@ -1098,12 +1105,19 @@ export default class Fragment1 extends Bard.Fragment {
         this.elements[i].render(this.clock);
       }
     }
-    console.log((this.clock.elapsed+(100))/4000)
+
+    
+   
     if(this.clouds.length ) {
       for (let i = 0; i < this.clouds.length; i++) {
         if(this.clouds[i].mesh) {
           console.log(this.clouds[i])
-          this.clouds[i].mesh.position.x = ((Math.sin(((this.clock.elapsed)/9000)+(this.clouds[i].position.x*Math.PI))+1)*(this.winWidth/this.aspect)*1.5)
+          if(i%2 == 0) {
+            this.clouds[i].mesh.position.x = (((-Math.sin(((this.clock.elapsed)/18000)+(this.clouds[i].position.x*Math.PI))+1)*(this.winWidth/this.aspect)*1.5))
+          } else [
+            this.clouds[i].mesh.position.x = ((Math.sin(((this.clock.elapsed)/18000)+(this.clouds[i].position.x*Math.PI))+1)*(this.winWidth/this.aspect)*1.5)
+
+          ]
         }
       }
     }

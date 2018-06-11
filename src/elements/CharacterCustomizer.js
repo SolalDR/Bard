@@ -29,6 +29,7 @@ class CharacterCustomizer extends Element {
       crps: [],
       bras: [],
       jmbe: [],
+      arme: []
     }
 
     if( this.character ){
