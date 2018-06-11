@@ -169,9 +169,11 @@ class CharacterCustomizer extends Element {
   }
 
   hide() {
-    this.element.parentNode.removeChild(this.element);
     this.element.classList.add("customization--hidden");
     this.fragment.book.dispatch("customize:hide", { element: this })
+    setTimeout(()=>{
+      this.element.parentNode.removeChild(this.element);
+    }, 1000);
   }
 
   displayItems(currentType) {
