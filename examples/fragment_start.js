@@ -1042,7 +1042,6 @@ export default class Fragment1 extends Bard.Fragment {
     }, { once: true })
 
     this.addAction("next",  e => {
-      console.log("Next");
       text.next()
     })
 
@@ -1098,11 +1097,10 @@ export default class Fragment1 extends Bard.Fragment {
         this.elements[i].render(this.clock);
       }
     }
-    console.log((this.clock.elapsed+(100))/4000)
+    
     if(this.clouds.length ) {
       for (let i = 0; i < this.clouds.length; i++) {
         if(this.clouds[i].mesh) {
-          console.log(this.clouds[i])
           this.clouds[i].mesh.position.x = ((Math.sin(((this.clock.elapsed)/9000)+(this.clouds[i].position.x*Math.PI))+1)*(this.winWidth/this.aspect)*1.5)
         }
       }
