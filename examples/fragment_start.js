@@ -26,7 +26,7 @@ export default class Fragment1 extends Bard.Fragment {
 
     var rocketLaunch = this.soundManager.load("rocket", "/examples/sounds/rocket_launch.mp3");
 
-    this.soundManager.load("terreAmbiance", "/examples/sounds/scene-1/terre-ambiance.mp3", {
+    var ambiance = this.soundManager.load("terreAmbiance", "/examples/sounds/scene-1/terre-ambiance.mp3", {
       loop: true,
     })
 
@@ -1050,7 +1050,6 @@ export default class Fragment1 extends Bard.Fragment {
     }, { once: true })
 
     this.addAction("next",  e => {
-      console.log("Next");
       text.next()
     })
 
@@ -1085,7 +1084,13 @@ export default class Fragment1 extends Bard.Fragment {
       
       this.rocket.actions[2].play()
 
-      this.soundManager.play('terreAmbiance')
+      if(ambiance.loaded){
+      	this.soundManager.play('terreAmbiance')
+      } else {
+        ambiance.on("load", ()=>{
+		  this.soundManager.play('terreAmbiance')
+        });
+      }
       
       this.initListeners();
     })
