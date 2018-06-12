@@ -46,6 +46,10 @@ export default class Fragment1 extends Bard.Fragment {
       
     })
 
+    this.soundManager.load("chatCri", "/examples/sounds/scene-1/chat-qui-tombent-cri.mp3", {
+      
+    })
+
     this.soundManager.load("chatTombe", "/examples/sounds/scene-1/chat-qui-tombent.mp3", {
       
     })
@@ -528,7 +532,6 @@ export default class Fragment1 extends Bard.Fragment {
 
     
     this.char.on("click", ()=>{
-      console.log(this.char.actions)
       if(!this.roar && this.scene2 && this.char.interactive) {
         this.executeAction('displayCatHolo')
       }
@@ -796,6 +799,7 @@ export default class Fragment1 extends Bard.Fragment {
     }, { once: true })
 
     this.addAction('fallOcelot', (e)=> {
+      this.soundManager.play('chatCri')
       this.ocelot.anims.push(new Bard.Animation({
         duration: 800,
         from: this.ocelot.mesh.position.y,
@@ -813,6 +817,7 @@ export default class Fragment1 extends Bard.Fragment {
     }, { once: true })
 
     this.addAction('fallCaracal', (e)=> {
+      this.soundManager.play('chatCri')
       this.ocelot.anims.push(new Bard.Animation({
         duration: 800,
         from: this.caracal.mesh.position.y,
@@ -1116,7 +1121,6 @@ export default class Fragment1 extends Bard.Fragment {
     if(this.clouds.length ) {
       for (let i = 0; i < this.clouds.length; i++) {
         if(this.clouds[i].mesh) {
-          console.log(this.clouds[i])
           if(i%2 == 0) {
             this.clouds[i].mesh.position.x = (((-Math.sin(((this.clock.elapsed)/18000)+(this.clouds[i].position.x*Math.PI))+1)*(this.winWidth/this.aspect)*1.5))
           } else [

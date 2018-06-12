@@ -65,6 +65,10 @@ export default class Fragment2 extends Bard.Fragment {
     this.soundManager.load('shout-before-chase', "/examples/sounds/scene-2/cri-monstre-apres-saut.mp3", {
     })
 
+    this.soundManager.load('cat-afrayed', "/examples/sounds/scene-2/chat-qui-a-peur.mp3", {
+    })
+
+
     this.soundManager.load('success', "/examples/sounds/scene-2/validation-robot.mp3", {
     })
 
@@ -109,11 +113,11 @@ export default class Fragment2 extends Bard.Fragment {
            "Avant même que Chevalier Justine ait eu le temps d’esquisser un geste, elle lui <span data-speech='break-sword'>fonce dessus</span> et le projette sur le sol, son arme se brisant avec la force du choc.<br> “ Hahahaha, <span data-speech='charUp'>trop facile</span> ! ”",
            "Ton héros est désarmé ! Vite, nous <span data-speech='run'>devons fuir</span> !",
            "Chevalier Justine et ses compagnons déguerpissent sans attendre. Le monstre les prend en chasse ! Ils sont rapides, mais le monstre <span data-speech='next'>plus encore</span>…  ",
-           "Il gagne de la distance sur eux ! <span data-speech='ocelot-talk'>Tout</span> à coup, Ocelot s’écrie : “ Nous voilà bloqués ! ” Un grand rocher se cachait au détour d’un virage : pas moyen de <span data-speech='next'>continuer à fuir</span> !",
+           "Il gagne de la <span data-speech='ocelot-talk'>distance sur</span> eux ! Tout à coup, Ocelot s’écrie : “ Nous voilà bloqués ! ” Un grand rocher se cachait au détour d’un virage : pas moyen de <span data-speech='next'>continuer à fuir</span> !",
            "En appui sur ses pattes arrières, <span data-speech='dragon-talk'>le monstre</span> s’apprête à bondir. “ Quelle pitoyable tentative ! lance le méchant. Vous ne pourrez pas m’empêcher de terroriser la planète mars ! Et je vais vous faire si peur que <span data-speech='ocelot-respond'>vous en</span> mourrez ! ”",
            "” Moi je n’ai pas peur, lui répond Ocelot, et je connais même quelqu’un que tu ne pourras jamais effrayer, il est d’ailleurs <span data-speech='dragon-respond'>avec nous</span> ! ”",
            "” Impossible ! Répond le monstre. Dis-moi qui est cette personne, que je te montre que tu as tort ! ” Touche ton compagnon qui ne pourra jamais être effrayé pour vaincre le monstre. ",
-           "“ Le robot Tanique ne te craint pas ! ” dit Chevalier Justine À ces mots, le monstre se met à trembler et à enfler de colère, prêt à faire <span data-speech='dragon-roar'>le cri</span> le plus terrorisant de tous les temps : “ Braougraaaaaagggggaaaaaar !!!! “",
+           "“ Le robot Tanique ne te craint pas ! ” dit Chevalier Justine. À ces mots, le monstre se met à trembler et à enfler de colère, prêt à faire <span data-speech='dragon-roar'>le cri</span> le plus terrorisant de tous les temps : “ Braougraaaaaagggggaaaaaar !!!! “",
            "Voyant qu’il a échoué à effrayer le robot, le <span data-speech='dragon-death'>monstre pâlit</span> et un grondement sourd sort de sa gueule. Le voilà vaincu ! Il s’écroule tout à coup et son corps s’évanouit pour ne laisser qu’une petite forme <span data-speech='dragon-fade'>sur le sol</span>.",
         ],
         align: "bottom-left",
@@ -763,6 +767,7 @@ export default class Fragment2 extends Bard.Fragment {
     this.addAction('ocelot-talk', (e)=>{
       this.ocelot.actions[6].setLoop(THREE.LoopOnce)
       this.ocelot.actions[6].play()
+      this.soundManager.play('cat-afrayed')
     })
     
     this.addAction('dragon-talk',()=>{

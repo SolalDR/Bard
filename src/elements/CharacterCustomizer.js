@@ -12,6 +12,14 @@ class CharacterCustomizer extends Element {
     this.selector = args.selector ? args.selector : null;
     this.character = args.character ? args.character : null;
     this.autoDisplay = false;
+
+    this.colorsAvailable = [
+      0x010ab4,
+      0x2f5623,
+      0x452d69,
+      0x546d95,
+    ]
+
     this.element = null;
     if( this.selector ) {
       this.element = document.querySelector(this.selector);
@@ -106,20 +114,20 @@ class CharacterCustomizer extends Element {
   }
 
   init(){
-    console.log(this.character)
     this.character.mesh.traverse(child => {
       if (child.isMesh) {
         if(child['material']) {
           // Manage name & classification
           child.name = child.parent.parent.name.replace('-', '').slice(0,5)
-          
+          child.realColor = child['material'].color.getHexString()
+
           if( this.bodyParts[child.name.slice(0,4)] ){
             this.bodyParts[child.name.slice(0,4)].push(child)
           }
           
           
           var matches = child.name.match(/\d+/);
-          if (matches[0] != 2) {
+          if (matches[0] != 1) {
             child.visible = false
           }
         }
@@ -149,6 +157,7 @@ class CharacterCustomizer extends Element {
           <button id="crps" class="customization__list-item"><%= image_tag "personnalisation/asset-body" %></button>
           <button id="bras" class="customization__list-item"><%= image_tag "personnalisation/asset-arm" %></button>
           <button id="jmbe" class="customization__list-item"><%= image_tag "personnalisation/asset-leg" %></button>
+          <button id="arme" class="customization__list-item"><%= image_tag "personnalisation/asset-arme" %></button>
         </div>
         <div id="body-part-choices-container" class="customization__list customization__list--depth-2"></div>
       </div>`
@@ -167,6 +176,20 @@ class CharacterCustomizer extends Element {
     }
     this.fragment.book.dispatch("customize:display", { element: this })
     this.element.classList.remove("customization--hidden");
+
+    this.colors = document.querySelectorAll('.customization__color')
+    for(let i = 0; i< this.colors.length; i++) {
+      const element = this.colors[i]
+      element.addEventListener('click', this.changeColor.bind(this, i))
+    }
+  }
+
+  changeColor(selectedColor) {
+    this.character.mesh.children[0].traverse((child)=> {
+      if(child['material'] && child.realColor == "010ab4") {
+        child.material.color = new THREE.Color(this.colorsAvailable[selectedColor])
+      }
+  })
   }
 
   hide() {

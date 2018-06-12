@@ -34,8 +34,8 @@ window.addEventListener("load", function(){
     }
   ]
   book.addFragment(fragment1);
-  
   book.addFragment(fragment2);
+  
 
   book.start();
   book.on("fragment:start", (e)=>{
