@@ -261,7 +261,7 @@ export default class Fragment2 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale:  ((this.winWidth/this.aspect)*0.470),
+        scale:  ((this.winWidth/this.aspect)*0.460),
         model: '/examples/obj/fusee/fusee.gltf'
       })
     )

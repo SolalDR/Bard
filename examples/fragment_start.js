@@ -189,7 +189,7 @@ export default class Fragment1 extends Bard.Fragment {
         y: Math.PI,
         z:0,
       },
-      scale: 300,
+      scale:  ((this.winWidth/this.aspect)*0.460),
       visible: false,
       model: '/examples/obj/fusee/fusee.gltf'
     }))
@@ -211,7 +211,7 @@ export default class Fragment1 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 1000,
+        scale:  ((this.winWidth/this.aspect)*1.2),
         model: '/examples/obj/herbe-alone/herbe-alone.gltf'
       }))
       this.herbes.push(herbe)
@@ -242,7 +242,7 @@ export default class Fragment1 extends Bard.Fragment {
           y:Math.PI,
           z:0,
         },
-        scale: 1000,
+        scale:  ((this.winWidth/this.aspect)*1.2),
         model: '/examples/obj/plante/plante.gltf'
       }))
       this.plantes.push(plante)
@@ -403,7 +403,7 @@ export default class Fragment1 extends Bard.Fragment {
             y: 0,
             z: 0,
           },
-          scale: 128,
+          scale:  ((this.winWidth/this.aspect)*0.200),
           position : {
             x:0.15*this.cloudsCount,
             y:(this.winWidth*(0.40+Math.random()*0.2-0.1))/this.aspect,
@@ -444,7 +444,7 @@ export default class Fragment1 extends Bard.Fragment {
         y: 0,
         z: 0,
       },
-      scale: 30,
+      scale:  ((this.winWidth/this.aspect)*0.047),
       position : {
         x:this.winWidth*0.83/this.aspect+this.scenesAttributes.two.position.x,
         y:this.winWidth*0.28/this.aspect,
@@ -474,7 +474,7 @@ export default class Fragment1 extends Bard.Fragment {
         y:0,
         z:0,
       },
-      scale: 0.65,
+      scale:  ((this.winWidth/this.aspect)*0.001),
       model: '/examples/obj/rig-heros (2).glb'
     }))
 
@@ -493,7 +493,7 @@ export default class Fragment1 extends Bard.Fragment {
         y:0,
         z:0,
       },
-      scale: 0.35,
+      scale:  ((this.winWidth/this.aspect)*0.00052),
       hide:true,
       model: '/examples/obj/rig-chats3.glb'
     }))
@@ -513,7 +513,7 @@ export default class Fragment1 extends Bard.Fragment {
         y:0,
         z:0,
       },
-      scale: 0.45,
+      scale:  ((this.winWidth/this.aspect)*0.00062),
       hide:true,
       model: '/examples/obj/rig-chats3.glb'
     }))
