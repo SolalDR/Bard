@@ -10,15 +10,6 @@ export default class Fragment2 extends Bard.Fragment {
   init() {    
     var self = this;
 
-    this.bodyParts = {
-      csqe:4,
-      tete:4,
-      crps:4,
-      bras:4,
-      jmbe: 4,
-      arme:3,
-    }
-
     this.addSpeechRecognition();
     this.addSoundManager();
     this.aspect = window.innerWidth/window.innerHeight
@@ -1073,13 +1064,9 @@ export default class Fragment2 extends Bard.Fragment {
 
       this.book.scene.camera.position.y = 50
       this.book.scene.scenePosition.y = 50
-      // this.book.scene.camera.position.x = this.winWidth*2.75
 
-      // this.char.mesh.children[0].traverse((child)=> {
-      //   if(child['material']) {
-      //     child.material.opacity = easeTime*child.material.realOpacity
-      //   }
-      // })
+      this.bodyParts = { csqe:4, tete:4, crps:4, bras:4, jmbe: 4, arme:3 }
+      if( this.book.config.character.body_parts ) this.bodyParts = this.book.config.character.body_parts;
 
       for (var key in this.bodyParts) {
         this.char.mesh.children[0].traverse((child)=> {
