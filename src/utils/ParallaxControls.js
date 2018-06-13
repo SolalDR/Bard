@@ -6,7 +6,7 @@ class ParallaxControl {
     this.spherical = new THREE.Spherical();
 	  this.sphericalDelta = new THREE.Spherical();
 
-    this.rotateSpeed = params.rotateSpeed ? params.rotateSpeed: 0.005
+    this.rotateSpeed = params.rotateSpeed ? params.rotateSpeed: 0.002
     this.rotateStart =   new THREE.Vector2(window.innerWidth/2, window.innerHeight/2)
     this.rotateEnd = new THREE.Vector2()
     this.rotateDelta = new THREE.Vector2()
@@ -41,8 +41,8 @@ class ParallaxControl {
     // this.rotateStart.y = this.rotateStart.y+this.scenePosition.y
     this.rotateDelta.subVectors( this.rotateEnd, this.rotateStart );
 
-    this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / (this.winWidth+this.scenePosition.x) * this.rotateSpeed );
-    this.rotateUp( 2 * Math.PI * this.rotateDelta.y / (this.winHeight+this.scenePosition.y) * this.rotateSpeed );
+    this.rotateLeft( 2 * Math.PI * this.rotateDelta.x / (this.winWidth) * this.rotateSpeed );
+    this.rotateUp( 2 * Math.PI * this.rotateDelta.y / (this.winHeight) * this.rotateSpeed );
 
     this.rotateStart.copy( this.rotateEnd );
     
@@ -51,18 +51,20 @@ class ParallaxControl {
   update(scenePosition) {
     this.scenePosition = scenePosition
     this.offset = new THREE.Vector3()
-    this.offset.copy(this.camera.position)
+    let cameraPosX = this.camera.position.x -scenePosition.x
+
+    this.offset.copy(new THREE.Vector3(cameraPosX, this.camera.position.y, this.camera.position.z))
 
     this.spherical.setFromVector3( this.offset );
 
-    this.camera.lookAt(new THREE.Vector3(scenePosition.x,0,0))
+    this.camera.lookAt(new THREE.Vector3(scenePosition.x,scenePosition.y,0))
     
     this.spherical.theta += this.sphericalDelta.theta;
     this.spherical.phi += this.sphericalDelta.phi;
 
     this.offset.setFromSpherical( this.spherical );
  
-    this.camera.position.x = this.offset.x
+    this.camera.position.x = scenePosition.x  + this.offset.x
     this.camera.position.y = this.offset.y
     this.camera.position.z = this.offset.z
 

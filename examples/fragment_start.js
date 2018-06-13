@@ -320,10 +320,6 @@ export default class Fragment1 extends Bard.Fragment {
 
     this.stars = this.addElement(new Bard.StarsElement({map: '/examples/img/etoile-128.png', count: 15, group: "background"}))
     
-    this.addAction('bonsoir', ()=>{
-      console.log('hello')
-    })
-
     this.planes.push(this.addElement(new Bard.PlaneElement({
       name: "plan3",
       group: "background",
@@ -924,10 +920,10 @@ export default class Fragment1 extends Bard.Fragment {
         onProgress: (advancement, time, anim) => {
           this.book.scene.cameraAnimate =true
           this.book.scene.camera.position.x = time
+          this.book.scene.scenePosition.x = time
         },
         onFinish: () => {
           this.book.scene.cameraAnimate =false
-          this.book.scene.scenePosition.x = this.currentScene.position.x
 
           this.executeAction('charWalk', this.winWidth*0.43/this.aspect)
           text.next();
@@ -975,6 +971,7 @@ export default class Fragment1 extends Bard.Fragment {
           // this.char.mesh.position.x = time
           this.book.scene.cameraAnimate =true
           this.book.scene.camera.position.x = time
+          this.book.scene.scenePosition.x = time
         },
         onFinish: () => {
 

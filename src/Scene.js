@@ -204,8 +204,8 @@ class Scene extends Event {
       this.dispatch("click", intersects );
     }
     this.cameraWooble(this.time);
-    if(this.pControls && !this.cameraAnimate) {
-      // this.pControls.update(this.scenePosition)
+    if(this.pControls ) {
+      this.pControls.update(this.scenePosition)
     }
     
 		this.renderer.render(this.threeScene, this.camera);

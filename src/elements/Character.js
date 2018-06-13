@@ -83,6 +83,7 @@ class Character extends Mesh {
               
               if(this.mainChar) {
                 var matches = child.name.match(/\d+/g);
+              
                 if (matches[0] != 1) {
                   child.visible = false
                 }

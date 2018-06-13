@@ -731,10 +731,12 @@ export default class Fragment2 extends Bard.Fragment {
           }
           
           this.book.scene.camera.position.x = advancement*(-this.winWidth*1.5/this.aspect)
+          this.book.scene.scenePosition.x = advancement*(-this.winWidth*1.5/this.aspect)
         },
         onFinish: ()=>{
           this.soundManager.stop('dragon-run')
           this.soundManager.stop('chars-run')
+          
 
           this.ocelot.actions[4].stop()
           // this.dragon.actions[2].stop()
@@ -1070,6 +1072,7 @@ export default class Fragment2 extends Bard.Fragment {
         this.elements[i].display();
 
       this.book.scene.camera.position.y = 50
+      this.book.scene.scenePosition.y = 50
       // this.book.scene.camera.position.x = this.winWidth*2.75
 
       // this.char.mesh.children[0].traverse((child)=> {
