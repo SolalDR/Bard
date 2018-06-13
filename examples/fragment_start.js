@@ -171,6 +171,7 @@ export default class Fragment1 extends Bard.Fragment {
           "Touche la fusée pour partir directement ou touche Ocelot si tu veux t’assurer que la fusée est bien en état de décoller",
           // "Tout le monde a mis sa ceinture de sécurité et est bien installé dans le cockpit. Il ne reste plus qu’à <span data-speech='next'>démarrer la fusée</span>.",
           "Tout le monde à bord, vers l'infini et <span data-speech='rocket-launch'>au-delà</span> !",
+          "",
         ],
         align: "bottom-left",
         position: { x: "40px", y: "-20px" },
@@ -475,7 +476,7 @@ export default class Fragment1 extends Bard.Fragment {
         z:0,
       },
       scale:  ((this.winWidth/this.aspect)*0.001),
-      model: '/examples/obj/rig-heros (2).glb'
+      model: '/examples/obj/rig-heros1.glb'
     }))
 
     this.caracal = this.addElement(new Bard.CharacterElement({
@@ -763,8 +764,8 @@ export default class Fragment1 extends Bard.Fragment {
       this.soundManager.play('feuillage')
 
       this.roar = true
-      this.char.actions[0].setLoop(THREE.LoopOnce)
-      this.char.actions[0].play()
+      this.char.actions[6].setLoop(THREE.LoopOnce)
+      this.char.actions[6].play()
 
       text.next();
       this.ocelot.interactive = true
@@ -1010,6 +1011,7 @@ export default class Fragment1 extends Bard.Fragment {
     })
 
     this.addAction('rocket-launch', (e)=>{
+      text.next()
       this.soundManager.play('rocketLaunch')
 
       this.rocket.actions[2].fadeOut(1)

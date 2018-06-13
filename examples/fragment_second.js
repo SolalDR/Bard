@@ -290,7 +290,7 @@ export default class Fragment2 extends Bard.Fragment {
         scale: ((this.winWidth/this.aspect)*0.001),
         hide:true,
         originCenter: true,
-        model: '/examples/obj/rig-heros (2).glb'
+        model: '/examples/obj/rig-heros1.glb'
       })
     )
 
@@ -630,10 +630,10 @@ export default class Fragment2 extends Bard.Fragment {
 
         this.dragon.actions[0].play()
         this.charBrandit.stop()
-        this.char.actions[16].clampWhenFinished = true
-        this.char.actions[16].setLoop(THREE.LoopOnce)
-        this.char.actions[16].play()
-        this.char.actions[14].fadeOut(0.2)
+        this.char.actions[11].clampWhenFinished = true
+        this.char.actions[11].setLoop(THREE.LoopOnce)
+        this.char.actions[11].play()
+        this.char.actions[3].fadeOut(0.2)
         this.executeAction('move-element', {element: this.char, to: -this.winWidth*0.15/this.aspect, duration: 1000})
       }, 500)
       
@@ -642,16 +642,15 @@ export default class Fragment2 extends Bard.Fragment {
     })
 
     this.addAction('charUp', (e)=>{
-      this.char.actions[16].stop()
       
-      this.char.actions[14].enabled =true
-      this.char.actions[14].fadeIn(0.8)
-      this.char.actions[14].play()
-      this.char.actions[16].stop()
+      this.char.actions[3].enabled =true
+      this.char.actions[3].fadeIn(0.8)
+      this.char.actions[3].play()
+      this.char.actions[11].stop()
 
-      this.char.actions[4].clampWhenFinished = true
-      this.char.actions[4].setLoop(THREE.LoopOnce)
-      this.char.actions[4].play()
+      this.char.actions[10].clampWhenFinished = true
+      this.char.actions[10].setLoop(THREE.LoopOnce)
+      this.char.actions[10].play()
 
         text.next();
     }, {
@@ -674,10 +673,10 @@ export default class Fragment2 extends Bard.Fragment {
 
       this.ocelot.actions[4].play()
       this.caracal.actions[4].play()
-      this.char.actions[1].play()
+      this.char.actions[13].play()
       this.caracal.actions[0].fadeOut(0.5)
       this.ocelot.actions[0].fadeOut(0.5)
-      this.char.actions[14].fadeOut(0.5)
+      this.char.actions[3].fadeOut(0.5)
       
       setTimeout( ()=>{
         this.dragon.actions[1].fadeIn(0.5),
@@ -752,14 +751,14 @@ export default class Fragment2 extends Bard.Fragment {
           this.ocelot.actions[0].fadeIn(0.5)
           this.ocelot.actions[0].play()
 
-          this.char.actions[14].enabled =true
-          this.char.actions[14].fadeIn(0.5)
-          this.char.actions[14].play()
+          this.char.actions[3].enabled =true
+          this.char.actions[3].fadeIn(0.5)
+          this.char.actions[3].play()
           
           this.caracal.mesh.rotation.x = Math.PI/2
           this.char.mesh.rotation.x = Math.PI /2
           this.ocelot.mesh.rotation.x = Math.PI/2
-          this.char.actions[1].stop()
+          this.char.actions[13].stop()
           this.caracal.actions[4].stop()
         
         }
@@ -838,8 +837,8 @@ export default class Fragment2 extends Bard.Fragment {
 
       // this.char.actions[11].setLx  oop(THREE.LoopOnce)
       // this.char.actions[9].crossFadeFrom(this.char.actions[0], 0.2)
-      this.char.actions[14].stop()
-      this.char.actions[12].play()
+      this.char.actions[3].stop()
+      this.char.actions[0].play()
       this.dragon.actions[0].stop()
 
       this.dragon.actions[0].crossFadeTo(this.dragon.actions[4], 0.5)
@@ -867,8 +866,9 @@ export default class Fragment2 extends Bard.Fragment {
       this.caracal.actions[0].play()
       this.caracal.actions[7].stop()
 
-      this.char.actions[14].play
-      this.char.actions[12].stop()
+      this.char.actions[3].enabled = true
+      this.char.actions[3].play()
+      this.char.actions[0].stop()
 
     })
 

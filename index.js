@@ -33,9 +33,9 @@ window.addEventListener("load", function(){
       "url": "/examples/img/clouds/nuage1.png"
     }
   ]
-  
-  book.addFragment(fragment2);
+
   book.addFragment(fragment1);
+  book.addFragment(fragment2);
   
 
   book.start();
