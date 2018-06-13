@@ -17,7 +17,7 @@ fragment2.childrenLinks = [3, 4];
 window.addEventListener("load", function(){
 
   var book = new Bard.Book({
-    debug: true,
+    debug: false,
     canvas: document.querySelector("#canvas")
   });
 
@@ -33,6 +33,7 @@ window.addEventListener("load", function(){
       "url": "/examples/img/clouds/nuage1.png"
     }
   ]
+
   book.addFragment(fragment1);
   book.addFragment(fragment2);
   
