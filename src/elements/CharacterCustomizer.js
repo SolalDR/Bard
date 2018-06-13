@@ -7,7 +7,7 @@ class CharacterCustomizer extends Element {
   constructor(args) {
     super(args);
     this.type = "ui-utils";
-    this.eventsList = ["load", "change", "save"];
+    this.eventsList = ["load", "change:element", "change:color", "save"];
     this.path = args.path ? args.path : null;
     this.selector = args.selector ? args.selector : null;
     this.character = args.character ? args.character : null;
@@ -15,9 +15,9 @@ class CharacterCustomizer extends Element {
 
     this.colorsAvailable = [
       0x010ab4,
-      0x2f5623,
-      0x452d69,
-      0x546d95,
+      0xffe600,
+      0x02114a,
+      0xff8d79,
     ]
 
     this.element = null;
@@ -189,7 +189,8 @@ class CharacterCustomizer extends Element {
       if(child['material'] && child.realColor == "010ab4") {
         child.material.color = new THREE.Color(this.colorsAvailable[selectedColor])
       }
-  })
+    })
+    this.dispatch("change:color", { color: selectedColor }); 
   }
 
   hide() {
@@ -225,7 +226,7 @@ class CharacterCustomizer extends Element {
         element.visible = true
        }
      }
-     this.dispatch("change", { element: selectedElement }); 
+     this.dispatch("change:element", { element: selectedElement }); 
     }
   }
 }
